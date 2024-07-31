@@ -6,30 +6,35 @@
           icon="arrow_back"
           flat
           size="lg"
-          :to="{name: 'start', params: {action: 'login'}}"
+          :to="{ name: 'start', params: { action: 'login' } }"
         />
       </div>
-      <div class="row col q-pt-xs">
-        <span class="text-h5 q-pt-xl">Create new account</span>
-        <div class="col-12 q-py-sm">
-          <q-input v-model="signUpCode" label="Sign-Up Code"
-              :type="/-?\d+/.test(signUpCode) ? 'password': 'text'"
-            :rules="[
-                (val) => !!val || 'Please enter organization sign-up code',
-                (val) =>
-                isValidSignUpCode(val) ||
-                  'Please enter valid Sign-Up code',
-              ]"
-              data-cy="signUpCode" >
-                <q-tooltip>Organization specific Sign-Up code</q-tooltip>
-            </q-input>
+      <div class="row col q-pt-xs q-mt-xl">
+        <div>
+          <span class="text-h5 q-pt-xl">Create new account</span>
+          <p class="text-weight-regular">
+            Already have an account?
+            <q-btn
+              flat
+              dense
+              class="text-primary"
+              style="z-index: 99999"
+              :to="{ name: 'start', params: { action: 'login' } }"
+            >
+              Login
+            </q-btn>
+          </p>
         </div>
+
         <div class="col-12 q-py-sm">
           <q-input v-model="email" label="Email" :rules="['email']" />
         </div>
         <div class="col-12 q-py-sm">
-          <q-input v-model="username"
-          label="Full Name" :rules="[(val) => val?.length || 'Enter Full Name']" />
+          <q-input
+            v-model="username"
+            label="Full Name"
+            :rules="[(val) => val?.length || 'Enter Full Name']"
+          />
         </div>
         <div class="col-12 q-py-sm">
           <q-input
@@ -84,7 +89,7 @@
             >
               Terms of Service
             </q-btn>
-            <q-space/>
+            <q-space />
             <q-btn
               style="width: 290px"
               class="q-my-lg"
@@ -115,6 +120,7 @@
 <script setup lang="ts">
 import TermsAndConditionDialog from '../desktop/TermsAndConditionDialog.vue';
 import useSignupScript from '../useSignupScript';
+
 defineEmits(['routeToTab']);
 
 const {
@@ -125,16 +131,13 @@ const {
   isViewPassword,
   isViewPassword1,
   onSignup,
-  signUpCode,
   signingUp,
   agreed,
   terms,
   showTerms,
   disabledSubmit,
   toggleSubmit,
-  isValidSignUpCode
 } = useSignupScript();
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -41,19 +41,13 @@ export default route(function (/* { store, ssrContext } */) {
       }
       resolve();
     });
-    const requiresSignCode = to.matched.some((route) => {
-      return (
-        Array.isArray(route.meta?.requires) && !!route.meta.requires.length
-      );
-    });
-    const requiresLogin =
-      requiresSignCode || to.matched.some((route) => route.meta.requiresLogin);
+
+    const requiresLogin = to.matched.some((route) => route.meta.requiresLogin);
     const requiresGuest = to.matched.some(
       (route) => !!route.meta.requiresGuest
     );
     function isRoleAuthorized(role?: string) {
-      if (!role) return !requiresSignCode;
-      if (!requiresSignCode) return requiresLogin;
+      if (!role) return false;
       return to.matched.some(
         (route) =>
           role &&
@@ -79,21 +73,24 @@ export default route(function (/* { store, ssrContext } */) {
       });
       return;
     } else if (
-      requiresSignCode &&
+      requiresGuest &&
+      to.name == 'start' &&
       user &&
-      !user.institution &&
-      to.name !== 'sign-code'
+      !user?.institution
     ) {
-      next({
-        name: 'sign-code',
-      });
+      if (to.params.action == 'register') {
+        next();
+      } else {
+        next({
+          name: 'start',
+          params: { action: 'register' },
+        });
+      }
       return;
     } else if (
       to.name !== 'home' &&
       user &&
-      (requiresGuest ||
-        (!user.role && requiresSignCode) ||
-        !isRoleAuthorized(user.role))
+      (requiresGuest || !user.role || !isRoleAuthorized(user.role))
     ) {
       next({
         name: 'home',

@@ -1,8 +1,10 @@
 import { ToEmit, ToType } from 'src/bus.struct';
 import { theBus } from 'src/the.bus';
 import { Auth } from './auth/definition';
+import { Registration } from './registration/definition';
+import { Profile } from 'src/pages/account/ui-components/dialog/definition';
 
-export type DialogStructs = Auth;
+export type DialogStructs = Auth | Registration | Profile;
 
 type DialogEvents = ToEmit<DialogStructs, DialogStructs>;
 export type DialogTypes = ToType<DialogStructs, DialogStructs>;

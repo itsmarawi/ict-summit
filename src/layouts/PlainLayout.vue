@@ -3,7 +3,7 @@
     <q-page-container>
       <ForgotPasswordDialogMobile v-if="$q.screen.lt.md" />
       <ForgotPasswordDialogDesktop v-else />
-      <RequireSignUpCodeDialog />
+      <RegisterInstitutionDialog />
       <router-view />
     </q-page-container>
   </q-layout>
@@ -12,5 +12,5 @@
 <script setup lang="ts">
 import ForgotPasswordDialogDesktop from 'src/dialogs/auth/components/ForgotPasswordDialogDesktop.vue';
 import ForgotPasswordDialogMobile from 'src/dialogs/auth/components/ForgotPasswordDialogMobile.vue';
-import RequireSignUpCodeDialog from 'src/dialogs/auth/components/RequireSignUpCodeDialog.vue';
+import RegisterInstitutionDialog from 'src/dialogs/registration/components/RegisterInstitutionDialog.vue';
 </script>

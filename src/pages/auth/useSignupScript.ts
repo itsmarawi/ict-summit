@@ -1,15 +1,21 @@
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
-import { Profiler } from 'src/utils/profiler';
 import { FirebaseError } from 'firebase/app';
 import { IAuth, useAuthStore } from 'src/stores/auth-store';
+import { useProfileStore } from 'src/stores/profile-store';
 
 export default function () {
   const router = useRouter();
   const authStore = useAuthStore();
+  const profileStore = useProfileStore();
   const $q = useQuasar();
-  const signUpCode = ref('');
+  onMounted(() => {
+    if (!profileStore.theUser) {
+      router.replace({ name: 'start', params: { action: 'signup' } });
+    }
+  });
+
   const email = ref('');
   const username = ref('');
   const password = ref('');
@@ -29,11 +35,10 @@ export default function () {
       name: username.value,
       avatar: '',
     };
-    const instKey = signUpCode.value.replace(/[0-9]/g, '');
     try {
       signingUp.value = true;
-      await authStore.signup(payload, instKey);
-      await router.replace({ name: 'dashboard' });
+      await authStore.signup(payload, '');
+      await router.replace({ name: 'start', params: { action: 'register' } });
     } catch (error) {
       if (error == 'synching timeout') {
         $q.notify({
@@ -84,15 +89,6 @@ export default function () {
     }
     signingUp.value = false;
   }
-  function isValidSignUpCode(val?: string) {
-    const code = val || signUpCode.value || '';
-    const hash = /-?\d+$/.exec(code)?.[0] || '';
-    return (
-      hash &&
-      Number(hash) ==
-        Profiler.hashName(code.substring(0, code.length - hash.length))
-    );
-  }
 
   function toggleSubmit() {
     if (terms.value === false) {
@@ -108,12 +104,11 @@ export default function () {
     email,
     username,
     password,
-    signUpCode,
+
     confirmPassword,
     isViewPassword,
     isViewPassword1,
     toggleSubmit,
-    isValidSignUpCode,
     signingUp,
     onSignup,
   };

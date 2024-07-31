@@ -10,5 +10,8 @@ export interface IProfile extends IBaseEntity {
   emailVerified?: boolean;
   mobileNumber?: string;
   institution?: string;
+  position?: string;
+  gender?: string;
+  tshirt?: string;
   role?: RoleType;
 }

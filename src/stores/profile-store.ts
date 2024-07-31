@@ -219,5 +219,32 @@ export const useProfileStore = defineStore('profile', {
       });
       return deffered.promise;
     },
+    async modifyProfile<T extends keyof IProfile>(
+      key: string,
+      props: T[],
+      source: Partial<IProfile>
+    ) {
+      const deferred = new DeferredPromise<IProfile | undefined>();
+      profileResource.updatePropertiesFrom(
+        key,
+        source,
+        props,
+        async (update) => {
+          if (update.status == 'synced') {
+            deferred.resolve(
+              await profileResource.getLocalData(
+                update.newKey || update.key || ''
+              )
+            );
+          } else if (/error/i.test(update.status)) {
+            const doc = await profileResource.getDoc(
+              update.newKey || update.key || ''
+            );
+            deferred.reject(doc?.remarks || 'Failed to update Profile');
+          }
+        }
+      );
+      return deferred.promise;
+    },
   },
 });

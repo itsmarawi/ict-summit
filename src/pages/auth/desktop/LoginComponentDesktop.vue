@@ -6,7 +6,7 @@
     >
       <q-btn
         icon="home"
-        :to="{ name: 'landing-page' }"
+        :to="{ name: 'home' }"
         rounded
         flat
         dense
@@ -15,8 +15,8 @@
       <div class="row justify-center">
         <q-img src="~assets/summit-logo.png" style="width: 25%" />
       </div>
-      <div class="text-weight-regular text-h2">e-SeQR</div>
-      <div class="text-weight-light text-h5">"Secure Records with e-SeQR!"</div>
+      <div class="text-weight-regular text-h4">Developed by ITSMarawi</div>
+      <div class="text-weight-light text-h5">"Help rebuilding Marawi!"</div>
     </q-card-section>
     <q-card-section class="col" style="overflow: auto">
       <q-form @submit="onLogin">
@@ -129,8 +129,8 @@
 </template>
 
 <script setup lang="ts">
-import { theDialogs } from 'src/dialogs';
 import useLoginScript from '../useLoginScript';
+import { theDialogs } from 'src/dialogs';
 
 defineEmits(['routeToTab', 'onForgetPassword']);
 const {

@@ -10,9 +10,7 @@
       <div class="fixed-left q-pt-sm">
         <q-btn icon="arrow_back" flat size="lg" @click="onHideForgetPassword" />
       </div>
-      <div class="q-pt-xl text-center">
-        <q-img src="~assets/Logo-forget-password.svg" style="width: 45%" />
-      </div>
+      <div class="q-pt-xl text-center"></div>
       <q-form @submit="onForgetPassword">
         <div class="q-pa-lg">
           <div class="text-h4" style="color: #555555">Forgot Password</div>

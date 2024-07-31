@@ -6,7 +6,7 @@
     >
       <q-btn
         icon="home"
-        :to="{ name: 'landing-page' }"
+        :to="{ name: 'home' }"
         rounded
         flat
         dense
@@ -14,10 +14,10 @@
       />
       <div class="text-weight-regular text-h6">Hello! Welcome Back!</div>
       <div class="row justify-center q-py-md">
-        <q-img src="~assets/common/new-logo.svg" style="width: 25%" />
+        <q-img src="~assets/summit-logo.png" style="width: 25%" />
       </div>
-      <div class="text-weight-medium text-h5">e-SeQR</div>
-      <div class="text-weight-thin text-h6">"Secure Records with e-SeQR!"</div>
+      <div class="text-weight-medium text-h4">Developed by ITSMarawi</div>
+      <div class="text-weight-thin text-h6">"Help rebuilding Marawi!"</div>
     </q-card-section>
     <q-card-section>
       <q-form @submit="onLogin">
@@ -69,7 +69,7 @@
               @click="
                 theDialogs.emit({
                   type: 'forgetPwDialog',
-                  arg: { },
+                  arg: {},
                 })
               "
             />
@@ -126,7 +126,6 @@
 <script setup lang="ts">
 import useLoginScript from '../useLoginScript';
 import { theDialogs } from 'src/dialogs';
-
 defineEmits(['routeToTab', 'onForgetPassword']);
 const {
   isPwd,

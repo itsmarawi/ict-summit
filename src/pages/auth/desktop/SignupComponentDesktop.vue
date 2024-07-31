@@ -18,34 +18,20 @@
 
         <q-form @submit="onSignup">
           <q-input
-            v-model="signUpCode"
-            label="Sign-Up Code"
-            :type="/-?\d+/.test(signUpCode) ? 'password' : 'text'"
-            :rules="[
-              (val) => !!val || 'Please enter organization sign-up code',
-              (val) =>
-                isValidSignUpCode(val) || 'Please enter valid Sign-Up code',
-            ]"
+            v-model="username"
+            label="Full Name"
+            data-cy="usernameInput"
+            :rules="[(val) => !!val || 'Please enter your full name']"
+            hint="Example: Dela Cruz, Juan T."
+            hide-hint
             hide-bottom-space
-            data-cy="signUpCode"
-          >
-            <q-tooltip>Organization specific Sign-Up code</q-tooltip>
-          </q-input>
+          />
           <q-input
             v-model="email"
             label="Email"
             data-cy="emailInput"
             :rules="['email']"
             hint="Example: sample@gmail.com"
-            hide-hint
-            hide-bottom-space
-          />
-          <q-input
-            v-model="username"
-            label="Full Name"
-            data-cy="usernameInput"
-            :rules="[(val) => !!val || 'Please enter your full name']"
-            hint="Example: Sample, Test D."
             hide-hint
             hide-bottom-space
           />
@@ -136,10 +122,8 @@
       <div class="row justify-center">
         <q-img src="~assets/summit-logo.png" style="width: 25%" />
       </div>
-      <div class="text-weight-regular text-h2">e-SeQR</div>
-      <div class="text-weight-light text-h5">
-        "Secure Documents with e-SeQR!"
-      </div>
+      <div class="text-weight-regular text-h4">Developed by ITSMarawi</div>
+      <div class="text-weight-light text-h5">"Help rebuilding Marawi!"</div>
     </q-card-section>
   </q-card>
 </template>
@@ -147,17 +131,16 @@
 <script setup lang="ts">
 import TermsAndConditionDialog from './TermsAndConditionDialog.vue';
 import useSignupScript from '../useSignupScript';
+
 defineEmits(['routeToTab']);
 
 const {
   email,
   username,
   password,
-  signUpCode,
   confirmPassword,
   isViewPassword,
   isViewPassword1,
-  isValidSignUpCode,
   onSignup,
   toggleSubmit,
   signingUp,

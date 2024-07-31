@@ -3,11 +3,13 @@ import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { FirebaseError } from 'firebase/app';
 import { theWorkflows } from 'src/workflows/the.workflows';
+import { useProfileStore } from 'src/stores/profile-store';
 
 export default function () {
   const $router = useRouter();
   const $route = useRoute();
   const $q = useQuasar();
+  const profileStore = useProfileStore();
   const persistent = ref(false);
   const isPwd = ref(true);
   const email = ref('');
@@ -28,10 +30,10 @@ export default function () {
         done() {
           if ($route.query?.redirect) {
             $router.replace($route.query?.redirect as string);
-          } else if ($q.screen.lt.md) {
-            $router.replace({ name: 'scanner' });
-          } else {
-            $router.replace({ name: 'dashboard' });
+          } else if (profileStore.theUser?.institution) {
+            $router.replace({ name: 'home' });
+          } else if (profileStore.theUser) {
+            $router.replace({ name: 'start', params: { action: 'register' } });
           }
           isLoadingLogin.value = false;
         },
@@ -84,10 +86,10 @@ export default function () {
         done() {
           if ($route.query?.redirect) {
             $router.replace($route.query?.redirect as string);
-          } else if ($q.screen.lt.md) {
-            $router.replace({ name: 'scanner' });
-          } else {
-            $router.replace({ name: 'dashboard' });
+          } else if (profileStore.theUser?.institution) {
+            $router.replace({ name: 'home' });
+          } else if (profileStore.theUser) {
+            $router.replace({ name: 'start', params: { action: 'register' } });
           }
           isLoadingGoogleLogin.value = false;
         },

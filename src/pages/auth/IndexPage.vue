@@ -27,6 +27,11 @@
           @routeToTab="routeToTab"
         ></SignupComponentDesktop>
       </q-tab-panel>
+      <q-tab-panel name="register">
+        <RegisterComponentDesktop
+          @routeToTab="routeToTab"
+        ></RegisterComponentDesktop>
+      </q-tab-panel>
     </q-tab-panels>
   </q-page>
 </template>
@@ -38,19 +43,19 @@ import LoginComponentMobile from 'src/pages/auth/mobile/LoginComponentMobile.vue
 import SignupComponentDesktop from 'src/pages/auth/desktop/SignupComponentDesktop.vue';
 import SignupComponentMobile from 'src/pages/auth/mobile/SignupComponentMobile.vue';
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
+import RegisterComponentDesktop from './desktop/RegisterComponentDesktop.vue';
 
 const tab = ref('login');
 const persistent = ref(false);
 const $route = useRoute();
 const updateRoute = () => {
   setTimeout(() => {
-    tab.value = ($route.params.action as string) || 'login' ;
+    tab.value = ($route.params.action as string) || 'login';
   }, 0);
-}
+};
 onMounted(updateRoute);
 
-onBeforeRouteUpdate(updateRoute)
-
+onBeforeRouteUpdate(updateRoute);
 
 function routeToTab(val: string) {
   tab.value = val;
@@ -59,7 +64,6 @@ function routeToTab(val: string) {
 function onForgetPassword(val: boolean) {
   persistent.value = val;
 }
-
 </script>
 <style scoped>
 .q-tab-panel {

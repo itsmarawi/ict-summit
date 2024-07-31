@@ -21,9 +21,7 @@
     <q-separator />
     <q-scroll-area
       class="text-grey-8 text-justify"
-      :style="`height: ${
-        $q.screen.lt.sm ? '312px' : '400px'
-      } `"
+      :style="`height: ${$q.screen.lt.sm ? '312px' : '400px'} `"
     >
       <q-card-section
         :style="`font-size: ${$q.screen.lt.sm ? '12px' : '16px'}`"
@@ -80,7 +78,7 @@ import {
   termsAndConditions,
   choiceAndConsent,
   privacyStatement,
-} from 'src/pages/auth/desktop/terms';
+} from './terms';
 
 export default defineComponent({
   name: 'TermsAndCondDialog',

@@ -75,7 +75,9 @@ export const useProfileStore = defineStore('profile', {
         }) ||
         undefined;
       if (userLogged?.key) {
-        const old = await profileResource.getData(userLogged.key);
+        const old =
+          (await profileResource.getData(userLogged.key)) ||
+          (await profileResource.getLocalData(userLogged.key));
         if (old) {
           const doc = await profileResource.updatePropertiesFrom(
             userLogged.key,

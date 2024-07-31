@@ -38,8 +38,9 @@ class ProfileResource extends FbBaseResource<IProfile> {
       filters as { [field: string]: string }
     )) as IProfile[];
   }
-  protected async updateCb(): Promise<boolean | void | IProfile> {
-    throw 'Not implemented';
+  protected async updateCb(data: IProfile): Promise<boolean | void | IProfile> {
+    await firebaseService.update('institutions', data.id || data.key, data);
+    return true;
   }
   protected async patchCb(
     data: IProfile,

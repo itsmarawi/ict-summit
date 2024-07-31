@@ -11,15 +11,21 @@
 const { configure } = require('quasar/wrappers');
 const path = require('path');
 const { version } = require('./package.json');
-const {
-  firebaseConfig,
-  firebaseConfigDev,
-} = require('./src/services/firebase-config');
+const { firebaseConfig, firebaseConfigDev } = require('./src/services/firebase-config')
 
 module.exports = configure(function (/* ctx */) {
-  const dbConfig =
-    process.env.USE_LIVE !== 'live' ? firebaseConfigDev : firebaseConfig;
+  const dbConfig = (process.env.USE_LIVE !== 'live') ?
+    firebaseConfigDev : firebaseConfig;
   return {
+    eslint: {
+      // fix: true,
+      // include: [],
+      // exclude: [],
+      // rawOptions: {},
+      warnings: true,
+      errors: true,
+    },
+
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
 
@@ -33,9 +39,9 @@ module.exports = configure(function (/* ctx */) {
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
-      'ionicons-v4',
-      // 'mdi-v7',
-      // 'fontawesome-v6',
+      // 'ionicons-v4',
+      // 'mdi-v5',
+      'fontawesome-v6',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -49,14 +55,11 @@ module.exports = configure(function (/* ctx */) {
     build: {
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
-        node: 'node20',
+        node: 'node16',
       },
       env: {
-        BUILD_DATE: new Date().toString(),
-        USE_LIVE:
-          typeof process.env.USE_LIVE == 'undefined'
-            ? ''
-            : process.env.USE_LIVE,
+        BUILD_DATE: (new Date()).toString(),
+        USE_LIVE: typeof process.env.USE_LIVE == 'undefined' ? '' : process.env.USE_LIVE,
         EPUBKEY:
           typeof process.env.EPUBKEY == 'undefined'
             ? 'DgdHX75/Q5Mtt1nTYOPIOf7e6+QGilaxzlLn9Li7GEk='
@@ -66,7 +69,7 @@ module.exports = configure(function (/* ctx */) {
             ? 'Cr7NZGCy4FamrITlxtTpT3J3KyvSAt9vMUOcjekH3r8='
             : process.env.EPRIKEY,
         DB_CONFIG: JSON.stringify(dbConfig),
-        APP_VERSION: version,
+        APP_VERSION: version
       },
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
@@ -84,9 +87,9 @@ module.exports = configure(function (/* ctx */) {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
-      // viteVuePluginOptions: {},
 
+      // viteVuePluginOptions: {},
+      // minify: process.env.NODE_ENV === 'production',
       vitePlugins: [
         [
           '@intlify/vite-plugin-vue-i18n',
@@ -102,18 +105,6 @@ module.exports = configure(function (/* ctx */) {
             include: path.resolve(__dirname, './src/i18n/**'),
           },
         ],
-        [
-          'vite-plugin-checker',
-          {
-            vueTsc: {
-              tsconfigPath: 'tsconfig.vue-tsc.json',
-            },
-            eslint: {
-              lintCommand: 'eslint "./**/*.{js,ts,mjs,cjs,vue}"',
-            },
-          },
-          { server: false },
-        ],
       ],
     },
 
@@ -121,6 +112,10 @@ module.exports = configure(function (/* ctx */) {
     devServer: {
       // https: true
       open: true, // opens browser window automatically
+      port: 81,
+      watch: {
+        usePolling: true
+      }
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -138,7 +133,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Notify', 'Dialog'],
     },
 
     // animations: 'all', // --- includes all animations
@@ -188,7 +183,9 @@ module.exports = configure(function (/* ctx */) {
       // useFilenameHashes: true,
       // extendGenerateSWOptions (cfg) {}
       // extendInjectManifestOptions (cfg) {},
-      // extendManifestJson (json) {}
+      extendManifestJson(json) {
+        json.id = `${json.name}-${version}`;
+      },
       // extendPWACustomSWConf (esbuildConf) {}
     },
 
@@ -225,7 +222,7 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'ict-summit',
+        appId: 'eseqr',
       },
     },
 

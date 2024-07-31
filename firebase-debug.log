@@ -1,0 +1,109 @@
+[debug] [2024-07-31T11:26:22.306Z] ----------------------------------------------------------------------
+[debug] [2024-07-31T11:26:22.310Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\azmar\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
+[debug] [2024-07-31T11:26:22.310Z] CLI Version:   13.13.3
+[debug] [2024-07-31T11:26:22.311Z] Platform:      win32
+[debug] [2024-07-31T11:26:22.311Z] Node Version:  v20.15.0
+[debug] [2024-07-31T11:26:22.311Z] Time:          Wed Jul 31 2024 19:26:22 GMT+0800 (Philippine Standard Time)
+[debug] [2024-07-31T11:26:22.311Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-07-31T11:26:22.404Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-07-31T11:26:22.404Z] > authorizing via signed-in user (lucman.abdulrachman@gmail.com)
+[debug] [2024-07-31T11:26:22.518Z] openjdk version "22.0.1" 2024-04-16
+OpenJDK Runtime Environment (build 22.0.1+8-16)
+
+[debug] [2024-07-31T11:26:22.519Z] OpenJDK 64-Bit Server VM (build 22.0.1+8-16, mixed mode, sharing)
+
+[debug] [2024-07-31T11:26:22.540Z] Parsed Java major version: 22
+[info] i  emulators: Starting emulators: auth, firestore, database, hosting {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, firestore, database, hosting"}}
+[debug] [2024-07-31T11:26:22.555Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-07-31T11:26:22.555Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-07-31T11:26:22.555Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-07-31T11:26:22.555Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-07-31T11:26:22.555Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-07-31T11:26:22.555Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-07-31T11:26:22.555Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9001}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5000}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2024-07-31T11:26:22.561Z] [hub] writing locator at C:\Users\azmar\AppData\Local\Temp\hub-ranao-ict-summit.json
+[debug] [2024-07-31T11:26:22.578Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2024-07-31T11:26:22.578Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2024-07-31T11:26:22.578Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","C:\\Users\\azmar\\.cache\\firebase\\emulators\\cloud-firestore-emulator-v1.19.7.jar","--host","127.0.0.1","--port",8080,"--websocket_port",9150,"--project_id","ranao-ict-summit","--rules","C:\\Users\\azmar\\Projects\\2024\\ict-summit\\firestore.rules","--single_project_mode",true],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false,"shell":false} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\azmar\\\\.cache\\\\firebase\\\\emulators\\\\cloud-firestore-emulator-v1.19.7.jar\",\"--host\",\"127.0.0.1\",\"--port\",8080,\"--websocket_port\",9150,\"--project_id\",\"ranao-ict-summit\",\"--rules\",\"C:\\\\Users\\\\azmar\\\\Projects\\\\2024\\\\ict-summit\\\\firestore.rules\",\"--single_project_mode\",true],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false,\"shell\":false}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[debug] [2024-07-31T11:26:24.826Z] Jul 31, 2024 7:26:24 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start
+INFO: Started WebSocket server on ws://127.0.0.1:9150
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jul 31, 2024 7:26:24 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start\r\nINFO: Started WebSocket server on ws://127.0.0.1:9150\r\n"}}
+[debug] [2024-07-31T11:26:24.878Z] API endpoint: http://127.0.0.1:8080
+If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
+
+   export FIRESTORE_EMULATOR_HOST= {"metadata":{"emulator":{"name":"firestore"},"message":"API endpoint: http://127.0.0.1:8080\nIf you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:\r\n\n   export FIRESTORE_EMULATOR_HOST="}}
+[debug] [2024-07-31T11:26:24.878Z] 127.0.0.1:8080
+
+If you are running a Firestore in Datastore Mode project, run:
+
+   export DATASTORE_EMULATOR_HOST=127.0.0.1:8080
+
+Note: Support for Datastore Mode is in preview. If you encounter any bugs please file at https://github.com/firebase/firebase-tools/issues.
+Dev App Server is now running.
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"127.0.0.1:8080\n\nIf you are running a Firestore in Datastore Mode project, run:\r\n\n   export DATASTORE_EMULATOR_HOST=127.0.0.1:8080\n\nNote: Support for Datastore Mode is in preview. If you encounter any bugs please file at https://github.com/firebase/firebase-tools/issues.\r\nDev App Server is now running.\n\r\n"}}
+[info] +  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2024-07-31T11:26:25.059Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit [none]
+[debug] [2024-07-31T11:26:25.542Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit 200
+[debug] [2024-07-31T11:26:25.543Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit {"projectId":"ranao-ict-summit","projectNumber":"644421892878","displayName":"ranao-ict-summit","name":"projects/ranao-ict-summit","resources":{"hostingSite":"ranao-ict-summit","realtimeDatabaseInstance":"ranao-ict-summit-default-rtdb"},"state":"ACTIVE","etag":"1_62b933f7-94d7-47f6-b8dd-66105014aed9"}
+[debug] [2024-07-31T11:26:25.543Z] database rules config:  [{"instance":"ranao-ict-summit-default-rtdb","rules":"C:\\Users\\azmar\\Projects\\2024\\ict-summit\\database.rules.json"}]
+[debug] [2024-07-31T11:26:25.545Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2024-07-31T11:26:25.545Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2024-07-31T11:26:25.545Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2024-07-31T11:26:25.545Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","C:\\Users\\azmar\\.cache\\firebase\\emulators\\firebase-database-emulator-v4.11.2.jar","--host","127.0.0.1","--port",9001,"--single_project_mode","Warning"],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false,"shell":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\azmar\\\\.cache\\\\firebase\\\\emulators\\\\firebase-database-emulator-v4.11.2.jar\",\"--host\",\"127.0.0.1\",\"--port\",9001,\"--single_project_mode\",\"Warning\"],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false,\"shell\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[debug] [2024-07-31T11:26:27.179Z] 19:26:27.178 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+ {"metadata":{"emulator":{"name":"database"},"message":"19:26:27.178 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started\r\n"}}
+[debug] [2024-07-31T11:26:27.525Z] 19:26:27.521 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9001
+ {"metadata":{"emulator":{"name":"database"},"message":"19:26:27.521 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9001\r\n"}}
+[debug] [2024-07-31T11:26:33.401Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/ranao-ict-summit/sites 
+[debug] [2024-07-31T11:26:34.133Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/ranao-ict-summit/sites 200
+[debug] [2024-07-31T11:26:34.133Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/ranao-ict-summit/sites {"sites":[{"name":"projects/ranao-ict-summit/sites/ranao-ict-summit","defaultUrl":"https://ranao-ict-summit.web.app","appId":"1:644421892878:web:26a82c181fa2707fb8355f","type":"DEFAULT_SITE"}]}
+[debug] [2024-07-31T11:26:34.133Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit/webApps/1:644421892878:web:26a82c181fa2707fb8355f/config [none]
+[debug] [2024-07-31T11:26:35.067Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit/webApps/1:644421892878:web:26a82c181fa2707fb8355f/config 200
+[debug] [2024-07-31T11:26:35.067Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit/webApps/1:644421892878:web:26a82c181fa2707fb8355f/config {"projectId":"ranao-ict-summit","appId":"1:644421892878:web:26a82c181fa2707fb8355f","databaseURL":"https://ranao-ict-summit-default-rtdb.asia-southeast1.firebasedatabase.app","storageBucket":"ranao-ict-summit.appspot.com","apiKey":"AIzaSyAkOToPDm92tWNpU8CFFjyFZuZHnxO6Xoo","authDomain":"ranao-ict-summit.firebaseapp.com","messagingSenderId":"644421892878"}
+[debug] [2024-07-31T11:26:35.084Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit [none]
+[debug] [2024-07-31T11:26:35.352Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit 200
+[debug] [2024-07-31T11:26:35.353Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ranao-ict-summit {"projectId":"ranao-ict-summit","projectNumber":"644421892878","displayName":"ranao-ict-summit","name":"projects/ranao-ict-summit","resources":{"hostingSite":"ranao-ict-summit","realtimeDatabaseInstance":"ranao-ict-summit-default-rtdb"},"state":"ACTIVE","etag":"1_62b933f7-94d7-47f6-b8dd-66105014aed9"}
+[info] i  hosting[ranao-ict-summit]: Serving hosting files from: dist/spa {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mdist/spa\u001b[22m"}}
+[info] +  hosting[ranao-ict-summit]: Local server: http://127.0.0.1:5000 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://127.0.0.1:5000\u001b[22m\u001b[24m"}}
+[debug] [2024-07-31T11:26:35.384Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2024-07-31T11:26:35.384Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2024-07-31T11:26:35.384Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\azmar\\.cache\\firebase\\emulators\\ui-v1.12.1\\server\\server.mjs"],"optionalArgs":[],"joinArgs":false,"shell":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\azmar\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.12.1\\\\server\\\\server.mjs\"],\"optionalArgs\":[],\"joinArgs\":false,\"shell\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2024-07-31T11:26:35.557Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2024-07-31T11:26:35.557Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[debug] [2024-07-31T11:26:35.606Z] >>> [apiv2][query] PUT http://127.0.0.1:9001/.settings/rules.json ns=ranao-ict-summit-default-rtdb
+[debug] [2024-07-31T11:26:35.607Z] >>> [apiv2][body] PUT http://127.0.0.1:9001/.settings/rules.json "{\n  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */\n  \"rules\": {\n    \".read\": false,\n    \".write\": false\n  }\n}"
+[debug] [2024-07-31T11:26:36.194Z] 19:26:36.197 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - ranao-ict-summit-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 330ms, init: 0ms
+ {"metadata":{"emulator":{"name":"database"},"message":"19:26:36.197 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - ranao-ict-summit-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 330ms, init: 0ms\r\n"}}
+[debug] [2024-07-31T11:26:36.329Z] 19:26:36.332 [NamespaceSystem-blocking-namespace-operation-dispatcher-8] INFO com.firebase.core.namespace.StateManager - Namespace ranao-ict-summit-default-rtdb status Active to Active
+ {"metadata":{"emulator":{"name":"database"},"message":"19:26:36.332 [NamespaceSystem-blocking-namespace-operation-dispatcher-8] INFO com.firebase.core.namespace.StateManager - Namespace ranao-ict-summit-default-rtdb status Active to Active\r\n"}}
+[debug] [2024-07-31T11:26:36.386Z] <<< [apiv2][status] PUT http://127.0.0.1:9001/.settings/rules.json 200
+[debug] [2024-07-31T11:26:36.386Z] <<< [apiv2][body] PUT http://127.0.0.1:9001/.settings/rules.json {"status":"ok"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Firestore      │ 127.0.0.1:8080 │ http://127.0.0.1:4000/firestore │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Database       │ 127.0.0.1:9001 │ http://127.0.0.1:4000/database  │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Hosting        │ 127.0.0.1:5000 │ n/a                             │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500, 9150
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 

@@ -251,12 +251,12 @@ const sponsors = ref<string[]>([]);
 onMounted(async () => {
   sponsors.value = [
     (await import('../assets/logos/LDS Logo.png')).default,
-    (await import('../assets/logos/ITSMarawi Logo.png')).default,
     (await import('../assets/logos/DICTBARMM.jpg.png')).default,
     (await import('../assets/logos/MSU CICS.png')).default,
+    (await import('../assets/logos/ITSMarawi Logo.png')).default,
     (await import('../assets/logos/KHMARS.jpg')).default,
     (await import('../assets/logos/democracynetph.jpg')).default,
-    (await import('../assets/logos/MSU OFFICIAL LOGO.jpg')).default,
+    (await import('../assets/logos/MSU OFFICIAL LOGO.png')).default,
     (await import('../assets/logos/MSU-BYTES.png')).default,
   ];
 });

@@ -4,5 +4,9 @@ export function getCollections(fbStore: Firestore) {
     profiles: () => collection(fbStore, 'profiles'),
     institutions: () => collection(fbStore, 'institutions'),
     medias: () => collection(fbStore, 'medias'),
+    draws: () => collection(fbStore, 'draws'),
+    participants: () => collection(fbStore, 'participants'),
+    winners: () => collection(fbStore, 'winners'),
+    prices: () => collection(fbStore, 'prices'),
   };
 }

@@ -28,12 +28,16 @@ export default function () {
         username: email.value,
         password: password.value,
         done() {
-          if ($route.query?.redirect) {
-            $router.replace($route.query?.redirect as string);
-          } else if (profileStore.theUser?.institution) {
+          if (profileStore.theUser?.institution) {
             $router.replace({ name: 'home' });
           } else if (profileStore.theUser) {
-            $router.replace({ name: 'start', params: { action: 'register' } });
+            $router.replace({
+              name: 'start',
+              params: { action: 'register' },
+              query: $route.query,
+            });
+          } else if ($route.query?.redirect) {
+            $router.replace($route.query?.redirect as string);
           }
           isLoadingLogin.value = false;
         },
@@ -84,12 +88,14 @@ export default function () {
       arg: {
         method: 'google',
         done() {
-          if ($route.query?.redirect) {
-            $router.replace($route.query?.redirect as string);
-          } else if (profileStore.theUser?.institution) {
+          if (profileStore.theUser?.institution) {
             $router.replace({ name: 'home' });
           } else if (profileStore.theUser) {
-            $router.replace({ name: 'start', params: { action: 'register' } });
+            $router.replace({
+              name: 'start',
+              params: { action: 'register' },
+              query: $route.query,
+            });
           }
           isLoadingGoogleLogin.value = false;
         },

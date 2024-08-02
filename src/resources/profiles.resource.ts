@@ -39,7 +39,7 @@ class ProfileResource extends FbBaseResource<IProfile> {
     )) as IProfile[];
   }
   protected async updateCb(data: IProfile): Promise<boolean | void | IProfile> {
-    await firebaseService.update('institutions', data.id || data.key, data);
+    await firebaseService.update('profiles', data.id || data.key, data);
     return true;
   }
   protected async patchCb(
@@ -55,7 +55,7 @@ class ProfileResource extends FbBaseResource<IProfile> {
     return true;
   }
   constructor() {
-    super('profile');
+    super('profiles');
   }
 }
 export const profileResource = new ProfileResource();

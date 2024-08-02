@@ -3,8 +3,9 @@ import { theBus } from 'src/the.bus';
 import { Auth } from './auth/definition';
 import { Registration } from './registration/definition';
 import { Profile } from 'src/pages/account/ui-components/dialog/definition';
+import { Raffle } from 'src/pages/raffle/ui-components/dialogs/definition';
 
-export type DialogStructs = Auth | Registration | Profile;
+export type DialogStructs = Auth | Registration | Profile | Raffle;
 
 type DialogEvents = ToEmit<DialogStructs, DialogStructs>;
 export type DialogTypes = ToType<DialogStructs, DialogStructs>;

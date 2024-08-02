@@ -1,14 +1,27 @@
 <template>
   <q-page class="">
     <div class="full-width row">
-      <q-img class="rounded-borders col" src="~assets/ictSummit2.jpg" />
+      <q-img class="rounded-borders col" src="~assets/ictSummit2.jpg">
+        <div
+          v-if="profileStore.theUser"
+          class="text-h4 text-bold"
+          :class="$q.screen.gt.sm ? 'q-ma-xl' : ''"
+          style="background: transparent"
+        >
+          Hi, {{ profileStore.theUser.name }}!
+        </div>
+      </q-img>
     </div>
     <div class="row fit justify-center items-center q-gutter-lg q-py-lg">
       <CountCard count="2" description="Days" />
       <CountCard count="6" description="Speakers" />
       <CountCard count="10+" description="Topics" />
       <CountCard count="300" description="Slots" />
-      <CountCard count="250" description="Attendees" />
+      <CountCard
+        v-if="attendees"
+        :count="attendees.toString()"
+        description="Attendees"
+      />
     </div>
     <div>
       <div class="text-center">
@@ -131,13 +144,6 @@
           full-name="Lucman M. Abdulrachman"
           :position="'Chief Technology Officer'"
           expertise="Software Architecture"
-        />
-        <SpeakerCard
-          avatar="https://0.academia-photos.com/193298193/55967453/44157860/s200_omair.marohom.jpeg"
-          company-logo="https://avatars.githubusercontent.com/u/51888165?s=200&v=4"
-          full-name="Omair M. Marohom"
-          :position="'Chief Information Officer'"
-          expertise="Software Engineering"
         />
       </div>
     </div>
@@ -429,6 +435,7 @@ $router.afterEach((route) => {
   }
 });
 const slide = ref('0');
+const attendees = ref(300);
 const sponsors = ref<string[]>([]);
 // const participating = ref<string[]>([]);
 onMounted(async () => {
@@ -443,6 +450,7 @@ onMounted(async () => {
     (await import('../assets/logos/MSU-BYTES.png')).default,
   ];
   handleHash();
+  attendees.value = await profileStore.countRegisters();
 });
 
 function handleHash(id?: string) {

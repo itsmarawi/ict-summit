@@ -1,7 +1,7 @@
 <template>
   <div style="width: 200px">
-    <q-card class="bg-white q-pt-xl full-width column" style="height: 300px">
-      <q-card-section>
+    <q-card class="bg-white q-pt-xl full-width column" style="height: 250px">
+      <q-card-section class="q-py-none">
         <q-img :src="logo" />
       </q-card-section>
     </q-card>

@@ -12,6 +12,7 @@ export interface IProfile extends IBaseEntity {
   institution?: string;
   position?: string;
   gender?: string;
+  summit?: string;
   tshirt?: string;
   role?: RoleType;
 }

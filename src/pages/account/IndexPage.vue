@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="q-mt-md">
     <AccountTable />
     <AccountRoleDialog />
   </q-page>

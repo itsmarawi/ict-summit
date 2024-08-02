@@ -46,7 +46,7 @@
             label="Short Name"
             hint="at least 2 letters"
             :rules="[
-              (val) => /^\w{2}/.test(val) || 'Please enter a valid short name',
+              (val) => /^.{2}/.test(val) || 'Please enter a valid short name',
             ]"
             hide-bottom-space
           >
@@ -57,7 +57,7 @@
             label="Institution Name"
             hint="at least 8 letters"
             :rules="[
-              (val) => /^\w{8}/.test(val) || 'Please enter a valid  name',
+              (val) => /^.{8}/.test(val) || 'Please enter a valid  name',
             ]"
             hide-bottom-space
           >

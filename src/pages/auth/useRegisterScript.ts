@@ -4,7 +4,7 @@ import { theDialogs } from 'src/dialogs';
 import { useQuasar } from 'quasar';
 import { useInstitutionStore } from 'src/stores/institution-store';
 import { useProfileStore } from 'src/stores/profile-store';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default function () {
   const gender = ref<'male' | 'female'>('male');
@@ -62,6 +62,8 @@ export default function () {
   const institutionStore = useInstitutionStore();
   const profileStore = useProfileStore();
   const $router = useRouter();
+  const $route = useRoute();
+
   const sub = institutionStore.streamAll().subscribe({
     next(value) {
       listInstutions.value = [...value];
@@ -126,12 +128,13 @@ export default function () {
       const user = profileStore.theUser;
       await profileStore.modifyProfile(
         user?.key,
-        ['institution', 'position', 'gender', 'tshirt'],
+        ['institution', 'position', 'gender', 'tshirt', 'summit'],
         {
           institution: institution.value.key,
           position: position.value,
           gender: gender.value,
           tshirt: tShirtSize.value,
+          summit: new Date().getFullYear().toString(),
         }
       );
       profileStore.clearUser();
@@ -144,9 +147,13 @@ export default function () {
         position: 'center',
         closeBtn: true,
         onDismiss() {
-          $router.replace({
-            name: 'home',
-          });
+          if ($route.query?.redirect) {
+            $router.replace($route.query?.redirect as string);
+          } else {
+            $router.replace({
+              name: 'home',
+            });
+          }
         },
       });
     } catch (error) {

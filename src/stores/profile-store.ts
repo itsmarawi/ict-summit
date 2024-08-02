@@ -149,6 +149,12 @@ export const useProfileStore = defineStore('profile', {
       }
       return profile;
     },
+    countRegisters() {
+      return profileResource.count({
+        'institution >=': '',
+        summit: new Date().getFullYear().toString(),
+      });
+    },
     streamAllProfiles() {
       if (
         this.theUser &&

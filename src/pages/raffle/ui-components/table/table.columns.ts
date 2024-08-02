@@ -1,6 +1,7 @@
 import { QTableColumn } from 'quasar';
+import { RaffleDraw } from 'src/entities';
 
-export const accountColumns = [
+export const raffleDrawColumns = [
   {
     headerStyle: 'font-size: 20px',
     name: 'name',
@@ -12,25 +13,17 @@ export const accountColumns = [
   },
   {
     headerStyle: 'font-size: 20px',
-    name: 'email',
-    field: 'email',
-    label: 'Email',
+    name: 'owner',
+    field: (row: RaffleDraw) => row.owner.name,
+    label: 'Owner',
     align: 'left',
     sortable: true,
   },
   {
     headerStyle: 'font-size: 20px',
-    name: 'institution',
-    field: 'institution',
-    label: 'Institution',
-    align: 'center',
-    sortable: true,
-  },
-  {
-    headerStyle: 'font-size: 20px',
-    name: 'role',
-    field: 'role',
-    label: 'Role',
+    name: 'summit',
+    field: 'summit',
+    label: 'Summit',
     align: 'center',
     sortable: true,
   },
@@ -39,6 +32,14 @@ export const accountColumns = [
     name: 'status',
     field: 'status',
     label: 'Status',
+    align: 'center',
+    sortable: true,
+  },
+  {
+    headerStyle: 'font-size: 20px',
+    name: 'spinning',
+    field: 'spinning',
+    label: 'Spinning',
     align: 'center',
     sortable: true,
   },

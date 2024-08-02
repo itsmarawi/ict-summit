@@ -21,6 +21,30 @@ const routes: RouteRecordRaw[] = [
         name: 'home',
         component: () => import('pages/IndexPage.vue'),
       },
+      {
+        path: 'accounts',
+        name: 'accounts',
+        component: () => import('pages/account/IndexPage.vue'),
+        meta: {
+          requires: ['admin'],
+        },
+      },
+      {
+        path: 'draws',
+        name: 'draws',
+        component: () => import('pages/raffle/IndexPage.vue'),
+        meta: {
+          requires: ['admin', 'moderator'],
+        },
+      },
+      {
+        path: 'raffle/:draw',
+        name: 'raffle',
+        component: () => import('pages/raffle/RafflePage.vue'),
+        meta: {
+          requiresLogin: true,
+        },
+      },
     ],
   },
   {

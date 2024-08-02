@@ -8,6 +8,13 @@
           flat
           @click="drawer = !drawer"
         />
+        <q-btn
+          icon="home"
+          dense
+          v-if="$route.name !== 'home'"
+          flat
+          :to="{ name: 'home' }"
+        />
         <q-space />
 
         <q-btn
@@ -24,6 +31,7 @@
         />
         <q-btn
           flat
+          class="hidden"
           round
           icon="ion-logo-github"
           href="https://github.com/itsmarawi/ranao-ict-summit"
@@ -33,27 +41,45 @@
         <q-btn
           flat
           v-if="!profileStore.theUser"
-          color="secondary"
+          color="positive"
           :to="{ name: 'start', params: { action: 'login' } }"
-          >Login</q-btn
-        >
+          :icon="'login'"
+          :label="'Login'"
+        ></q-btn>
         <q-btn
           flat
           v-else-if="!profileStore.theUser.institution"
           color="secondary"
+          :icon="$q.screen.gt.sm ? '' : 'how_to_reg'"
+          :label="$q.screen.gt.sm ? 'Register' : ''"
           :to="{ name: 'start', params: { action: 'register' } }"
-          >Register</q-btn
-        >
-        <q-btn flat :to="{ name: 'home', hash: '#topics' }">Topics</q-btn>
-        <q-btn flat :to="{ name: 'home', hash: '#speakers' }">Speakers</q-btn>
-        <q-btn flat :to="{ name: 'home', hash: '#sponsors' }">Sponsors</q-btn>
+        />
+        <q-btn
+          flat
+          :to="{ name: 'home', hash: '#topics' }"
+          :icon="$q.screen.gt.sm ? '' : 'topic'"
+          :label="$q.screen.gt.sm ? 'Topics' : ''"
+        />
+        <q-btn
+          flat
+          :to="{ name: 'home', hash: '#speakers' }"
+          :icon="$q.screen.gt.sm ? '' : 'mic'"
+          :label="$q.screen.gt.sm ? 'Speakers' : ''"
+        />
+        <q-btn
+          flat
+          :to="{ name: 'home', hash: '#sponsors' }"
+          :icon="$q.screen.gt.sm ? '' : 'volunteer_activism'"
+          :label="$q.screen.gt.sm ? 'Sponsors' : ''"
+        />
         <q-btn
           flat
           v-if="profileStore.theUser"
-          color="secondary"
+          color="dark"
           @click="onLogout"
-          >Logout</q-btn
-        >
+          :icon="$q.screen.gt.sm ? '' : 'logout'"
+          :label="$q.screen.gt.sm ? 'Logout' : ''"
+        />
         <q-space />
       </q-toolbar>
     </q-header>
@@ -66,19 +92,7 @@
       :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
     >
       <q-scroll-area class="fit">
-        <q-list>
-          <template v-for="(menuItem, index) in menuList" :key="index">
-            <q-item clickable :active="menuItem.label === 'Outbox'" v-ripple>
-              <q-item-section avatar>
-                <q-icon :name="menuItem.icon" />
-              </q-item-section>
-              <q-item-section>
-                {{ menuItem.label }}
-              </q-item-section>
-            </q-item>
-            <q-separator :key="'sep' + index" v-if="menuItem.separator" />
-          </template>
-        </q-list>
+        <DrawerItemList :menuList="menuList" />
       </q-scroll-area>
     </q-drawer>
     <q-page-container>
@@ -93,6 +107,8 @@ import { useAuthStore } from 'src/stores/auth-store';
 import { useProfileStore } from 'src/stores/profile-store';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import DrawerItemList from './DrawerItemList.vue';
+import { IDrawerItem } from './drawer.item';
 
 defineOptions({
   name: 'MainLayout',
@@ -103,16 +119,28 @@ const $q = useQuasar();
 const authStore = useAuthStore();
 const $router = useRouter();
 const drawer = ref(false);
-const menuList = ref([
+
+const menuList = ref<IDrawerItem[]>([
   {
     icon: 'inbox',
-    label: 'Inbox',
-    separator: true,
+    label: 'Accounts',
+    route: { name: 'accounts' },
   },
   {
-    icon: 'send',
-    label: 'Outbox',
-    separator: false,
+    label: 'Raffle',
+    icon: 'widgets',
+    children: [
+      {
+        icon: 'celebration',
+        label: 'Draws',
+        route: { name: 'draws' },
+      },
+      {
+        icon: 'military_tech',
+        label: 'Winners',
+        route: { name: 'winners' },
+      },
+    ],
   },
 ]);
 function onLogout() {

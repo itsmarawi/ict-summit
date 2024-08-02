@@ -47,6 +47,7 @@ export default route(function (/* { store, ssrContext } */) {
       (route) => !!route.meta.requiresGuest
     );
     function isRoleAuthorized(role?: string) {
+      if (requiresLogin && user) return true;
       if (!role) return false;
       return to.matched.some(
         (route) =>
@@ -90,7 +91,7 @@ export default route(function (/* { store, ssrContext } */) {
     } else if (
       to.name !== 'home' &&
       user &&
-      (requiresGuest || !user.role || !isRoleAuthorized(user.role))
+      (requiresGuest || !isRoleAuthorized(user.role))
     ) {
       next({
         name: 'home',

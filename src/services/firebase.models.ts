@@ -4,4 +4,8 @@ export type Models =
   | entities.IProfile
   | entities.IInstitution
   | entities.IMedia
+  | entities.RaffleDraw
+  | entities.RaffleParticipant
+  | entities.RaffleWinner
+  | entities.RafflePrice
   | undefined;

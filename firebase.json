@@ -2,7 +2,11 @@
   "hosting": {
     "public": "dist/pwa",
     "site": "ranao-ict-summit",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
   },
   "database": {
     "rules": "database.rules.json"

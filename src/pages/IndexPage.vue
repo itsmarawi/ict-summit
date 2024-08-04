@@ -9,6 +9,13 @@
           style="background: transparent"
         >
           Hi, {{ profileStore.theUser.name }}!
+          <q-btn
+            v-if="prices.length"
+            flat
+            :label="`Redeem ${prices.length}`"
+            :to="{ name: 'prices' }"
+            icon="redeem"
+          />
         </div>
       </q-img>
     </div>
@@ -423,12 +430,15 @@ import InstitutionCard from 'src/components/InstitutionCard.vue';
 import { scroll } from 'quasar';
 import { useRoute, useRouter } from 'vue-router';
 import { useProfileStore } from 'src/stores/profile-store';
+import { RafflePrice } from 'src/entities';
+import { useRaffleDrawStore } from 'src/stores/raffle-draw-store';
 defineOptions({
   name: 'IndexPage',
 });
 const $route = useRoute();
 const $router = useRouter();
 const profileStore = useProfileStore();
+const raffeDrawStore = useRaffleDrawStore();
 $router.afterEach((route) => {
   if (route.hash && route.name == 'home') {
     handleHash(route.hash);
@@ -436,6 +446,7 @@ $router.afterEach((route) => {
 });
 const slide = ref('0');
 const attendees = ref(300);
+const prices = ref<RafflePrice[]>([]);
 const sponsors = ref<string[]>([]);
 // const participating = ref<string[]>([]);
 onMounted(async () => {
@@ -451,6 +462,13 @@ onMounted(async () => {
   ];
   handleHash();
   attendees.value = await profileStore.countRegisters();
+  if (profileStore.theUser) {
+    raffeDrawStore.streamParticipantPrices(profileStore.theUser).subscribe({
+      next(value) {
+        prices.value = value.filter((p) => p.status == 'ready');
+      },
+    });
+  }
 });
 
 function handleHash(id?: string) {

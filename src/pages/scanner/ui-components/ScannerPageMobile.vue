@@ -86,6 +86,23 @@
               <ProfileAvatar :profile-key="priceMatched.recipient.key" />
             </q-item-section>
           </q-item>
+          <q-item>
+            <q-item-section class="text-bold">
+              <q-item-label>T-Shirt Size:</q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-chip>{{ priceMatched.recipient.tshirt }}</q-chip>
+            </q-item-section>
+            <q-item-section side avatar>
+              <q-icon
+                :name="
+                  priceMatched?.recipient.gender == 'female'
+                    ? 'ion-woman'
+                    : 'ion-man'
+                "
+              />
+            </q-item-section>
+          </q-item>
           <q-item class="bg-positive">
             <q-item-section class="text-bold">
               <q-item-label>Price:</q-item-label>
@@ -96,6 +113,7 @@
             <q-item-section side>
               <q-btn
                 round
+                :loading="loading"
                 color="primary"
                 icon="volunteer_activism"
                 @click="releaseRafflePrice(priceMatched)"
@@ -229,7 +247,14 @@ async function onDetect(detectedCode: ResultType) {
   ) {
     window.open(result.value, '_self');
   } else if (typeof detectedCode == 'object' && detectedCode) {
+    loading.value = true;
     priceMatched.value = await raffleStore.getRafflePriceDraw(detectedCode.key);
+    if (priceMatched.value) {
+      priceMatched.value.recipient =
+        (await profileStore.getProfile(priceMatched.value.recipient.key)) ||
+        priceMatched.value.recipient;
+    }
+    loading.value = false;
   }
 }
 

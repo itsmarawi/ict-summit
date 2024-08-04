@@ -36,6 +36,6 @@ export const propsTablePriceRecipientActionRight: ITableUIElements[] = [
   {
     event: 'onClaimPrice',
     icon: 'volunteer_activism',
-    label: 'Claim Price',
+    label: 'Redeem Price',
   },
 ];

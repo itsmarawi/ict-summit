@@ -14,10 +14,16 @@
   <q-btn flat v-else-if="col.name == 'name'" @click="emit('onViewPriceQr')">{{
     col.value
   }}</q-btn>
+  <span v-else-if="col.name == 'releasedBy' && typeof col.value == 'object'">
+    <ProfileAvatar :profile-key="(col.value as IProfile).key" />
+    {{ (col.value as IProfile).name }}</span
+  >
   <span v-else> {{ col.value }}</span>
 </template>
 <script setup lang="ts">
+import { IProfile } from 'src/entities';
 import { IPropsTableCustom } from '../table.interface';
+import ProfileAvatar from 'src/components/common/ProfileAvatar.vue';
 
 defineProps<IPropsTableCustom>();
 const emit = defineEmits<{

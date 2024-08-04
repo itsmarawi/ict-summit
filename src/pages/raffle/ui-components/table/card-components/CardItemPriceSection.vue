@@ -10,10 +10,11 @@
     {{ col.value }}
   </q-item-label>
   <q-item-label v-if="col.name === 'releasedBy'">
-    <profile-avatar
-      v-if="col.value && typeof col.value == 'object'"
-      :profile-key="(col.value as IProfile).key"
-    />
+    <template v-if="col.value && typeof col.value == 'object'">
+      <profile-avatar :profile-key="(col.value as IProfile).key" />
+      {{ (col.value as IProfile).name }}
+    </template>
+
     <q-btn
       dense
       flat

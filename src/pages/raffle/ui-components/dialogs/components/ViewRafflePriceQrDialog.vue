@@ -22,7 +22,7 @@
           <div class="row justify-center">
             <q-card class="bg-white q-pa-sm">
               <qrcode-vue
-                :value="JSON.stringify(rafflePrice)"
+                :value="priceQrCode"
                 :size="Math.min($q.screen.width, $q.screen.height) - 260"
                 level="H"
               />
@@ -47,7 +47,7 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import QrcodeVue from 'qrcode.vue';
 import { theDialogs } from 'src/dialogs';
 import { RafflePrice } from 'src/entities';
@@ -62,6 +62,16 @@ let sub: Subscription;
 function onHide() {
   sub?.unsubscribe();
 }
+const priceQrCode = computed(() => {
+  return JSON.stringify({
+    ...rafflePrice.value,
+    recipient: undefined,
+    status: undefined,
+    releasedBy: undefined,
+    draw: undefined,
+    id: undefined,
+  });
+});
 theDialogs.on({
   type: 'viewRafflePriceQr',
   info: { module: 'raffle', icon: 'celebrate' },

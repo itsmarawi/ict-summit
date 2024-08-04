@@ -21,3 +21,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RANAO_ICT_SUMMIT }}
           channelId: live
           projectId: ranao-ict-summit
+          target: ranao-ict-summit

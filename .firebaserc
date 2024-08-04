@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "ranao-ict-summit"
+  },
+  "targets": {
+    "default": {
+      "hosting": {
+        "ranao-ict-summit": [
+          "ranao-ict-summit"
+        ]
+      }
+    }
   }
 }

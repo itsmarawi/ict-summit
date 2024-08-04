@@ -80,7 +80,7 @@
       </div>
     </q-card-section>
     <q-card-section
-      class="__background-image col text-center text-white q-gutter-y-md"
+      class="gt-md __background-image col text-center text-white q-gutter-y-md"
       style="overflow: auto; padding: 80px 0px 80px 0px"
     >
       <div class="row justify-center">

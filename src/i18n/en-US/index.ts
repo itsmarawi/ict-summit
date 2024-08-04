@@ -3,5 +3,9 @@
 
 export default {
   failed: 'Action failed',
-  success: 'Action was successful'
+  success: 'Action was successful',
+  'scan-header-label': 'Scan QR Code',
+  'scan-subheader-label': 'Place QR Code inside the frame',
+  'scan-slider': 'Zoom',
+  'scan-btn': 'Scan',
 };

@@ -1,5 +1,5 @@
 import { BusStruct } from 'src/bus.struct';
-import { RaffleDraw } from 'src/entities';
+import { RaffleDraw, RafflePrice } from 'src/entities';
 
 export type Raffle =
   | BusStruct<
@@ -14,6 +14,14 @@ export type Raffle =
       {
         payload: RaffleDraw;
         done?: (raffle: RaffleDraw) => void;
+        error?: ErrorCallback;
+      }
+    >
+  | BusStruct<
+      'viewRafflePriceQr',
+      {
+        payload: RafflePrice;
+        done?: (raffle: RafflePrice) => void;
         error?: ErrorCallback;
       }
     >;

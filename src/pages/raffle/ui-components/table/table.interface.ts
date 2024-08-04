@@ -14,7 +14,12 @@ export type TEvents =
   | 'onAddRaffle'
   | 'onSearch'
   | 'onEditRaffle'
-  | 'onDeleteRaffle';
+  | 'openRaffle'
+  | 'onDeleteRaffle'
+  | 'onReleasePrice'
+  | 'onUnclaimPrice'
+  | 'onClaimPrice'
+  | 'onViewRafflePrices';
 
 export interface ITableUIElements {
   event: TEvents;

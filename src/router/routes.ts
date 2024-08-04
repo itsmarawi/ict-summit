@@ -3,6 +3,7 @@ import { IRouteMeta } from './route.meta';
 import PlainLayout from 'layouts/PlainLayout.vue';
 import EmailVerification from 'src/pages/auth/EmailVerificationPage.vue';
 import AuthIndexPage from 'src/pages/auth/IndexPage.vue';
+import ScannerIndexPage from 'src/pages/scanner/IndexPage.vue';
 
 declare module 'vue-router' {
   interface RouteMeta extends IRouteMeta {
@@ -41,6 +42,22 @@ const routes: RouteRecordRaw[] = [
         path: 'raffle/:draw',
         name: 'raffle',
         component: () => import('pages/raffle/RafflePage.vue'),
+        meta: {
+          requiresLogin: true,
+        },
+      },
+      {
+        path: 'prices/:draw?',
+        name: 'prices',
+        component: () => import('pages/raffle/PricesPage.vue'),
+        meta: {
+          requiresLogin: true,
+        },
+      },
+      {
+        path: 'scanner',
+        name: 'scanner',
+        component: () => Promise.resolve(ScannerIndexPage),
         meta: {
           requiresLogin: true,
         },

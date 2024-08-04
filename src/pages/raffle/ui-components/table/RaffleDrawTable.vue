@@ -9,7 +9,7 @@
       />
     </template>
     <template #tableBodyCustomColumn="{ props, col }">
-      <TableBodyCustomColumn
+      <TableBodyDrawColumn
         @onToggleStatus="onToggleStatus(props.row)"
         :color="translateStatus(col.value).color"
         :name="translateStatus(col.value).name"
@@ -24,6 +24,8 @@
       <TableBodyRight
         @on-delete-raffle="deleteRaffle(props.row)"
         @on-edit-raffle="onEditRaffle(props.row)"
+        @open-raffle="runRaffle(props.row)"
+        @on-view-raffle-prices="viewPrices(props.row)"
         :elements="propsTableActionRight"
       />
     </template>
@@ -34,6 +36,8 @@
       <CardItemRight
         @on-delete-raffle="deleteRaffle(props.row)"
         @on-edit-raffle="onEditRaffle(props.row)"
+        @open-raffle="runRaffle(props.row)"
+        @on-view-raffle-prices="viewPrices(props.row)"
         :elements="propsTableActionRight"
       />
     </template>
@@ -43,6 +47,19 @@
         :color="translateStatus(col.value).color"
         :col="col"
         :identity="props.row.key"
+      />
+    </template>
+    <template #fabAction>
+      <FabAction
+        :actions="[
+          {
+            event: 'onAddRaffle',
+            icon: 'add',
+            label: 'Create Raffle',
+            isShowBtn: true,
+            cb: onAddRaffle,
+          },
+        ]"
       />
     </template>
     <!-- Card -->
@@ -58,13 +75,17 @@ import { raffleDrawColumns } from './table.columns';
 import { useRaffleDrawStore } from 'src/stores/raffle-draw-store';
 import { Subscription } from 'rxjs';
 import TableTop from './table-components/TableTop.vue';
-import TableBodyCustomColumn from './table-components/TableBodyCustomColumn.vue';
+
 import TableBodyRight from './table-components/TableBodyRight.vue';
 import CardItemRight from './card-components/CardItemRight.vue';
-import CardItemCustomSection from './card-components/CardItemCustomSection.vue';
 import { theDialogs } from 'src/dialogs';
+import { useRouter } from 'vue-router';
+import TableBodyDrawColumn from './table-components/TableBodyDrawColumn.vue';
+import FabAction from 'src/components/common/table/fab-components/FabAction.vue';
+import CardItemCustomSection from './card-components/CardItemCustomSection.vue';
 
 const $q = useQuasar();
+const $router = useRouter();
 const raffleDrawStore = useRaffleDrawStore();
 const columns = ref(raffleDrawColumns);
 const raffleDraws = ref<RaffleDraw[]>([]);
@@ -110,6 +131,14 @@ function translateStatus(val: boolean) {
   return val
     ? { name: 'Open', color: 'positive' }
     : { name: 'Closed', color: 'warning' };
+}
+function viewPrices(raffle: RaffleDraw) {
+  $router.replace({
+    name: 'prices',
+    params: {
+      draw: raffle.key,
+    },
+  });
 }
 function deleteRaffle(raffle: RaffleDraw) {
   const msg = 'Delete Raffle';
@@ -188,6 +217,14 @@ function onEditRaffle(raffle: RaffleDraw) {
           color: 'negative',
         });
       },
+    },
+  });
+}
+function runRaffle(raffle: RaffleDraw) {
+  $router.replace({
+    name: 'raffle',
+    params: {
+      draw: raffle.key,
     },
   });
 }

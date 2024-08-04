@@ -4,8 +4,8 @@
       <q-img class="rounded-borders col" src="~assets/ictSummit2.jpg">
         <div
           v-if="profileStore.theUser"
-          class="text-h4 text-bold"
-          :class="$q.screen.gt.sm ? 'q-ma-xl' : ''"
+          class="text-bold"
+          :class="$q.screen.gt.sm ? 'q-ma-xl text-h4' : 'text-h6'"
           style="background: transparent"
         >
           Hi, {{ profileStore.theUser.name }}!

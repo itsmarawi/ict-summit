@@ -34,7 +34,19 @@
       <q-banner class="text-h6 text-center"
         >Welcome to {{ presentRaffle?.name }}</q-banner
       >
-      <div v-if="people.length >= 4" class="row justify -center">
+
+      <div
+        v-if="people.length >= 4 && presentRaffle?.winnerPrices?.length"
+        class="row justify -center"
+      >
+        <div class="col-12 text-center">
+          <q-chip
+            color="primary"
+            v-for="(price, indx) in presentRaffle?.winnerPrices || []"
+            :key="indx"
+            >{{ price }}</q-chip
+          >
+        </div>
         <Roulette
           display-shadow
           display-indicator
@@ -52,7 +64,9 @@
       </div>
       <div v-else>
         <q-banner class="text-center">
-          <div class="text-bold">Requires at least 4 participants</div>
+          <div class="text-bold" v-if="presentRaffle?.winnerPrices?.length">
+            Requires at least 4 participants
+          </div>
           <div class="text-center q-gutter-sm">
             <q-avatar v-for="p in participants" :key="p.key" color="grey">
               <q-img v-if="p.participant.avatar" :src="p.participant.avatar" />
@@ -81,7 +95,7 @@
         color="primary"
         size="8em"
       />
-      <q-list bordered v-else>
+      <q-list bordered v-else-if="presentRaffle.winnerPrices?.length">
         <div class="text-h6">Winners</div>
         <q-item v-for="w in winners" :key="w.id">
           <q-item-section avatar>
@@ -113,7 +127,7 @@ function generateAvatar(name: string) {
     .join('');
 
   const canvas = document.createElement('canvas');
-  const radius = 30;
+  const radius = 25;
   const margin = 5;
 
   canvas.width = radius * 2 + margin * 2;
@@ -137,10 +151,11 @@ function generateAvatar(name: string) {
 class Person {
   htmlContent: string;
   constructor(public name: string, public id: string, avatar: string) {
-    if (!avatar) {
+    if (!avatar || !/\:/.test(avatar)) {
       avatar = generateAvatar(name);
     }
-    this.htmlContent = `<div class="flex col center" style="gap: 25px;">${name}<br/><img class="avatar" src="${avatar}" alt="" /></div>`;
+    this.htmlContent = `<div style="gap: 25px;">
+      ${name}<br/><img width="25" heght="25" class="avatar" src="${avatar}" alt="" /></div>`;
   }
 }
 interface SpinningWheel {
@@ -194,13 +209,37 @@ async function load() {
       raffleStore
         .joinRaffle(presentRaffle.value, profileStore.theUser)
         .then((result) => {
-          $q.notify({
-            position: 'center',
-            message: `Welcome to ${presentRaffle.value?.name}`,
-            caption: Array.isArray(result)
-              ? `Please claim your ${result.length} freebie`
-              : '',
-          });
+          if (result) {
+            $q.notify({
+              position: 'center',
+              icon: 'info',
+              message: `Welcome to ${presentRaffle.value?.name}`,
+              caption: Array.isArray(result)
+                ? `Please claim your ${result.length} freebie`
+                : '',
+              actions: [
+                {
+                  icon: 'reddem',
+                  label: 'Redeem',
+                  to: { name: 'prices' },
+                },
+              ],
+            });
+          } else {
+            if (/^(admin|moderator)$/.test(profileStore.theUser?.role || '')) {
+              $q.notify({
+                position: 'center',
+                icon: 'warning',
+                message: 'Admins or Moderators are not qualified to join',
+              });
+            } else {
+              $q.notify({
+                position: 'center',
+                icon: 'warning',
+                message: `${presentRaffle.value?.name} is closed for new joiners`,
+              });
+            }
+          }
         });
     }
     presentSub = raffleStore.streamUpdate(presentRaffle.value).subscribe({

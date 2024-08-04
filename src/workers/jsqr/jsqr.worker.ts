@@ -14,7 +14,7 @@ ctx.addEventListener('message', function (event) {
     });
     let content = null;
     const location = null;
-    if (typeof result?.data == 'string' && /^[\{\[]}]/.test(result.data)) {
+    if (typeof result?.data == 'string' && /^[\{\[]/i.test(result.data)) {
       content = JSON.parse(result.data);
     } else {
       content = result?.data;

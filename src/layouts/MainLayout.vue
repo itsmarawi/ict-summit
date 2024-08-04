@@ -92,12 +92,34 @@
       :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
     >
       <q-scroll-area class="fit">
-        <DrawerItemList :menuList="menuList" />
+        <DrawerItemList
+          :menuList="menuList"
+          :role="profileStore.theUser?.role"
+        />
       </q-scroll-area>
     </q-drawer>
     <q-page-container>
       <router-view />
     </q-page-container>
+    <q-footer>
+      <q-btn
+        class="fixed bg-dark"
+        :class="$route.name != 'home' ? 'hidden' : ''"
+        color="primary"
+        :to="{ name: 'scanner' }"
+        size="lg"
+        style="
+          bottom: 0px;
+          margin-left: 50%;
+          left: -30px;
+          width: 60px;
+          border-top-left-radius: 20px;
+          border-top-right-radius: 20px;
+        "
+        icon="qr_code_scanner"
+        flat
+      />
+    </q-footer>
   </q-layout>
 </template>
 
@@ -125,6 +147,7 @@ const menuList = ref<IDrawerItem[]>([
     icon: 'inbox',
     label: 'Accounts',
     route: { name: 'accounts' },
+    requires: ['admin'],
   },
   {
     label: 'Raffle',
@@ -134,11 +157,12 @@ const menuList = ref<IDrawerItem[]>([
         icon: 'celebration',
         label: 'Draws',
         route: { name: 'draws' },
+        requires: ['admin', 'moderator'],
       },
       {
         icon: 'military_tech',
-        label: 'Winners',
-        route: { name: 'winners' },
+        label: 'Prices',
+        route: { name: 'prices' },
       },
     ],
   },

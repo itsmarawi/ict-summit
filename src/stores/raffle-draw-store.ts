@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { IProfile, RaffleDraw } from 'src/entities';
+import { IProfile, RaffleDraw, RafflePrice } from 'src/entities';
 import { raffleDrawsResource, raffleWinnersResource } from 'src/resources';
 import { DeferredPromise } from 'src/resources/localbase';
 import { raffleParticipantsResource } from 'src/resources/raffle-participants.resource';
@@ -23,7 +23,6 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
     },
     async getRaffleDraw(key: string) {
       const RaffleDraw = await raffleDrawsResource.getData(key);
-
       return RaffleDraw;
     },
 
@@ -91,10 +90,22 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
     },
     //{participaints}
     async joinRaffle(raffle: RaffleDraw, participant: IProfile) {
+      if (
+        raffle.status == 'closed' &&
+        /^(admin|moderator)$/.test(participant.role || '')
+      )
+        return;
       const payload = {
         key: '',
         draw: raffle.key,
-        participant: firebaseService.clone(participant),
+        participant: firebaseService.clone({
+          ...participant,
+          email: '',
+          mobileNumber: '',
+          tshirt: '',
+          avatar: '',
+          gender: '',
+        }),
       };
       const existing = await raffleParticipantsResource.getData(
         raffleParticipantsResource.getKeyOf(payload)
@@ -103,7 +114,18 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
       const result = await raffleParticipantsResource.setData('', payload);
       const prices = await Promise.all(
         (raffle.defaultPrices || []).map((price) => {
-          return this.sendRafflePrice(raffle, `Freebie:${price}`, participant);
+          return this.sendRafflePrice(
+            raffle,
+            `Freebie:${price}`,
+            firebaseService.clone({
+              ...participant,
+              email: '',
+              mobileNumber: '',
+              tshirt: '',
+              avatar: '',
+              gender: '',
+            })
+          );
         })
       );
       return prices.length ? prices : result;
@@ -122,7 +144,18 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
       });
       await Promise.all(
         raffle.winnerPrices.map((price) => {
-          return this.sendRafflePrice(raffle, `Winner:${price}`, participant);
+          return this.sendRafflePrice(
+            raffle,
+            `Winner:${price}`,
+            firebaseService.clone({
+              ...participant,
+              email: '',
+              mobileNumber: '',
+              tshirt: '',
+              avatar: '',
+              gender: '',
+            })
+          );
         })
       );
       return winner;
@@ -143,18 +176,73 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
         draw: raffle.key,
         price,
         status: 'ready',
-        recipient: firebaseService.clone(participant),
+        recipient: firebaseService.clone({
+          ...participant,
+          email: '',
+          mobileNumber: '',
+          tshirt: '',
+          avatar: '',
+          gender: '',
+        }),
       });
     },
     streamRafflePrices(raffle: RaffleDraw) {
-      return raffleWinnersResource.streamWith({
+      return rafflePricesResource.streamWith({
         draw: raffle.key,
       });
     },
     streamParticipantPrices(profile: IProfile) {
-      return raffleWinnersResource.streamWith({
+      return rafflePricesResource.streamWith({
         'recipient.key': profile.key,
       });
+    },
+    async updateRafflePriceProp<
+      T extends keyof RafflePrice,
+      V = RafflePrice[T]
+    >(key: string, prop: T, value: V) {
+      const deferred = new DeferredPromise<void>();
+      rafflePricesResource.updateProperty(key, prop, value, (status) => {
+        if (status.status == 'synced') {
+          deferred.resolve();
+        }
+      });
+      return deferred.promise;
+    },
+    async updateRafflePrice<T extends keyof RafflePrice>(
+      key: string,
+      props: T[],
+      source: Partial<RafflePrice>
+    ) {
+      const deferred = new DeferredPromise<RafflePrice | undefined>();
+      rafflePricesResource.updatePropertiesFrom(
+        key,
+        source,
+        props,
+        async (update) => {
+          if (update.status == 'synced') {
+            deferred.resolve(
+              await rafflePricesResource.getLocalData(
+                update.newKey || update.key || ''
+              )
+            );
+          } else if (/error/i.test(update.status)) {
+            const doc = await rafflePricesResource.getDoc(
+              update.newKey || update.key || ''
+            );
+            deferred.reject(doc?.remarks || 'Failed to update RafflePrice');
+          }
+        }
+      );
+      return deferred.promise;
+    },
+    streamPriceUpdate(price: RafflePrice) {
+      return rafflePricesResource.streamWith({
+        key: price.key,
+      });
+    },
+    async getRafflePriceDraw(key: string) {
+      const price = await rafflePricesResource.getData(key);
+      return price;
     },
   },
 });

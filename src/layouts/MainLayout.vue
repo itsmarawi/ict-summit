@@ -158,6 +158,12 @@ const menuList = ref<IDrawerItem[]>([
     requires: ['admin'],
   },
   {
+    icon: 'ion-analytics',
+    label: 'Dashboard',
+    route: { name: 'dashboard' },
+    requires: ['admin', 'moderator'],
+  },
+  {
     label: 'Raffle',
     icon: 'widgets',
     children: [

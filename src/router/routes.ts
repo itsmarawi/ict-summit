@@ -31,6 +31,14 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('pages/dashboard/DashboardPage.vue'),
+        meta: {
+          requires: ['admin', 'moderator'],
+        },
+      },
+      {
         path: 'draws',
         name: 'draws',
         component: () => import('pages/raffle/IndexPage.vue'),

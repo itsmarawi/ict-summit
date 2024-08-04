@@ -55,7 +55,6 @@ import { Subscription } from 'rxjs';
 import TableTop from './table-components/TableTop.vue';
 import TableBodyRight from './table-components/TableBodyRight.vue';
 import CardItemRight from './card-components/CardItemRight.vue';
-import CardItemCustomSection from './card-components/CardItemCustomSection.vue';
 import { useRoute } from 'vue-router';
 import { useProfileStore } from 'src/stores/profile-store';
 import TableBodyPriceColumn from './table-components/TableBodyPriceColumn.vue';

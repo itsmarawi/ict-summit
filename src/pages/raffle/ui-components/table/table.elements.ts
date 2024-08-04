@@ -20,7 +20,7 @@ export const propsTableActionRight: ITableUIElements[] = [
   {
     event: 'onViewRafflePrices',
     label: 'View Prices',
-    icon: 'redeem',
+    icon: 'gift',
   },
 ];
 

@@ -74,7 +74,7 @@ export const rafflePriceColumns = [
   {
     headerStyle: 'font-size: 20px',
     name: 'releasedBy',
-    field: (row: RafflePrice) => row.releasedBy?.name || 'Not released',
+    field: 'releasedBy',
     label: 'Released by',
     align: 'left',
     sortable: true,

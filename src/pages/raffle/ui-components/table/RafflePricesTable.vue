@@ -34,7 +34,11 @@
       />
     </template>
     <template #cardItemCustomSection="{ props, col }">
-      <CardItemPriceSection :col="col" :identity="props.row.key" />
+      <CardItemPriceSection
+        :col="col"
+        :identity="props.row.recipient.key"
+        @on-redem="viewRafflePrice(props.row)"
+      />
     </template>
 
     <!-- Card -->

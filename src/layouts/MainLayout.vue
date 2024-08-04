@@ -96,12 +96,20 @@
           :menuList="menuList"
           :role="profileStore.theUser?.role"
         />
+        <q-btn
+          v-if="profileStore.theUser"
+          flat
+          icon="logout"
+          @click="onLogout"
+          class="full-width"
+          >Logout</q-btn
+        >
       </q-scroll-area>
     </q-drawer>
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer>
+    <q-footer elevated>
       <q-btn
         class="fixed bg-dark"
         :class="$route.name != 'home' ? 'hidden' : ''"
@@ -165,6 +173,11 @@ const menuList = ref<IDrawerItem[]>([
         route: { name: 'prices' },
       },
     ],
+  },
+  {
+    icon: 'qr_code_scanner',
+    label: 'Scanner',
+    route: { name: 'scanner' },
   },
 ]);
 function onLogout() {

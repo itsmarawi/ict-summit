@@ -244,6 +244,23 @@ function onError(err: string) {
   });
 }
 function releaseRafflePrice(price: RafflePrice) {
+  if (/^(admin|moderator)$/.test(profileStore.theUser?.role || 'none')) {
+    $q.notify({
+      message: 'Unauthorized to release prices',
+      caption: 'Redeeming your price?',
+      icon: 'error',
+      color: 'negative',
+      position: 'center',
+      actions: [
+        {
+          label: 'View Prices',
+          icon: 'redeem',
+          to: { name: 'prices' },
+        },
+      ],
+    });
+    return;
+  }
   const msg = 'Release Raffle Price';
   if (price.status !== 'ready') {
     $q.notify({

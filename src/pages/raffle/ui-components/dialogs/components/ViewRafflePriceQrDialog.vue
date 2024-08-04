@@ -1,5 +1,11 @@
 <template>
-  <q-dialog v-model="isShowDialog" persistent @before-hide="onHide">
+  <q-dialog
+    v-model="isShowDialog"
+    :maximized="$q.screen.lt.lg"
+    :full-width="$q.screen.lt.lg"
+    persistent
+    @before-hide="onHide"
+  >
     <q-card flat class="q-pa-md" style="min-width: 300px; max-width: 80vw">
       <q-form v-if="rafflePrice">
         <div class="row justify-center">
@@ -23,13 +29,16 @@
             <q-card class="bg-white q-pa-sm">
               <qrcode-vue
                 :value="priceQrCode"
-                :size="Math.min($q.screen.width, $q.screen.height) - 260"
+                :size="
+                  Math.min($q.screen.width, $q.screen.height) -
+                  ($q.screen.lt.lg ? 20 : 260)
+                "
                 level="H"
               />
             </q-card>
           </div>
         </q-card-section>
-        <q-card-actions align="right">
+        <q-card-actions align="center">
           <div class="row justify-between q-col-gutter-x-sm">
             <div>
               <q-btn

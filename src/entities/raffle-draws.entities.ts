@@ -9,13 +9,15 @@ export interface RaffleDraw extends IBaseEntity {
   defaultPrices: string[];
   winnerPrices: string[];
   spinning?: boolean;
-  status: 'open' | 'closed';
+  status: 'open' | 'running' | 'closed';
+  managedBy?: string;
   owner: IProfile;
 }
 
 export interface RaffleParticipant extends IBaseEntity {
   key: string;
   draw: string;
+  won?: boolean;
   participant: IProfile;
 }
 

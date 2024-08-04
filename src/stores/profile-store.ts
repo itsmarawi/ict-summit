@@ -155,6 +155,12 @@ export const useProfileStore = defineStore('profile', {
         summit: new Date().getFullYear().toString(),
       });
     },
+    countProfiles(filter: Partial<IProfile>) {
+      return profileResource.count({
+        summit: new Date().getFullYear().toString(),
+        ...filter,
+      });
+    },
     streamAllProfiles() {
       if (
         this.theUser &&

@@ -167,10 +167,13 @@ function onToggleStatus(value: RaffleDraw) {
     html: true,
   })
     .onOk(async () => {
-      await raffleDrawStore.updateRaffleDrawProp(
+      await raffleDrawStore.updateRaffleDraw(
         value.key,
-        'status',
-        !isOpen ? 'open' : 'closed'
+        ['status', 'spinning'],
+        {
+          status: !isOpen ? 'open' : 'closed',
+          spinning: false,
+        }
       );
     })
     .onCancel(() => {
@@ -221,11 +224,33 @@ function onEditRaffle(raffle: RaffleDraw) {
   });
 }
 function runRaffle(raffle: RaffleDraw) {
-  $router.replace({
-    name: 'raffle',
-    params: {
-      draw: raffle.key,
-    },
-  });
+  if (raffle.status == 'open') {
+    $router.replace({
+      name: 'raffle',
+      params: {
+        draw: raffle.key,
+      },
+    });
+  } else if (raffle.status == 'running') {
+    const msg = 'Spin the wheels';
+    $q.dialog({
+      title: `<span class="text-negative">${msg}</span>`,
+      message: `Are you sure you want to ${msg}?`,
+      cancel: { outline: true, rounded: true, color: 'negative' },
+      ok: { rounded: true, label: msg },
+      persistent: true,
+      html: true,
+    })
+      .onOk(async () => {
+        await raffleDrawStore.updateRaffleDrawProp(
+          raffle.key,
+          'spinning',
+          true
+        );
+      })
+      .onCancel(() => {
+        // console.log('>>>> Cancel')
+      });
+  }
 }
 </script>

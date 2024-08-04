@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia';
-import { IProfile, RaffleDraw, RafflePrice } from 'src/entities';
+import {
+  IProfile,
+  RaffleDraw,
+  RaffleParticipant,
+  RafflePrice,
+} from 'src/entities';
 import { raffleDrawsResource, raffleWinnersResource } from 'src/resources';
 import { DeferredPromise } from 'src/resources/localbase';
 import { raffleParticipantsResource } from 'src/resources/raffle-participants.resource';
@@ -136,19 +141,20 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
       });
     },
     //{winners}
-    async setRaffleWinner(raffle: RaffleDraw, participant: IProfile) {
+    async setRaffleWinner(raffle: RaffleDraw, participant: RaffleParticipant) {
       const winner = await raffleWinnersResource.setData('', {
         key: '',
         draw: raffle.key,
-        winner: firebaseService.clone(participant),
+        winner: firebaseService.clone(participant.participant),
       });
-      await Promise.all(
-        raffle.winnerPrices.map((price) => {
+      await Promise.all([
+        raffleParticipantsResource.updateProperty(participant.key, 'won', true),
+        ...raffle.winnerPrices.map((price) => {
           return this.sendRafflePrice(
             raffle,
             `Winner:${price}`,
             firebaseService.clone({
-              ...participant,
+              ...participant.participant,
               email: '',
               mobileNumber: '',
               tshirt: '',
@@ -156,8 +162,8 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
               gender: '',
             })
           );
-        })
-      );
+        }),
+      ]);
       return winner;
     },
     streamRaffleWinners(raffle: RaffleDraw) {

@@ -1,21 +1,30 @@
 <template>
   <q-page>
-    <div v-if="selected">
-      <q-banner>
-        <div class="text-h6 text-center">
-          Congratulations {{ selected.participant.name }}!
-          <q-avatar color="grey">
-            <q-img
-              v-if="selected.participant.avatar"
-              :src="selected.participant.avatar"
-            />
+    <div v-if="canManageDraw && (selected.length >= groupCount || !ready)">
+      <q-banner class="bg-positive q-mb-sm">
+        <div class="text-h6 text-center" v-if="selected.length">
+          <div>Congratulations!</div>
+          <q-chip v-for="winner in selected" :key="winner.key">
+            <ProfileAvatar size="sm" :profile-key="winner.participant.key" />
+            {{ winner.participant.name }}
+          </q-chip>
+        </div>
+        <div v-else class="text-center q-gutter-sm">
+          <div>
+            Welcome to {{ presentRaffle?.name }} with
+            {{ participants.length }} Participants
+          </div>
+          <q-avatar v-for="p in participants" :key="p.key" color="grey">
+            <q-img v-if="p.participant.avatar" :src="p.participant.avatar" />
             <span v-else class="text-uppercase">{{
-              selected.participant.name.replace(/(\w)[\w]+\s?/g, '$1')
+              p.participant.name.replace(/(\w)[\w]+\s?/g, '$1')
             }}</span>
           </q-avatar>
         </div>
         <template #action>
-          <q-btn @click="nextRound">Next</q-btn>
+          <q-btn @click="nextRound">{{
+            winners.length || selected.length ? 'Next' : 'Start'
+          }}</q-btn>
         </template>
       </q-banner>
       <div class="row justify-center">
@@ -32,11 +41,16 @@
     <!-- if present user is the host of event -->
     <div v-else-if="isHosting">
       <q-banner class="text-h6 text-center"
-        >Welcome to {{ presentRaffle?.name }}</q-banner
-      >
+        >Welcome to {{ presentRaffle?.name }} with
+        {{ participants.length }} Participants
+        <template #action>
+          <q-btn icon="add" @click="groupCount++"></q-btn>
+          <q-btn icon="qr_code" @click="ready = false"></q-btn>
+        </template>
+      </q-banner>
 
       <div
-        v-if="people.length >= 4 && presentRaffle?.winnerPrices?.length"
+        v-if="participants.length >= 4 && presentRaffle?.winnerPrices?.length"
         class="row justify -center"
       >
         <div class="col-12 text-center">
@@ -47,20 +61,22 @@
             >{{ price }}</q-chip
           >
         </div>
+
         <Roulette
-          display-shadow
+          v-for="group in groupCount"
+          :key="group"
           display-indicator
-          :counter-clockwise="false"
-          :duration="10"
+          :duration="5"
           class="wheel"
-          ref="wheel"
+          ref="wheels"
           easing="bounce"
-          :items="people"
+          :items="groupings[group - 1] || []"
           :size="Math.min($q.screen.width, $q.screen.height) - 150"
           :result-variation="duration"
           @click="launchWheel"
-          @wheel-end="wheelEnded"
-        ></Roulette>
+          @wheel-end="(winner:Person) => wheelEnded(wheels && wheels[group-1], winner)"
+        >
+        </Roulette>
       </div>
       <div v-else>
         <q-banner class="text-center">
@@ -95,13 +111,20 @@
         color="primary"
         size="8em"
       />
-      <q-list bordered v-else-if="presentRaffle.winnerPrices?.length">
+      <q-list
+        bordered
+        dense
+        class="rounded-border q-mx-xl"
+        v-else-if="presentRaffle.winnerPrices?.length"
+      >
         <div class="text-h6">Winners</div>
-        <q-item v-for="w in winners" :key="w.id">
+        <q-item
+          v-for="(w, i) in winners"
+          :key="w.id"
+          :class="i % 2 ? '' : 'bg-dark'"
+        >
           <q-item-section avatar>
-            <q-avatar>
-              <q-img :src="w.winner.avatar" />
-            </q-avatar>
+            <ProfileAvatar :profile-key="w.winner.key" />
           </q-item-section>
           <q-item-section>{{ w.winner.name }}</q-item-section>
         </q-item>
@@ -120,6 +143,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { Subscription } from 'rxjs';
 import { useQuasar } from 'quasar';
+import ProfileAvatar from 'src/components/common/ProfileAvatar.vue';
 function generateAvatar(name: string) {
   const initials = name
     .split(' ')
@@ -154,8 +178,7 @@ class Person {
     if (!avatar || !/\:/.test(avatar)) {
       avatar = generateAvatar(name);
     }
-    this.htmlContent = `<div style="gap: 25px;">
-      ${name}<br/><img width="25" heght="25" class="avatar" src="${avatar}" alt="" /></div>`;
+    this.htmlContent = `<div>${name}</div><img width="25" heght="25" class="avatar" src="${avatar}" alt="" />`;
   }
 }
 interface SpinningWheel {
@@ -166,18 +189,40 @@ const profileStore = useProfileStore();
 const raffleStore = useRaffleDrawStore();
 const $q = useQuasar();
 
-const wheel = ref<SpinningWheel | null>(null);
+const ready = ref(true);
+const wheels = ref<SpinningWheel[] | null>(null);
 const spinning = ref(false);
 const participants = ref<RaffleParticipant[]>([]);
 const winners = ref<RaffleWinner[]>([]);
-const selected = ref<RaffleParticipant>();
+const selected = ref<RaffleParticipant[]>([]);
 const presentRaffle = ref<RaffleDraw>();
-const duration = ref(100);
-const people = computed(() => {
-  return participants.value.map(
-    (p) =>
-      new Person(p.participant.name, p.participant.key, p.participant.avatar)
+const duration = ref(68);
+const groupCount = ref(1);
+function shufflePeople(people: Person[]) {
+  const shuffledPeople = [...people];
+  for (let i = shuffledPeople.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledPeople[i], shuffledPeople[j]] = [
+      shuffledPeople[j],
+      shuffledPeople[i],
+    ];
+  }
+  return shuffledPeople;
+}
+const groupings = computed(() => {
+  const people = shufflePeople(
+    participants.value.map(
+      (p) =>
+        new Person(p.participant.name, p.participant.key, p.participant.avatar)
+    )
   );
+
+  const memberCount = Math.max(Math.ceil(people.length / groupCount.value), 4);
+  const parts: Person[][] = [];
+  while (people.length) {
+    parts.push(people.splice(0, memberCount));
+  }
+  return parts;
 });
 const $route = useRoute();
 const isHosting = computed(() => {
@@ -189,6 +234,16 @@ const isHosting = computed(() => {
 const qrCodeUrl = computed(() => {
   return location.href;
 });
+const canManageDraw = computed(() => {
+  if (
+    presentRaffle.value &&
+    presentRaffle.value.status == 'running' &&
+    profileStore.theUser?.key !== presentRaffle.value.managedBy
+  ) {
+    return false;
+  }
+  return /^(admin|moderator)$/.test(profileStore.theUser?.role || '');
+});
 let participantSub: Subscription;
 let presentSub: Subscription;
 let winnesSub: Subscription;
@@ -197,14 +252,29 @@ async function load() {
   const raffleId = String($route.params.draw || '');
   presentRaffle.value = await raffleStore.getRaffleDraw(raffleId);
   if (presentRaffle.value) {
-    if (profileStore.theUser?.key == presentRaffle.value?.owner.key) {
+    if (canManageDraw.value) {
       participantSub = raffleStore
         .streamRaffleParticipants(presentRaffle.value)
         .subscribe({
           next(value) {
-            participants.value = value;
+            if (!presentRaffle.value?.spinning) {
+              participants.value = value.filter((p) => !p.won);
+              if (groupCount.value == 1 && value.length >= 32) {
+                groupCount.value = 2;
+              } else if (participants.value.length < 8) {
+                groupCount.value = 1;
+              }
+            }
           },
         });
+      await raffleStore.updateRaffleDraw(
+        presentRaffle.value.key,
+        ['status', 'managedBy'],
+        {
+          status: 'running',
+          managedBy: profileStore.theUser?.key,
+        }
+      );
     } else if (profileStore.theUser) {
       raffleStore
         .joinRaffle(presentRaffle.value, profileStore.theUser)
@@ -217,16 +287,18 @@ async function load() {
               caption: Array.isArray(result)
                 ? `Please claim your ${result.length} freebie`
                 : '',
-              actions: [
-                {
-                  icon: 'reddem',
-                  label: 'Redeem',
-                  to: { name: 'prices' },
-                },
-              ],
+              actions: presentRaffle.value?.defaultPrices.length
+                ? [
+                    {
+                      icon: 'reddem',
+                      label: 'Redeem',
+                      to: { name: 'prices' },
+                    },
+                  ]
+                : [],
             });
           } else {
-            if (/^(admin|moderator)$/.test(profileStore.theUser?.role || '')) {
+            if (canManageDraw.value) {
               $q.notify({
                 position: 'center',
                 icon: 'warning',
@@ -244,15 +316,27 @@ async function load() {
     }
     presentSub = raffleStore.streamUpdate(presentRaffle.value).subscribe({
       next(value) {
+        let spinnedRemotely =
+          presentRaffle.value && !presentRaffle.value.spinning;
         presentRaffle.value = value[0] || presentRaffle.value;
+        spinnedRemotely = spinnedRemotely && !!presentRaffle.value?.spinning;
+        if (spinnedRemotely) {
+          launchWheel();
+          ready.value = true;
+        }
       },
     });
     winnesSub = raffleStore.streamRaffleWinners(presentRaffle.value).subscribe({
       next(list) {
         winners.value = list || winners.value;
         participants.value = participants.value.filter(
-          (p) => !winners.value.find((w) => w.winner.key == p.participant.key)
+          (p) =>
+            !p.won &&
+            !winners.value.find((w) => w.winner.key == p.participant.key)
         );
+        if (participants.value.length <= 4) {
+          groupCount.value = 1;
+        }
       },
     });
   }
@@ -260,46 +344,113 @@ async function load() {
 onMounted(async () => {
   await load();
 });
-onUnmounted(() => {
+onUnmounted(async () => {
   participantSub?.unsubscribe();
   presentSub?.unsubscribe();
   winnesSub?.unsubscribe();
+  if (presentRaffle.value?.status == 'running' && canManageDraw.value) {
+    await raffleStore.updateRaffleDraw(presentRaffle.value.key, ['status'], {
+      status: 'open',
+    });
+  }
 });
 
 async function launchWheel() {
+  if (!canManageDraw.value) {
+    return;
+  }
   spinning.value = true;
+  selected.value = [];
   //duration.value = Math.round(Math.random() * 50) + 50;
-  wheel.value?.launchWheel();
-  if (presentRaffle.value) {
-    presentRaffle.value.spinning = true;
+  if (!wheels.value) return;
+  wheels.value.forEach((wheel) => wheel.launchWheel());
+  if (presentRaffle.value && !presentRaffle.value?.spinning) {
     await raffleStore.updateRaffleDrawProp(
       presentRaffle.value.key,
       'spinning',
       true
     );
+    presentRaffle.value.spinning = true;
   }
 }
-async function wheelEnded(winner: Person) {
+async function wheelEnded(wheel: SpinningWheel | null, winner: Person) {
   spinning.value = false;
-  selected.value = participants.value.find(
+  const winningParticipant = participants.value.find(
     (p) => p.participant.key == winner.id
   );
+  if (!winningParticipant) return;
+  selected.value.push(winningParticipant);
   if (presentRaffle.value) {
-    presentRaffle.value.spinning = false;
+    await raffleStore.setRaffleWinner(presentRaffle.value, winningParticipant);
+  }
+  if (presentRaffle.value && selected.value.length >= groupCount.value) {
     await raffleStore.updateRaffleDrawProp(
       presentRaffle.value.key,
       'spinning',
       false
     );
-    if (selected.value) {
-      await raffleStore.setRaffleWinner(
-        presentRaffle.value,
-        selected.value.participant
-      );
-    }
+    presentRaffle.value.spinning = false;
   }
 }
 function nextRound() {
-  selected.value = undefined;
+  selected.value = [];
+  ready.value = true;
 }
 </script>
+<style lang="css">
+.flex {
+  display: flex;
+}
+
+.flex.col {
+  flex-direction: column;
+}
+
+.flex.center {
+  justify-content: center;
+  align-items: center;
+}
+.wheel {
+  user-select: none;
+}
+
+.wheel-container::after {
+  content: '';
+  height: 210px;
+  width: 2px;
+  position: absolute;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  top: 0;
+  left: calc(50% - 2px);
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.wheel:not(.wheel-container)::after {
+  content: '';
+  background-image: url(/icons/favicon-128x128.png);
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-size: contain;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+}
+
+.wheel .wheel-item:nth-child(odd) {
+  background: linear-gradient(90deg, #2cbd9a 0%, #65c86d);
+}
+
+.wheel .wheel-item:nth-child(even) {
+  background: linear-gradient(to right, #ffa246, #e14a53);
+}
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  box-shadow: 4px 4px 10px black;
+}
+</style>

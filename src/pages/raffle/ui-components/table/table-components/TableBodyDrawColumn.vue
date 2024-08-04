@@ -1,8 +1,8 @@
 <template>
   <div v-if="col.name === 'status'">
     <q-toggle
-      :model-value="col.value == 'open'"
-      checked-icon="check"
+      :model-value="col.value != 'closed'"
+      :checked-icon="col.value == 'open' ? 'check' : 'ion-play'"
       unchecked-icon="clear"
       :color="color"
       @update:model-value="emit('onToggleStatus')"

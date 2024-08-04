@@ -15,12 +15,12 @@ export const propsTableActionRight: ITableUIElements[] = [
   {
     event: 'openRaffle',
     label: 'Run Raffle',
-    icon: 'flag',
+    icon: 'ion-play-circle',
   },
   {
     event: 'onViewRafflePrices',
     label: 'View Prices',
-    icon: 'gift',
+    icon: 'redeem',
   },
 ];
 

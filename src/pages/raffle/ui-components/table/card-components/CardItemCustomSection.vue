@@ -1,12 +1,15 @@
 <template>
   <q-item-label v-if="col.name === 'status'">
     <q-toggle
-      :model-value="col.value"
-      checked-icon="check"
+      :model-value="col.value != 'closed'"
+      :checked-icon="col.value == 'open' ? 'check' : 'ion-play'"
       unchecked-icon="clear"
       :color="color"
       @update:model-value="emit('onToggleStatus')"
     />
+    <span :class="`text-${color}`">
+      {{ name }}
+    </span>
   </q-item-label>
   <q-item-label
     v-else

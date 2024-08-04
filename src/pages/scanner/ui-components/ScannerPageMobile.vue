@@ -75,6 +75,10 @@
     <div v-else-if="result" class="row result">
       <q-list class="col-12" bordered>
         <template v-if="priceMatched?.status == 'ready'">
+          <q-banner class="bg-positive">
+            <template #avatar><q-icon name="redeem" /></template>
+            <span class="text-h6">Qualified!</span>
+          </q-banner>
           <q-item>
             <q-item-section class="text-bold">
               <q-item-label>Recipient:</q-item-label>
@@ -101,6 +105,17 @@
                     : 'ion-man'
                 "
               />
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section class="text-bold">
+              <q-item-label>Institution:</q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-chip>{{ priceMatched.recipient.institution }}</q-chip>
+            </q-item-section>
+            <q-item-section side avatar>
+              <q-icon name="ion-briefcase" />
             </q-item-section>
           </q-item>
           <q-item class="bg-positive">
@@ -145,7 +160,7 @@
             </q-item-section>
           </q-item>
         </template>
-        <q-banner>
+        <q-banner v-else>
           <template #avatar><q-icon name="error" /></template>
           Record not found
         </q-banner>
@@ -269,7 +284,7 @@ function onError(err: string) {
   });
 }
 function releaseRafflePrice(price: RafflePrice) {
-  if (/^(admin|moderator)$/.test(profileStore.theUser?.role || 'none')) {
+  if (!/^(admin|moderator)$/.test(profileStore.theUser?.role || 'none')) {
     $q.notify({
       message: 'Unauthorized to release prices',
       caption: 'Redeeming your price?',

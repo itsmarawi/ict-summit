@@ -72,9 +72,9 @@
         </div>
       </div>
     </div>
-    <div v-else-if="result && priceMatched" class="row result">
+    <div v-else-if="result" class="row result">
       <q-list class="col-12" bordered>
-        <template v-if="priceMatched.status == 'ready'">
+        <template v-if="priceMatched?.status == 'ready'">
           <q-item>
             <q-item-section class="text-bold">
               <q-item-label>Recipient:</q-item-label>
@@ -103,7 +103,7 @@
             </q-item-section>
           </q-item>
         </template>
-        <template v-else-if="priceMatched.status == 'released'">
+        <template v-else-if="priceMatched?.status == 'released'">
           <q-item>
             <q-item-section class="text-bold">
               <q-item-label>Recipient:</q-item-label>
@@ -127,6 +127,10 @@
             </q-item-section>
           </q-item>
         </template>
+        <q-banner>
+          <template #avatar><q-icon name="error" /></template>
+          Record not found
+        </q-banner>
       </q-list>
       <div class="col-12 row justify-center q-my-lg">
         <q-btn

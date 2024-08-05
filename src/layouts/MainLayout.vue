@@ -68,7 +68,7 @@
           <q-btn
             flat
             :to="{ name: 'home', hash: '#speakers' }"
-            :icon="$q.screen.gt.sm && !$q.screen.lg ? '' : 'mic'"
+            :icon="$q.screen.gt.sm && !$q.screen.lg ? '' : 'record_voice_over'"
             :label="$q.screen.gt.sm ? 'Speakers' : ''"
           />
           <q-btn

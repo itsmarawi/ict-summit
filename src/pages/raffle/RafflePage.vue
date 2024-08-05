@@ -40,15 +40,18 @@
     </div>
     <!-- if present user is the host of event -->
     <div v-else-if="isHosting">
-      <q-banner class="text-h6 text-center"
-        >Welcome to {{ presentRaffle?.name }} with
-        {{ participants.length }} Participants
+      <q-banner>
+        <div class="text-h6 text-center">
+          Welcome to {{ presentRaffle?.name }} with
+          {{ participants.length }} Participants
+        </div>
         <template #action>
-          <q-btn icon="add" @click="groupCount++"></q-btn>
-          <q-btn icon="qr_code" @click="ready = false"></q-btn>
+          <div class="print-hide">
+            <q-btn flat round icon="add" @click="groupCount++"></q-btn>
+            <q-btn flat round icon="qr_code" @click="ready = false"></q-btn>
+          </div>
         </template>
       </q-banner>
-
       <div
         v-if="participants.length >= 4 && presentRaffle?.winnerPrices?.length"
         class="row justify -center"
@@ -228,7 +231,8 @@ const $route = useRoute();
 const isHosting = computed(() => {
   return (
     presentRaffle.value &&
-    presentRaffle.value.owner.key == profileStore.theUser?.key
+    (presentRaffle.value.owner.key == profileStore.theUser?.key ||
+      presentRaffle.value.managedBy == profileStore.theUser?.key)
   );
 });
 const qrCodeUrl = computed(() => {

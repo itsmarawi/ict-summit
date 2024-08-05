@@ -47,11 +47,27 @@
 
 <script lang="ts" setup>
 import { useQuasar } from 'quasar';
+import { useProfileStore } from 'src/stores/profile-store';
 import { theWorkflows } from 'src/workflows/the.workflows';
-import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 const $q = useQuasar();
+const $route = useRoute();
 const $router = useRouter();
-
+const profileStore = useProfileStore();
+onMounted(() => {
+  profileStore.streamProfile(profileStore.theUser?.key || '').subscribe({
+    next(value) {
+      if (value[0]?.emailVerified) {
+        if ($route.query?.redirect) {
+          $router.replace($route.query.redirect as string);
+        } else {
+          $router.replace({ name: 'home' });
+        }
+      }
+    },
+  });
+});
 function resendEmailVerification() {
   theWorkflows.emit({
     type: 'resendEmailVerification',

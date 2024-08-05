@@ -71,6 +71,7 @@ export default route(function (/* { store, ssrContext } */) {
     } else if (requiresLogin && !emailVerified && to.name != 'verify') {
       next({
         name: 'verify',
+        query: { redirect: to.fullPath },
       });
       return;
     } else if (

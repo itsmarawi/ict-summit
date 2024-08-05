@@ -8,7 +8,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 export default function () {
   const gender = ref<'male' | 'female'>('male');
-  const tShirtSize = ref<'S' | 'M' | 'L' | 'XL' | 'XXL'>();
+  const tShirtSize = ref<'S' | 'M' | 'L' | 'XL' | 'XXL'>('L');
   const position = ref('');
   const institution = ref<IInstitution>();
   const listInstutions = ref<IInstitution[]>([]);

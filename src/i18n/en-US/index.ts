@@ -8,4 +8,6 @@ export default {
   'scan-subheader-label': 'Place QR Code inside the frame',
   'scan-slider': 'Zoom',
   'scan-btn': 'Scan',
+  'email-verification-message-dialog':
+    'Kindly verify your account via email and refresh the page if already confirmed. Thank you.',
 };

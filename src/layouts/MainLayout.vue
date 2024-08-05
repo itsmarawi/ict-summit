@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header elevated class="print-hide">
       <q-toolbar>
         <q-btn
           icon="menu"
@@ -86,6 +86,7 @@
     <q-drawer
       v-if="profileStore.theUser?.institution"
       v-model="drawer"
+      class="print-hide"
       :width="200"
       :breakpoint="500"
       bordered

@@ -35,9 +35,13 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
   Router.beforeEach(async (to, from, next) => {
-    const requiresLogin = to.matched.some(
-      (route) => route.meta.requiresLogin || !!route.meta.requires?.length
+    const requiresUserRole = to.matched.some(
+      (route) => !!route.meta.requires?.length
     );
+
+    const requiresLogin =
+      requiresUserRole || to.matched.some((route) => route.meta.requiresLogin);
+
     const requiresGuest = to.matched.some(
       (route) => !!route.meta.requiresGuest
     );
@@ -57,7 +61,6 @@ export default route(function (/* { store, ssrContext } */) {
     });
 
     function isRoleAuthorized(role?: string) {
-      if (requiresLogin && user) return true;
       if (!role) return false;
       return to.matched.some(
         (route) =>
@@ -100,7 +103,7 @@ export default route(function (/* { store, ssrContext } */) {
       }
       return;
     } else if (
-      to.name !== 'home' &&
+      requiresUserRole &&
       user &&
       (requiresGuest || !isRoleAuthorized(user.role))
     ) {

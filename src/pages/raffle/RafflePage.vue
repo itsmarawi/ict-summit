@@ -127,9 +127,9 @@
           :class="i % 2 ? '' : 'bg-dark'"
         >
           <q-item-section avatar>
-            <ProfileAvatar :profile-key="w.winner.key" />
+            <ProfileAvatar :profile-key="w.participant.key" />
           </q-item-section>
-          <q-item-section>{{ w.winner.name }}</q-item-section>
+          <q-item-section>{{ w.participant.name }}</q-item-section>
         </q-item>
       </q-list>
     </div>
@@ -139,7 +139,7 @@
 import { Roulette } from 'vue3-roulette';
 import QrcodeVue from 'qrcode.vue';
 
-import { RaffleDraw, RaffleParticipant, RaffleWinner } from 'src/entities';
+import { RaffleDraw, RaffleParticipant } from 'src/entities';
 import { useProfileStore } from 'src/stores/profile-store';
 import { useRaffleDrawStore } from 'src/stores/raffle-draw-store';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
@@ -196,7 +196,7 @@ const ready = ref(true);
 const wheels = ref<SpinningWheel[] | null>(null);
 const spinning = ref(false);
 const participants = ref<RaffleParticipant[]>([]);
-const winners = ref<RaffleWinner[]>([]);
+const winners = ref<RaffleParticipant[]>([]);
 const selected = ref<RaffleParticipant[]>([]);
 const presentRaffle = ref<RaffleDraw>();
 const duration = ref(68);
@@ -336,7 +336,7 @@ async function load() {
         participants.value = participants.value.filter(
           (p) =>
             !p.won &&
-            !winners.value.find((w) => w.winner.key == p.participant.key)
+            !winners.value.find((w) => w.participant.key == p.participant.key)
         );
         if (participants.value.length <= 4) {
           groupCount.value = 1;

@@ -6,6 +6,5 @@ export type Models =
   | entities.IMedia
   | entities.RaffleDraw
   | entities.RaffleParticipant
-  | entities.RaffleWinner
   | entities.RafflePrice
   | undefined;

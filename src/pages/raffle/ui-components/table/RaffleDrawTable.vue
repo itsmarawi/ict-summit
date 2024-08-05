@@ -26,6 +26,7 @@
         @on-edit-raffle="onEditRaffle(props.row)"
         @open-raffle="runRaffle(props.row)"
         @on-view-raffle-prices="viewPrices(props.row)"
+        @on-clone-participants="cloneRaffleParticipants(props.row)"
         :elements="propsTableActionRight"
       />
     </template>
@@ -38,6 +39,7 @@
         @on-edit-raffle="onEditRaffle(props.row)"
         @open-raffle="runRaffle(props.row)"
         @on-view-raffle-prices="viewPrices(props.row)"
+        @on-clone-participants="cloneRaffleParticipants(props.row)"
         :elements="propsTableActionRight"
       />
     </template>
@@ -68,7 +70,7 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { RaffleDraw } from 'src/entities';
+import { RaffleDraw, RaffleDrawWithParticipants } from 'src/entities';
 import BaseTable from 'src/components/base/BaseTable.vue';
 import { propsTableActionRight } from './table.elements';
 import { raffleDrawColumns } from './table.columns';
@@ -83,10 +85,7 @@ import { useRouter } from 'vue-router';
 import TableBodyDrawColumn from './table-components/TableBodyDrawColumn.vue';
 import FabAction from 'src/components/common/table/fab-components/FabAction.vue';
 import CardItemCustomSection from './card-components/CardItemCustomSection.vue';
-interface RaffleDrawWithParticipants extends RaffleDraw {
-  participants?: number;
-  winners?: number;
-}
+
 const $q = useQuasar();
 const $router = useRouter();
 const raffleDrawStore = useRaffleDrawStore();
@@ -140,6 +139,21 @@ function viewPrices(raffle: RaffleDraw) {
     name: 'prices',
     params: {
       draw: raffle.key,
+    },
+  });
+}
+function cloneRaffleParticipants(raffle: RaffleDraw) {
+  theDialogs.emit({
+    type: 'cloneRaffleParticipants',
+    arg: {
+      payload: raffle,
+      done(target) {
+        $q.notify({
+          message: `Clone to raffle draw ${target.name} with ${target.participants}`,
+          icon: 'info',
+          color: 'positive',
+        });
+      },
     },
   });
 }

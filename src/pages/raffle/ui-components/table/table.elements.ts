@@ -13,6 +13,11 @@ export const propsTableActionRight: ITableUIElements[] = [
     icon: 'edit',
   },
   {
+    event: 'onCloneParticipants',
+    label: 'Clone Participants',
+    icon: 'content_copy',
+  },
+  {
     event: 'openRaffle',
     label: 'Run Raffle',
     icon: 'ion-play-circle',

@@ -6,7 +6,6 @@ export function getCollections(fbStore: Firestore) {
     medias: () => collection(fbStore, 'medias'),
     draws: () => collection(fbStore, 'draws'),
     participants: () => collection(fbStore, 'participants'),
-    winners: () => collection(fbStore, 'winners'),
     prices: () => collection(fbStore, 'prices'),
   };
 }

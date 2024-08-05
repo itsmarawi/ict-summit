@@ -5,7 +5,7 @@ import {
   RaffleParticipant,
   RafflePrice,
 } from 'src/entities';
-import { raffleDrawsResource, raffleWinnersResource } from 'src/resources';
+import { raffleDrawsResource } from 'src/resources';
 import { DeferredPromise } from 'src/resources/localbase';
 import { raffleParticipantsResource } from 'src/resources/raffle-participants.resource';
 import { rafflePricesResource } from 'src/resources/raffle-prices.resource';
@@ -96,10 +96,11 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
     //{participaints}
     async joinRaffle(raffle: RaffleDraw, participant: IProfile) {
       if (
-        raffle.status == 'closed' &&
+        raffle.status == 'closed' ||
         /^(admin|moderator)$/.test(participant.role || '')
-      )
+      ) {
         return;
+      }
       const payload = {
         key: '',
         draw: raffle.key,
@@ -140,13 +141,14 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
         draw: raffle.key,
       });
     },
+    countParticipants(filter?: Partial<RaffleParticipant>) {
+      return raffleParticipantsResource.count(filter);
+    },
+    findParticipants(filter?: Partial<RaffleParticipant>) {
+      return raffleParticipantsResource.findAllFrom(filter);
+    },
     //{winners}
     async setRaffleWinner(raffle: RaffleDraw, participant: RaffleParticipant) {
-      const winner = await raffleWinnersResource.setData('', {
-        key: '',
-        draw: raffle.key,
-        winner: firebaseService.clone(participant.participant),
-      });
       await Promise.all([
         raffleParticipantsResource.updateProperty(participant.key, 'won', true),
         ...raffle.winnerPrices.map((price) => {
@@ -164,11 +166,13 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
           );
         }),
       ]);
-      return winner;
+      participant.won = true;
+      return participant;
     },
     streamRaffleWinners(raffle: RaffleDraw) {
-      return raffleWinnersResource.streamWith({
+      return raffleParticipantsResource.streamWith({
         draw: raffle.key,
+        won: true,
       });
     },
     //{prices}

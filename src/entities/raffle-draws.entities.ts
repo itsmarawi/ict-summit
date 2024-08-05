@@ -21,12 +21,6 @@ export interface RaffleParticipant extends IBaseEntity {
   participant: IProfile;
 }
 
-export interface RaffleWinner extends IBaseEntity {
-  key: string;
-  draw: string;
-  winner: IProfile;
-}
-
 export interface RafflePrice extends IBaseEntity {
   key: string;
   draw: string;
@@ -34,4 +28,9 @@ export interface RafflePrice extends IBaseEntity {
   status: 'ready' | 'unclaimed' | 'released';
   recipient: IProfile;
   releasedBy?: IProfile;
+}
+
+export interface RaffleDrawWithParticipants extends RaffleDraw {
+  participants?: number;
+  winners?: number;
 }

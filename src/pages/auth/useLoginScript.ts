@@ -74,6 +74,12 @@ export default function () {
                 break;
               default:
             }
+          } else {
+            $q.notify({
+              message: 'Sign-in failed:' + String(error),
+              icon: 'error',
+              color: 'negative',
+            });
           }
           isLoadingLogin.value = false;
         },
@@ -126,6 +132,12 @@ export default function () {
                 });
                 break;
             }
+          } else {
+            $q.notify({
+              message: 'Sign-in failed:' + String(error),
+              icon: 'error',
+              color: 'negative',
+            });
           }
           isLoadingGoogleLogin.value = false;
         },

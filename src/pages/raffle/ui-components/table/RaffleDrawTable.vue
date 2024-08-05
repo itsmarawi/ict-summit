@@ -83,12 +83,15 @@ import { useRouter } from 'vue-router';
 import TableBodyDrawColumn from './table-components/TableBodyDrawColumn.vue';
 import FabAction from 'src/components/common/table/fab-components/FabAction.vue';
 import CardItemCustomSection from './card-components/CardItemCustomSection.vue';
-
+interface RaffleDrawWithParticipants extends RaffleDraw {
+  participants?: number;
+  winners?: number;
+}
 const $q = useQuasar();
 const $router = useRouter();
 const raffleDrawStore = useRaffleDrawStore();
 const columns = ref(raffleDrawColumns);
-const raffleDraws = ref<RaffleDraw[]>([]);
+const raffleDraws = ref<RaffleDrawWithParticipants[]>([]);
 const search = ref('');
 
 onMounted(() => {

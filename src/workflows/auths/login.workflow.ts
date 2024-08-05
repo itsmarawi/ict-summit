@@ -21,6 +21,11 @@ theWorkflows.on({
     }
     const profileStore = useProfileStore();
     const user = await profileStore.getUserAsync();
+    if (user?.status === false) {
+      e.error && e.error('Account deactivated');
+      profileStore.authenticate();
+      return;
+    }
     user &&
       e.done &&
       e.done({

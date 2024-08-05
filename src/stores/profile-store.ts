@@ -130,6 +130,10 @@ export const useProfileStore = defineStore('profile', {
         } else {
           await firebaseService.validateAuth();
           await this.getUserAsync();
+          if (this.theUser?.status === false) {
+            await firebaseService.signOut();
+            this.clearUser();
+          }
           cb && cb();
         }
       } else {

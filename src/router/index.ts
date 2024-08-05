@@ -35,17 +35,27 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
   Router.beforeEach(async (to, from, next) => {
+    const requiresLogin = to.matched.some(
+      (route) => route.meta.requiresLogin || !!route.meta.requires?.length
+    );
+    const requiresGuest = to.matched.some(
+      (route) => !!route.meta.requiresGuest
+    );
     await new Promise<void>(async (resolve) => {
       if (!profileStore.theUser) {
-        await profileStore.authenticate();
+        await profileStore.authenticate(() => {
+          if (requiresLogin && !profileStore.theUser) {
+            Router.replace({
+              name: 'start',
+              params: { action: 'login' },
+              query: { redirect: to.fullPath },
+            });
+          }
+        });
       }
       resolve();
     });
 
-    const requiresLogin = to.matched.some((route) => route.meta.requiresLogin);
-    const requiresGuest = to.matched.some(
-      (route) => !!route.meta.requiresGuest
-    );
     function isRoleAuthorized(role?: string) {
       if (requiresLogin && user) return true;
       if (!role) return false;

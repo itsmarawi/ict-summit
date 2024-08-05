@@ -8,7 +8,7 @@
             class="col-12"
             :style="
               'height: ' +
-              Math.min(500, $q.screen.width, $q.screen.height) +
+              Math.min(500, $q.screen.width - 30, $q.screen.height - 30) +
               'px;'
             "
           >
@@ -18,7 +18,7 @@
             class="col-12 col-md-5"
             :style="
               'height: ' +
-              Math.min(500, $q.screen.width, $q.screen.height) +
+              Math.min(500, $q.screen.width - 30, $q.screen.height - 30) +
               'px;'
             "
           >
@@ -28,7 +28,7 @@
             class="col-12 col-md-5"
             :style="
               'height: ' +
-              Math.min(500, $q.screen.width, $q.screen.height) +
+              Math.min(500, $q.screen.width - 30, $q.screen.height - 30) +
               'px;'
             "
           >

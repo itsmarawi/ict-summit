@@ -47,37 +47,43 @@
           :label="'Login'"
         ></q-btn>
         <q-btn
-          flat
+          :flat="!$q.screen.xs"
           v-else-if="!profileStore.theUser.institution"
-          color="secondary"
-          :icon="$q.screen.gt.sm ? '' : 'how_to_reg'"
-          :label="$q.screen.gt.sm ? 'Register' : ''"
+          color="dark"
+          :style="$q.screen.xs ? 'top: 50px; right: 5px; width: 150px' : ''"
+          :class="$q.screen.xs ? 'fixed-top-right' : ''"
+          :icon="$q.screen.gt.sm && !$q.screen.lg ? '' : 'how_to_reg'"
+          :label="
+            $q.screen.gt.sm || $q.screen.xs || $q.screen.xl ? 'Register' : ''
+          "
           :to="{ name: 'start', params: { action: 'register' } }"
         />
-        <q-btn
-          flat
-          :to="{ name: 'home', hash: '#topics' }"
-          :icon="$q.screen.gt.sm ? '' : 'topic'"
-          :label="$q.screen.gt.sm ? 'Topics' : ''"
-        />
-        <q-btn
-          flat
-          :to="{ name: 'home', hash: '#speakers' }"
-          :icon="$q.screen.gt.sm ? '' : 'mic'"
-          :label="$q.screen.gt.sm ? 'Speakers' : ''"
-        />
-        <q-btn
-          flat
-          :to="{ name: 'home', hash: '#sponsors' }"
-          :icon="$q.screen.gt.sm ? '' : 'volunteer_activism'"
-          :label="$q.screen.gt.sm ? 'Sponsors' : ''"
-        />
+        <template v-if="!$q.screen.xs">
+          <q-btn
+            flat
+            :to="{ name: 'home', hash: '#topics' }"
+            :icon="$q.screen.gt.sm && !$q.screen.lg ? '' : 'topic'"
+            :label="$q.screen.gt.sm ? 'Topics' : ''"
+          />
+          <q-btn
+            flat
+            :to="{ name: 'home', hash: '#speakers' }"
+            :icon="$q.screen.gt.sm && !$q.screen.lg ? '' : 'mic'"
+            :label="$q.screen.gt.sm ? 'Speakers' : ''"
+          />
+          <q-btn
+            flat
+            :to="{ name: 'home', hash: '#sponsors' }"
+            :icon="$q.screen.gt.sm && !$q.screen.lg ? '' : 'volunteer_activism'"
+            :label="$q.screen.gt.sm ? 'Sponsors' : ''"
+          />
+        </template>
         <q-btn
           flat
           v-if="profileStore.theUser"
           color="dark"
           @click="onLogout"
-          :icon="$q.screen.gt.sm ? '' : 'logout'"
+          :icon="$q.screen.gt.sm && !$q.screen.lg ? '' : 'logout'"
           :label="$q.screen.gt.sm ? 'Logout' : ''"
         />
         <q-space />

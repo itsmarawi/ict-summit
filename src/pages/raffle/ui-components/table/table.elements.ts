@@ -18,6 +18,11 @@ export const propsTableActionRight: ITableUIElements[] = [
     icon: 'content_copy',
   },
   {
+    event: 'exportParticipants',
+    label: 'Export',
+    icon: 'download',
+  },
+  {
     event: 'openRaffle',
     label: 'Run Raffle',
     icon: 'ion-play-circle',

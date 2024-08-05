@@ -27,6 +27,7 @@
         @open-raffle="runRaffle(props.row)"
         @on-view-raffle-prices="viewPrices(props.row)"
         @on-clone-participants="cloneRaffleParticipants(props.row)"
+        @export-participants="exportParticipants(props.row)"
         :elements="propsTableActionRight"
       />
     </template>
@@ -40,6 +41,7 @@
         @open-raffle="runRaffle(props.row)"
         @on-view-raffle-prices="viewPrices(props.row)"
         @on-clone-participants="cloneRaffleParticipants(props.row)"
+        @export-participants="exportParticipants(props.row)"
         :elements="propsTableActionRight"
       />
     </template>
@@ -68,7 +70,7 @@
   </BaseTable>
 </template>
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
+import { exportFile, useQuasar } from 'quasar';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { RaffleDraw, RaffleDrawWithParticipants } from 'src/entities';
 import BaseTable from 'src/components/base/BaseTable.vue';
@@ -156,6 +158,39 @@ function cloneRaffleParticipants(raffle: RaffleDraw) {
       },
     },
   });
+}
+async function exportParticipants(raffle: RaffleDraw) {
+  const participants = await raffleDrawStore.findParticipants({
+    draw: raffle.key,
+  });
+  const status = exportFile(
+    'participant.csv',
+    participants.reduce((content, p) => {
+      return (
+        content +
+        `\r\n"${p.participant.name}","${p.participant.institution}","${p.participant.position}"`
+      );
+    }, '"Name","Institution","Position"'),
+    {
+      encoding: 'windows-1252',
+      mimeType: 'text/tsv;charset=windows-1252;',
+    }
+  );
+
+  if (status === true) {
+    $q.notify({
+      message: `Exported ${participants.length}`,
+      icon: 'info',
+      color: 'positive',
+    });
+  } else {
+    // browser denied it
+    $q.notify({
+      message: 'Brower denied it:' + String(status),
+      icon: 'error',
+      color: 'negative',
+    });
+  }
 }
 function deleteRaffle(raffle: RaffleDraw) {
   const msg = 'Delete Raffle';

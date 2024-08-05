@@ -20,7 +20,8 @@ export type TEvents =
   | 'onUnclaimPrice'
   | 'onClaimPrice'
   | 'onViewRafflePrices'
-  | 'onCloneParticipants';
+  | 'onCloneParticipants'
+  | 'exportParticipants';
 
 export interface ITableUIElements {
   event: TEvents;

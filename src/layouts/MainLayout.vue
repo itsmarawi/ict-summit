@@ -15,7 +15,7 @@
           flat
           :to="{ name: 'home' }"
         />
-        <q-space />
+        <q-space v-if="!$q.screen.xs" />
 
         <q-btn
           flat
@@ -36,7 +36,7 @@
           icon="ion-logo-github"
           href="https://github.com/itsmarawi/ranao-ict-summit"
         />
-        <q-space />
+        <q-space v-if="!$q.screen.xs" />
         <q-separator vertical inset />
         <q-btn
           flat
@@ -86,7 +86,7 @@
           :icon="$q.screen.gt.sm && !$q.screen.lg ? '' : 'logout'"
           :label="$q.screen.gt.sm ? 'Logout' : ''"
         />
-        <q-space />
+        <q-space v-if="!$q.screen.xs" />
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -96,6 +96,7 @@
       :width="200"
       :breakpoint="500"
       bordered
+      overlay
       :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
     >
       <q-scroll-area class="fit">
@@ -103,14 +104,20 @@
           :menuList="menuList"
           :role="profileStore.theUser?.role"
         />
-        <q-btn
+        <q-item
+          clickable
           v-if="profileStore.theUser"
           flat
-          icon="logout"
+          v-close-popup
           @click="onLogout"
-          class="full-width"
-          >Logout</q-btn
         >
+          <q-item-section avatar>
+            <q-icon name="logout" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Logout</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-scroll-area>
     </q-drawer>
     <q-page-container>

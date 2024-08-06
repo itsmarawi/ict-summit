@@ -333,14 +333,6 @@ async function load() {
     winnesSub = raffleStore.streamRaffleWinners(presentRaffle.value).subscribe({
       next(list) {
         winners.value = list || winners.value;
-        participants.value = participants.value.filter(
-          (p) =>
-            !p.won &&
-            !winners.value.find((w) => w.participant.key == p.participant.key)
-        );
-        if (participants.value.length <= 4) {
-          groupCount.value = 1;
-        }
       },
     });
   }

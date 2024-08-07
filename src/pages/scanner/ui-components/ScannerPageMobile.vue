@@ -74,7 +74,14 @@
     </div>
     <div v-else-if="result" class="row result">
       <q-list class="col-12" bordered>
-        <template v-if="priceMatched?.status == 'ready'">
+        <template
+          v-if="
+            priceMatched &&
+            (priceMatched.status == 'ready' ||
+              (priceMatched.status == 'scanned' &&
+                priceMatched.scannedBy?.key == profileStore.userInfo?.key))
+          "
+        >
           <q-banner class="bg-positive">
             <template #avatar><q-icon name="redeem" /></template>
             <span class="text-h6">Qualified!</span>
@@ -136,7 +143,7 @@
             </q-item-section>
           </q-item>
         </template>
-        <template v-else-if="priceMatched?.status == 'released'">
+        <template v-else-if="priceMatched">
           <q-item>
             <q-item-section class="text-bold">
               <q-item-label>Recipient:</q-item-label>
@@ -157,6 +164,17 @@
             </q-item-section>
             <q-item-section side avatar>
               <ProfileAvatar :profile-key="priceMatched.releasedBy.key" />
+            </q-item-section>
+          </q-item>
+          <q-item class="bg-negative" v-else-if="priceMatched.scannedBy">
+            <q-item-section class="text-bold">
+              <q-item-label>Being processed by:</q-item-label>
+            </q-item-section>
+            <q-item-section>
+              {{ priceMatched.scannedBy.name }}
+            </q-item-section>
+            <q-item-section side avatar>
+              <ProfileAvatar :profile-key="priceMatched.scannedBy.key" />
             </q-item-section>
           </q-item>
         </template>
@@ -265,6 +283,13 @@ async function onDetect(detectedCode: ResultType) {
     loading.value = true;
     priceMatched.value = await raffleStore.getRafflePriceDraw(detectedCode.key);
     if (priceMatched.value) {
+      if (priceMatched.value.status == 'ready') {
+        raffleStore.updateRafflePrice(
+          detectedCode.key,
+          ['status', 'scannedBy'],
+          { status: 'scanned', scannedBy: profileStore.userInfo }
+        );
+      }
       priceMatched.value.recipient =
         (await profileStore.getProfile(priceMatched.value.recipient.key)) ||
         priceMatched.value.recipient;
@@ -302,7 +327,7 @@ function releaseRafflePrice(price: RafflePrice) {
     return;
   }
   const msg = 'Release Raffle Price';
-  if (price.status !== 'ready') {
+  if (price.status === 'released') {
     $q.notify({
       message: `Price is already ${price.status}`,
       icon: 'info',

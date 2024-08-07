@@ -127,6 +127,11 @@ function onStreamAllDrawsOfSummit() {
     .subscribe({
       next(list) {
         raffleDraws.value = list;
+        raffleDraws.value.forEach(async (d) => {
+          d.participants = await raffleDrawStore.countParticipants({
+            draw: d.key,
+          });
+        });
       },
     });
 }
@@ -151,7 +156,7 @@ function cloneRaffleParticipants(raffle: RaffleDraw) {
       payload: raffle,
       done(target) {
         $q.notify({
-          message: `Clone to raffle draw ${target.name} with ${target.participants}`,
+          message: `Clone to raffle draw ${target.name} with ${target.participants} participants`,
           icon: 'info',
           color: 'positive',
         });
@@ -277,7 +282,7 @@ function onEditRaffle(raffle: RaffleDraw) {
 }
 function runRaffle(raffle: RaffleDraw) {
   if (raffle.status == 'open') {
-    $router.replace({
+    $router.push({
       name: 'raffle',
       params: {
         draw: raffle.key,

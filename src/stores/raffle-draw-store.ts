@@ -94,7 +94,7 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
       return deferred.promise;
     },
     //{participaints}
-    async joinRaffle(raffle: RaffleDraw, participant: IProfile) {
+    async joinRaffle(raffle: RaffleDraw, participant: IProfile, won?: boolean) {
       if (
         raffle.status == 'closed' ||
         /^(admin|moderator)$/.test(participant.role || '')
@@ -104,19 +104,19 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
       const payload = {
         key: '',
         draw: raffle.key,
+        won,
+        default: typeof won !== 'undefined' ? true : undefined,
         participant: firebaseService.clone({
           ...participant,
           email: '',
           mobileNumber: '',
-          tshirt: '',
           avatar: '',
-          gender: '',
         }),
       };
       const existing = await raffleParticipantsResource.getData(
         raffleParticipantsResource.getKeyOf(payload)
       );
-      if (existing) return existing;
+      if (existing) return { ...existing, prices: [] };
       const result = await raffleParticipantsResource.setData('', payload);
       const prices = await Promise.all(
         (raffle.defaultPrices || []).map((price) => {
@@ -134,7 +134,10 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
           );
         })
       );
-      return prices.length ? prices : result;
+      return {
+        ...result,
+        prices,
+      };
     },
     streamRaffleParticipants(raffle: RaffleDraw) {
       return raffleParticipantsResource.streamWith({
@@ -149,6 +152,9 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
     },
     //{winners}
     async setRaffleWinner(raffle: RaffleDraw, participant: RaffleParticipant) {
+      if (participant.won) {
+        return participant;
+      }
       await Promise.all([
         raffleParticipantsResource.updateProperty(participant.key, 'won', true),
         ...raffle.winnerPrices.map((price) => {
@@ -168,12 +174,6 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
       ]);
       participant.won = true;
       return participant;
-    },
-    streamRaffleWinners(raffle: RaffleDraw) {
-      return raffleParticipantsResource.streamWith({
-        draw: raffle.key,
-        won: true,
-      });
     },
     //{prices}
     async sendRafflePrice(

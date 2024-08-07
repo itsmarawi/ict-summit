@@ -18,6 +18,7 @@ export interface RaffleParticipant extends IBaseEntity {
   key: string;
   draw: string;
   won?: boolean;
+  default?: boolean;
   participant: IProfile;
 }
 
@@ -25,7 +26,8 @@ export interface RafflePrice extends IBaseEntity {
   key: string;
   draw: string;
   price: string;
-  status: 'ready' | 'unclaimed' | 'released';
+  status: 'ready' | 'scanned' | 'unclaimed' | 'released';
+  scannedBy?: IProfile;
   recipient: IProfile;
   releasedBy?: IProfile;
 }

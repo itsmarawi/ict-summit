@@ -60,6 +60,8 @@
                 { label: 'Large', value: 'L' },
                 { label: 'XL', value: 'XL' },
                 { label: 'XXL', value: 'XXL' },
+                { label: '3XL', value: '3XL' },
+                { label: '4XL', value: '4XL' },
               ]"
             >
             </q-option-group>

@@ -1,6 +1,10 @@
 <template>
-  <q-page>
-    <div v-if="canManageDraw && (selected.length >= groupCount || !ready)">
+  <q-page id="rafflePage">
+    <div
+      v-if="
+        canManageDraw && (selected.length >= groupCount || !ready) && !spinning
+      "
+    >
       <q-banner class="bg-positive q-mb-sm">
         <div class="text-h6 text-center" v-if="selected.length">
           <div>Congratulations!</div>
@@ -14,7 +18,12 @@
             Welcome to {{ presentRaffle?.name }} with
             {{ participants.length }} Participants
           </div>
-          <q-avatar v-for="p in participants" :key="p.key" color="grey">
+          <q-avatar
+            v-for="p in participants"
+            :key="p.key"
+            size="xs"
+            color="grey"
+          >
             <q-img v-if="p.participant.avatar" :src="p.participant.avatar" />
             <span v-else class="text-uppercase">{{
               p.participant.name.replace(/(\w)[\w]+\s?/g, '$1')
@@ -47,13 +56,32 @@
         </div>
         <template #action>
           <div class="print-hide">
-            <q-btn flat round icon="add" @click="groupCount++"></q-btn>
-            <q-btn flat round icon="qr_code" @click="ready = false"></q-btn>
+            <q-btn
+              flat
+              v-if="divisible"
+              rounded
+              icon="safety_divider"
+              @click="groupCount++, wheelsResults.push({ value: null })"
+              >&nbsp;Split</q-btn
+            >
+            <q-btn flat rounded icon="qr_code" @click="ready = false"
+              >Raffle Qr Code</q-btn
+            >
+            <q-btn
+              flat
+              rounded
+              icon="fullscreen"
+              :label="$q.fullscreen.isActive ? 'Exit Fullscreen' : 'Fullscreen'"
+              @click="toggleFullscreen"
+            ></q-btn>
           </div>
         </template>
       </q-banner>
       <div
-        v-if="participants.length >= 4 && presentRaffle?.winnerPrices?.length"
+        v-if="
+          (participants.length >= 4 && presentRaffle?.winnerPrices?.length) ||
+          spinning
+        "
         class="row justify -center"
       >
         <div class="col-12 text-center">
@@ -64,22 +92,31 @@
             >{{ price }}</q-chip
           >
         </div>
-
         <Roulette
           v-for="group in groupCount"
-          :key="group"
+          :key="group + 1"
           display-indicator
           :duration="5"
           class="wheel"
           ref="wheels"
           easing="bounce"
           :items="groupings[group - 1] || []"
-          :size="Math.min($q.screen.width, $q.screen.height) - 150"
+          :size="
+            Math.min($q.screen.width / groupCount, $q.screen.height - 150) - 5
+          "
+          :wheel-result-index="wheelsResults[group - 1]"
           :result-variation="duration"
-          @click="launchWheel"
-          @wheel-end="(winner:Person) => wheelEnded(wheels && wheels[group-1], winner)"
+          @click="confirmLaunchWeels"
+          @wheel-end="(winner:Person) => wheelEnded(group-1, winner)"
         >
         </Roulette>
+        <div class="col-12 text-h6 text-center q-pb-xl" v-if="winners.length">
+          <div>Congratulations!</div>
+          <q-chip v-for="winner in winners" :key="winner.key">
+            <ProfileAvatar size="sm" :profile-key="winner.participant.key" />
+            {{ winner.participant.name }}
+          </q-chip>
+        </div>
       </div>
       <div v-else>
         <q-banner class="text-center">
@@ -147,6 +184,13 @@ import { useRoute } from 'vue-router';
 import { Subscription } from 'rxjs';
 import { useQuasar } from 'quasar';
 import ProfileAvatar from 'src/components/common/ProfileAvatar.vue';
+import { ObjectUtil } from 'src/utils/object.util';
+function toggleFullscreen() {
+  const target = document.getElementById('rafflePage');
+  if (target) {
+    $q.fullscreen.toggle(target);
+  }
+}
 function generateAvatar(name: string) {
   const initials = name
     .split(' ')
@@ -193,11 +237,13 @@ const raffleStore = useRaffleDrawStore();
 const $q = useQuasar();
 
 const ready = ref(true);
+const wheelsResults = ref<{ value: null | number }[]>([{ value: null }]);
 const wheels = ref<SpinningWheel[] | null>(null);
 const spinning = ref(false);
 const participants = ref<RaffleParticipant[]>([]);
 const winners = ref<RaffleParticipant[]>([]);
 const selected = ref<RaffleParticipant[]>([]);
+const spinningWheels = ref<SpinningWheel[] | null>(null);
 const presentRaffle = ref<RaffleDraw>();
 const duration = ref(68);
 const groupCount = ref(1);
@@ -226,6 +272,21 @@ const groupings = computed(() => {
     parts.push(people.splice(0, memberCount));
   }
   return parts;
+});
+const divisible = computed(() => {
+  const totalCount = participants.value.length;
+  const memberCount = Math.max(
+    Math.ceil(totalCount / (groupCount.value + 1)),
+    4
+  );
+  const remainder = totalCount - memberCount * groupCount.value;
+  return remainder >= 4;
+});
+const shouldGroupDown = computed(() => {
+  const totalCount = participants.value.length;
+  const memberCount = Math.max(Math.ceil(totalCount / groupCount.value), 4);
+  const remainder = totalCount - memberCount * (groupCount.value - 1);
+  return remainder < 4;
 });
 const $route = useRoute();
 const isHosting = computed(() => {
@@ -256,21 +317,28 @@ async function load() {
   const raffleId = String($route.params.draw || '');
   presentRaffle.value = await raffleStore.getRaffleDraw(raffleId);
   if (presentRaffle.value) {
-    if (canManageDraw.value) {
-      participantSub = raffleStore
-        .streamRaffleParticipants(presentRaffle.value)
-        .subscribe({
-          next(value) {
+    participantSub = raffleStore
+      .streamRaffleParticipants(presentRaffle.value)
+      .subscribe({
+        next(list) {
+          if (canManageDraw.value) {
             if (!presentRaffle.value?.spinning) {
-              participants.value = value.filter((p) => !p.won);
-              if (groupCount.value == 1 && value.length >= 32) {
+              participants.value = list.filter((p) => !p.won);
+              if (groupCount.value == 1 && list.length >= 32) {
                 groupCount.value = 2;
-              } else if (participants.value.length < 8) {
-                groupCount.value = 1;
+                wheelsResults.value = [{ value: null }, { value: null }];
+              }
+              while (shouldGroupDown.value && groupCount.value > 2) {
+                groupCount.value = groupCount.value - 1;
+                wheelsResults.value.pop();
               }
             }
-          },
-        });
+          }
+          winners.value =
+            list.filter((p) => p.won && !p.default) || winners.value;
+        },
+      });
+    if (canManageDraw.value) {
       await raffleStore.updateRaffleDraw(
         presentRaffle.value.key,
         ['status', 'managedBy'],
@@ -284,14 +352,18 @@ async function load() {
         .joinRaffle(presentRaffle.value, profileStore.theUser)
         .then((result) => {
           if (result) {
+            const withPrices =
+              Array.isArray(result.prices) && result.prices.length > 0;
             $q.notify({
               position: 'center',
               icon: 'info',
-              message: `Welcome to ${presentRaffle.value?.name}`,
-              caption: Array.isArray(result)
-                ? `Please claim your ${result.length} freebie`
+              message: !result.won
+                ? `Welcome to ${presentRaffle.value?.name}`
+                : 'Already won!',
+              caption: withPrices
+                ? `Please claim your ${result.prices.length} freebie`
                 : '',
-              actions: presentRaffle.value?.defaultPrices.length
+              actions: withPrices
                 ? [
                     {
                       icon: 'reddem',
@@ -330,11 +402,6 @@ async function load() {
         }
       },
     });
-    winnesSub = raffleStore.streamRaffleWinners(presentRaffle.value).subscribe({
-      next(list) {
-        winners.value = list || winners.value;
-      },
-    });
   }
 }
 onMounted(async () => {
@@ -350,6 +417,20 @@ onUnmounted(async () => {
     });
   }
 });
+function confirmLaunchWeels() {
+  const msg = 'Spin the wheel' + (groupCount.value > 1 ? 's' : '');
+  $q.dialog({
+    title: `<span class="text-negative">${msg}</span>`,
+    message: `Are you sure you want to ${msg}?`,
+    color: 'warning',
+    cancel: { outline: true, rounded: true, color: 'negative' },
+    ok: { rounded: true, label: msg, icon: 'ion-play-circle' },
+    persistent: true,
+    html: true,
+  }).onOk(async () => {
+    await launchWheel();
+  });
+}
 
 async function launchWheel() {
   if (!canManageDraw.value) {
@@ -357,38 +438,76 @@ async function launchWheel() {
   }
   spinning.value = true;
   selected.value = [];
+  spinningWheels.value = [];
   //duration.value = Math.round(Math.random() * 50) + 50;
   if (!wheels.value) return;
-  wheels.value.forEach((wheel) => wheel.launchWheel());
+  wheels.value.forEach((wheel, index) => {
+    setTimeout(() => {
+      wheel.launchWheel();
+      spinningWheels.value?.push(wheel);
+    }, Math.round((index + 1) * Math.random() * 1000));
+  });
   if (presentRaffle.value && !presentRaffle.value?.spinning) {
+    presentRaffle.value.spinning = true;
     await raffleStore.updateRaffleDrawProp(
       presentRaffle.value.key,
       'spinning',
       true
     );
-    presentRaffle.value.spinning = true;
   }
 }
-async function wheelEnded(wheel: SpinningWheel | null, winner: Person) {
-  spinning.value = false;
-  const winningParticipant = participants.value.find(
+async function wheelEnded(groupIndex: number, winner: Person) {
+  const wheel = wheels.value?.[groupIndex];
+  const participant = participants.value.find(
     (p) => p.participant.key == winner.id
   );
-  if (!winningParticipant) return;
-  selected.value.push(winningParticipant);
-  if (presentRaffle.value) {
-    await raffleStore.setRaffleWinner(presentRaffle.value, winningParticipant);
+  if (!participant) {
+    return;
   }
-  if (presentRaffle.value && selected.value.length >= groupCount.value) {
+  const winningParticipant = ObjectUtil.copyObject(participant);
+  if (!winningParticipant) return;
+  if (presentRaffle.value) {
+    try {
+      await raffleStore.setRaffleWinner(
+        presentRaffle.value,
+        winningParticipant
+      );
+    } catch (error) {
+      console.log('failed', error);
+    }
+    selected.value.push(winningParticipant);
+  }
+  const index = spinningWheels.value?.findIndex((w) => wheel == w);
+  if (typeof index == 'number' && index >= 0) {
+    spinningWheels.value?.splice(index, 1);
+  }
+  if (presentRaffle.value && !spinningWheels.value?.length) {
     await raffleStore.updateRaffleDrawProp(
       presentRaffle.value.key,
       'spinning',
       false
     );
     presentRaffle.value.spinning = false;
+    setTimeout(() => {
+      spinning.value = false;
+      const list = [...selected.value];
+      while (list.length) {
+        const par = list.pop();
+        const index = participants.value.findIndex(
+          (p) => p.participant.key == par?.participant.key
+        );
+        if (index >= 0) {
+          participants.value.splice(index, 1);
+        }
+      }
+    }, 1000);
   }
 }
 function nextRound() {
+  while (shouldGroupDown.value && groupCount.value > 1) {
+    groupCount.value = groupCount.value - 1;
+    wheelsResults.value.pop();
+  }
   selected.value = [];
   ready.value = true;
 }

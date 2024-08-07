@@ -56,8 +56,21 @@
             label="Select Target Draw"
             :options="raffleDrawOptions"
             option-label="name"
+          >
+            <template #after>
+              <q-btn icon="add" @click="createDraw"
+                ><q-tooltip>Create Draw</q-tooltip></q-btn
+              >
+            </template>
+          </q-select>
+          <q-linear-progress
+            :size="'10px'"
+            rounded
+            class="q-mt-sm"
+            :class="saving ? '' : 'hidden'"
+            :value="copied"
+            :max="sourceParticipants.length"
           />
-          <q-linear-progress :value="copied" :max="sourceParticipants.length" />
         </q-card-section>
         <q-card-actions align="center">
           <div class="row justify-between q-gutter-sm">
@@ -78,7 +91,9 @@
               :loading="saving"
               rounded
               @click="onCloneParticipants"
-            />
+            >
+              <q-tooltip> Winners can re-join by scanning </q-tooltip>
+            </q-btn>
             <q-btn
               icon="copy_all"
               color="primary"
@@ -88,7 +103,9 @@
               :loading="saving"
               rounded
               @click="onCloneAll"
-            />
+            >
+              <q-tooltip> Block Winners from re-joining </q-tooltip>
+            </q-btn>
           </div>
         </q-card-actions>
       </q-form>
@@ -143,7 +160,11 @@ async function startCloning() {
     await Promise.all(
       sourceParticipants.value.map(async (participant) => {
         if (!raffleDraw.value) return;
-        await raffleStore.joinRaffle(raffleDraw.value, participant.participant);
+        await raffleStore.joinRaffle(
+          raffleDraw.value,
+          participant.participant,
+          participant.won
+        );
         copied.value++;
       })
     );
@@ -159,7 +180,20 @@ async function startCloning() {
       ...raffleDraw.value,
       participants: copied.value,
     });
-  isShowDialog.value = false;
+  setTimeout(() => {
+    isShowDialog.value = false;
+  }, 1000);
+}
+function createDraw() {
+  theDialogs.emit({
+    type: 'addRaffle',
+    arg: {
+      done(raffle) {
+        raffleDrawOptions.value.push(raffle);
+        raffleDraw.value = raffle;
+      },
+    },
+  });
 }
 theDialogs.on({
   type: 'cloneRaffleParticipants',

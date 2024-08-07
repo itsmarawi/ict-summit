@@ -17,7 +17,19 @@ export const useProfileStore = defineStore('profile', {
       cache: [],
       theUser: undefined,
     } as ProfileState),
-  getters: {},
+  getters: {
+    userInfo(): IProfile | undefined {
+      return (
+        this.theUser && {
+          ...this.theUser,
+          email: undefined,
+          emailVerified: undefined,
+          mobileNumber: undefined,
+          status: undefined,
+        }
+      );
+    },
+  },
   actions: {
     getUser() {
       let user;

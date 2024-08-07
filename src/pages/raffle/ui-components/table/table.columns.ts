@@ -1,11 +1,16 @@
 import { QTableColumn } from 'quasar';
-import { RaffleDraw, RafflePrice } from 'src/entities';
+import {
+  RaffleDraw,
+  RaffleDrawWithParticipants,
+  RafflePrice,
+} from 'src/entities';
 
 export const raffleDrawColumns = [
   {
     headerStyle: 'font-size: 20px',
     name: 'name',
-    field: (row: { name: string }) => row.name,
+    field: (row: RaffleDrawWithParticipants) =>
+      `${row.name}${row.participants ? ` (${row.participants})` : ''}`,
     label: 'Name',
     align: 'left',
     required: true,

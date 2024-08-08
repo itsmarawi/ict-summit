@@ -2,8 +2,49 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2025, 12, 31);
+    match /institutions/{institutionId} {
+      allow read: if request.auth != null && request.auth.token.email_verified == true;
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /profiles/{profileId} {
+      allow read: if request.auth != null && request.auth.token.email_verified == true;
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /draws/{drawId} {
+      allow read: if request.auth != null && request.auth.token.email_verified == true;
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /participants/{participantId} {
+      allow read: if request.auth != null && request.auth.token.email_verified == true;
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /prices/{priceId} {
+      allow read: if request.auth != null && request.auth.token.email_verified == true;
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /summits/{summitId} {
+      allow read: if true; // Allow anyone to read
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /speakers/{speakerId} {
+      allow read: if true; // Allow anyone to read
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /topics/{topicId} {
+      allow read: if true; // Allow anyone to read
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    match /sponsors/{sponsorId} {
+      allow read: if true; // Allow anyone to read
+      allow write: if request.auth != null && request.auth.token.email_verified == true;
     }
   }
 }

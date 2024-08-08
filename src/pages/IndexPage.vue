@@ -82,8 +82,10 @@
         </ul>
 
         <p class="text-h6">
-          <q-btn class="text-bold" dense>Register Now</q-btn> and be part of the
-          digital revolution!
+          <q-btn color="primary" class="text-bold" icon-right="ads_click"
+            >Register Now&nbsp;</q-btn
+          >
+          and be part of the digital revolution!
         </p>
       </div>
     </div>
@@ -104,53 +106,13 @@
         class="row fit justify-center items-center q-gutter-xl q-py-lg q-px-xl"
       >
         <SpeakerCard
-          avatar="https://www.realtechnirman.com/wp-content/uploads/2017/02/man-dummy.jpg"
-          company-logo="https://scontent-mnl1-2.xx.fbcdn.net/v/t39.30808-1/366598395_122103301430005970_7083018911420604229_n.jpg?stp=dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=f4b9fd&_nc_eui2=AeH_P8oUMfBWL8xeAym5H3EShcHhQ3PZHfqFweFDc9kd-irSWu3rT258VTtaEW31y6g&_nc_ohc=mo8mxVziV0cQ7kNvgGLXa0t&_nc_ht=scontent-mnl1-2.xx&oh=00_AYAo475oTYKt3AZbWvmd-F5Wz4Lj3CnrtJJIjYzl2Uaukg&oe=66B0851C"
-          full-name="MAHID A. MACADATO"
-          :position="'Communications Officer'"
-          expertise="Communications Specialist"
-        />
-        <SpeakerCard
-          avatar="https://media.licdn.com/dms/image/D5603AQEg6gM0GPKWTA/profile-displayphoto-shrink_800_800/0/1684551192284?e=2147483647&v=beta&t=pjWJWw_3RYL4mWYACa7TAi_0EZxrW3Vh3DflL1sYfpw"
-          company-logo="https://th.bing.com/th/id/OIP.uVU4EvwhKGbijAJs7_VM5QHaHa?rs=1&pid=ImgDetMain"
-          full-name="Moslemen M. Macarambon Jr."
-          :position="'President: Democracy.net.ph'"
-          expertise="Innovative Governance"
-        />
-        <SpeakerCard
-          avatar="https://www.aquasafemine.com/wp-content/uploads/2018/06/dummy-woman-570x570.png"
-          company-logo="https://th.bing.com/th/id/OIP.C1qUTEd3TjLOjthcUun7YAHaHa?rs=1&pid=ImgDetMain"
-          full-name="Mudzna M. Asakil"
-          :position="'College Dean'"
-          expertise="Database"
-        />
-        <SpeakerCard
-          avatar="https://www.aquasafemine.com/wp-content/uploads/2018/06/dummy-woman-570x570.png"
-          company-logo="https://th.bing.com/th/id/OIP.ow2rjrmA32_uMoiAbwCbJwHaHU?rs=1&pid=ImgDetMain"
-          full-name="Hannah Grace M. Parcon"
-          :position="'Project Focal: DICT IIDB'"
-          expertise="Digital Innovation"
-        />
-        <SpeakerCard
-          avatar="https://www.realtechnirman.com/wp-content/uploads/2017/02/man-dummy.jpg"
-          company-logo="https://th.bing.com/th/id/OIP.ow2rjrmA32_uMoiAbwCbJwHaHU?rs=1&pid=ImgDetMain"
-          full-name="Engr. Amal Salih M. Asum"
-          :position="'Provicial Field Officer'"
-          expertise="Innovative Governance"
-        />
-        <SpeakerCard
-          avatar="https://yt3.googleusercontent.com/ytc/AIdro_nezLkMAII0B_rjmEe_7CulWH488wO5M3mjhLYyquprIg=s160-c-k-c0x00ffffff-no-rj"
-          company-logo="https://avatars.githubusercontent.com/u/51888165?s=200&v=4"
-          full-name="Azreen M. Marohomsalic"
-          :position="'Chief Executive Officer'"
-          expertise="Project Management"
-        />
-        <SpeakerCard
-          avatar="https://avatars.githubusercontent.com/u/74109685?v=4"
-          company-logo="https://avatars.githubusercontent.com/u/51888165?s=200&v=4"
-          full-name="Lucman M. Abdulrachman"
-          :position="'Chief Technology Officer'"
-          expertise="Software Architecture"
+          v-for="speaker in speakers"
+          :key="speaker.fullname"
+          :avatar="speaker.avatar || speaker.defaultAvatar || ''"
+          :company-logo="speaker.companyLogo || ''"
+          :full-name="speaker.fullname"
+          :position="speaker.position"
+          :expertise="speaker.expertise"
         />
       </div>
     </div>
@@ -170,28 +132,15 @@
       <div
         class="row fit justify-center items-center q-gutter-xl q-py-lg q-px-xl"
       >
-        <TopicCard schedule="Aug 28" class="col-12 col-md-5">
-          <div>DIGITAL INNOVATION</div>
+        <TopicCard
+          v-for="topic in topics"
+          :key="topic.name + topic.schedule"
+          :schedule="topic.schedule"
+          class="col-12 col-md-5"
+        >
+          <div>{{ topic.name }}</div>
           <ul>
-            <li>ICT Industry Development for Lanao del Sur</li>
-            <li>Role and Updates of Academe in ICT</li>
-            <li>
-              Philippine Skills Framework (PSF) for ICT-related industries
-            </li>
-          </ul>
-        </TopicCard>
-        <TopicCard schedule="Aug 28" class="col-12 col-md-5">
-          <div>Governance</div>
-          <ul>
-            <li>IT Governance and ICT Council in LGU LDS Province</li>
-            <li>LDS ICT Ecosystem: Opportunities</li>
-          </ul>
-        </TopicCard>
-        <TopicCard schedule="Aug 29" class="col-12 col-md-5">
-          <div>ICT Council and ICT Trends</div>
-          <ul>
-            <li>ICT Council 101</li>
-            <li>Cybersecurity Best Practices</li>
+            <li v-for="line in topic.contents" :key="line">{{ line }}</li>
           </ul>
         </TopicCard>
       </div>
@@ -214,8 +163,9 @@
       >
         <InstitutionCard
           v-for="s in sponsors"
-          :key="s"
-          :logo="s"
+          :key="s.name || s.logo"
+          :logo="s.logo"
+          :bg="s.background"
         ></InstitutionCard>
       </div>
     </div>
@@ -399,9 +349,10 @@
             <div class="text-center">
               <q-btn
                 v-if="!profileStore.theUser?.institution"
-                icon="register"
+                icon-right="ads_click"
+                color="primary"
                 :to="{ name: 'start', params: { action: 'signup' } }"
-                >Register Now</q-btn
+                >Register Now &nbsp;</q-btn
               >
             </div>
           </div>
@@ -432,6 +383,24 @@ import { useRoute, useRouter } from 'vue-router';
 import { useProfileStore } from 'src/stores/profile-store';
 import { RafflePrice } from 'src/entities';
 import { useRaffleDrawStore } from 'src/stores/raffle-draw-store';
+type Speaker = {
+  fullname: string;
+  position: string;
+  expertise: string;
+  companyLogo?: string;
+  avatar?: string;
+  defaultAvatar?: string;
+};
+type Sponsor = {
+  logo: string;
+  background?: string;
+  name?: string;
+};
+type Topic = {
+  schedule: string;
+  name: string;
+  contents: string[];
+};
 defineOptions({
   name: 'IndexPage',
 });
@@ -447,18 +416,124 @@ $router.afterEach((route) => {
 const slide = ref('0');
 const attendees = ref(300);
 const prices = ref<RafflePrice[]>([]);
-const sponsors = ref<string[]>([]);
+const sponsors = ref<Sponsor[]>([]);
+const speakers = ref<Speaker[]>([]);
+const topics = ref<Topic[]>([]);
+
+const defaultManAvatar = ref<string>();
+const defaultWomanAvatar = ref<string>();
 // const participating = ref<string[]>([]);
 onMounted(async () => {
+  defaultManAvatar.value = (await import('../assets/man-dummy.webp')).default;
+  defaultWomanAvatar.value = (
+    await import('../assets/dummy-woman.png')
+  ).default;
+
   sponsors.value = [
-    (await import('../assets/logos/LDS Logo.png')).default,
-    (await import('../assets/logos/DICTBARMM.jpg.png')).default,
-    (await import('../assets/logos/MSU CICS.png')).default,
-    (await import('../assets/logos/ITSMarawi Logo.png')).default,
-    (await import('../assets/logos/KHMARS.jpg')).default,
-    (await import('../assets/logos/democracynetph.jpg')).default,
-    (await import('../assets/logos/MSU OFFICIAL LOGO.png')).default,
-    (await import('../assets/logos/MSU-BYTES.png')).default,
+    { logo: (await import('../assets/logos/LDS Logo.png')).default },
+    { logo: (await import('../assets/logos/ICTO.jpg')).default },
+    { logo: (await import('../assets/logos/DICT Logo.png')).default },
+    { logo: (await import('../assets/logos/MSU CICS.png')).default },
+    { logo: (await import('../assets/logos/ITSMarawi Logo.png')).default },
+    { logo: (await import('../assets/logos/KHMARS.jpg')).default },
+    { logo: (await import('../assets/logos/DemocracyNetPH.png')).default },
+    { logo: (await import('../assets/logos/Data Lake.jpg')).default },
+    {
+      logo: (await import('../assets/logos/DITO_PH_Logo-Transparent.png'))
+        .default,
+    },
+    {
+      logo: (
+        await import(
+          '../assets/logos/QBOInnovation_gray_accented_stacked_allcaps.png'
+        )
+      ).default,
+    },
+    {
+      logo: (await import('../assets/logos/Biond Logo.png')).default,
+      background: 'grey',
+    },
+    { logo: (await import('../assets/logos/MSU OFFICIAL LOGO.png')).default },
+    { logo: (await import('../assets/logos/MSU-BYTES.png')).default },
+    { logo: (await import('../assets/logos/The Cursor.png')).default },
+  ];
+
+  speakers.value = [
+    {
+      fullname: 'MAHID A. MACADATO',
+      position: 'Communications Officer',
+      expertise: 'Communications Specialist',
+      avatar: defaultManAvatar.value,
+      defaultAvatar: defaultManAvatar.value,
+      companyLogo: (await import('../assets/logos/LDS Logo.png')).default,
+    },
+    {
+      fullname: 'Moslemen M. Macarambon Jr.',
+      position: 'President: Democracy.net.ph',
+      expertise: 'Innovative Governance',
+      avatar:
+        'https://media.licdn.com/dms/image/D5603AQEg6gM0GPKWTA/profile-displayphoto-shrink_800_800/0/1684551192284?e=2147483647&v=beta&t=pjWJWw_3RYL4mWYACa7TAi_0EZxrW3Vh3DflL1sYfpw',
+      defaultAvatar: defaultManAvatar.value,
+      companyLogo: (await import('../assets/logos/DemocracyNetPH.png')).default,
+    },
+    {
+      fullname: 'Mudzna M. Asakil',
+      position: 'MSU CICS, College Dean',
+      expertise: 'Database',
+      avatar: defaultWomanAvatar.value,
+      defaultAvatar: defaultWomanAvatar.value,
+      companyLogo: (await import('../assets/logos/MSU CICS.png')).default,
+    },
+    {
+      fullname: 'Hannah Grace M. Parcon',
+      position: 'Project Focal: DICT IIDB',
+      expertise: 'Digital Innovation',
+      avatar: defaultWomanAvatar.value,
+      defaultAvatar: defaultWomanAvatar.value,
+      companyLogo: (await import('../assets/logos/DICTBARMM.jpg.png')).default,
+    },
+    {
+      fullname: 'Engr. Amal Salih M. Asum',
+      position: 'Provicial Field Officer',
+      expertise: 'Innovative Governance',
+      avatar: defaultManAvatar.value,
+      defaultAvatar: defaultManAvatar.value,
+      companyLogo: (await import('../assets/logos/DICTBARMM.jpg.png')).default,
+    },
+    {
+      fullname: 'Azreen M. Marohomsalic',
+      position: 'ITS Marawi, CEO',
+      expertise: 'Project Management',
+      avatar:
+        'https://yt3.googleusercontent.com/ytc/AIdro_nezLkMAII0B_rjmEe_7CulWH488wO5M3mjhLYyquprIg=s160-c-k-c0x00ffffff-no-rj',
+      defaultAvatar: defaultManAvatar.value,
+      companyLogo: (await import('../assets/logos/ITSMarawi Logo.png')).default,
+    },
+  ];
+
+  topics.value = [
+    {
+      schedule: 'Aug 28',
+      name: 'DIGITAL INNOVATION',
+      contents: [
+        'ICT Industry Development for Lanao del Sur',
+        'Role and Updates of Academe in ICT',
+        'Philippine Skills Framework (PSF) for ICT-related industries',
+      ],
+    },
+    {
+      schedule: 'Aug 28',
+      name: 'Governance',
+      contents: [
+        'IT Governance and ICT Council in LGU LDS Province',
+        'LDS ICT Ecosystem: Opportunities',
+      ],
+    },
+    {
+      schedule: 'Aug 29',
+      name: 'ICT Council and ICT Trends',
+      contents: ['ICT Council 101', 'Cybersecurity Best Practices'],
+    },
   ];
   handleHash();
   attendees.value = await profileStore.countRegisters();

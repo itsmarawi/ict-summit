@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 200px">
-    <q-card class="bg-white q-pt-xl full-width">
+  <div style="width: 205px">
+    <q-card class="bg-white q-pt-xl full-width" style="height: 250px">
       <q-card-section>
         <div class="absolute" style="right: 5px; top: -80px">
           <q-avatar size="90px" color="grey">

@@ -75,6 +75,8 @@
           <q-btn
             style="width: 300px"
             label="Select"
+            :disable="!selectedUrl"
+            :loading="loading"
             color="primary"
             rounded
             type="submit"
@@ -126,6 +128,7 @@ theDialogs.on({
     loading.value = true;
     file.value = undefined;
     path.value = e.path || '';
+    selectedUrl.value = '';
     try {
       list.value = await mediaStore.listMedia(e.path || '');
     } catch (error) {
@@ -144,6 +147,7 @@ theDialogs.on({
 
 async function uploadImage() {
   if (!file.value) return;
+  loading.value = true;
   const image = await mediaStore.uploadImage(file.value, path.value);
   if (image) {
     list.value.push({
@@ -153,5 +157,6 @@ async function uploadImage() {
     });
     selectedUrl.value = image;
   }
+  loading.value = false;
 }
 </script>

@@ -478,8 +478,8 @@ onMounted(async () => {
     },
   });
   handleHash();
-  attendees.value = await profileStore.countRegisters();
   if (profileStore.theUser) {
+    attendees.value = await profileStore.countRegisters();
     raffeDrawStore.streamParticipantPrices(profileStore.theUser).subscribe({
       next(value) {
         prices.value = value.filter((p) => p.status == 'ready');

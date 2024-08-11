@@ -1,5 +1,5 @@
 <template>
-  <BaseTable row-key="name" :columns="columns" :rows="filteredPrices" flat>
+  <BaseTable row-key="key" :columns="columns" :rows="filteredRecords" flat>
     <!-- Table -->
     <template #tableTop>
       <TableTop
@@ -38,7 +38,7 @@
       />
     </template>
     <template #cardItemCustomSection="{ props, col }">
-      <CardItemCustomSection :col="col" :identity="props.row.recipient.key" />
+      <CardItemCustomSection :col="col" :identity="props.row.key" />
     </template>
     <!-- Card -->
   </BaseTable>
@@ -82,7 +82,7 @@ onUnmounted(() => {
 async function onSearchRecords(term: string) {
   search.value = term;
 }
-const filteredPrices = computed(() => {
+const filteredRecords = computed(() => {
   if (search.value) {
     return speakers.value.filter((r) =>
       new RegExp(search.value, 'i').test(

@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="isShowDialog" persistent>
+  <q-dialog v-model="isShowDialog" persistent :full-width="$q.screen.lt.xl">
     <q-card flat class="q-pa-md" style="min-width: 300px; max-width: 80vw">
       <q-form @submit="onSubmit" v-if="topic">
         <div class="row">

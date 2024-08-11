@@ -1,6 +1,6 @@
 <template>
-  <q-dialog v-model="isShowDialog" persistent>
-    <q-card flat class="q-pa-md" style="min-width: 300px; max-width: 80vw">
+  <q-dialog v-model="isShowDialog" persistent :full-width="$q.screen.lt.xl">
+    <q-card flat class="q-pa-md" style="min-width: 300px">
       <q-form @submit="onSubmit" v-if="speaker">
         <div class="row">
           <q-avatar class="col q-mx-sm">

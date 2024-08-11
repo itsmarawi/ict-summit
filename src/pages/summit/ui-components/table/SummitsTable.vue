@@ -29,7 +29,7 @@
       />
     </template>
     <template #cardItemCustomSection="{ props, col }">
-      <CardItemCustomSection :col="col" :identity="props.row.recipient.key" />
+      <CardItemCustomSection :col="col" :identity="props.row.key" />
     </template>
 
     <!-- Card -->

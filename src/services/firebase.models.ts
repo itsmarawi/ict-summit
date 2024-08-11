@@ -7,4 +7,8 @@ export type Models =
   | entities.RaffleDraw
   | entities.RaffleParticipant
   | entities.RafflePrice
+  | entities.ISummit
+  | entities.ISpeaker
+  | entities.ITopic
+  | entities.ISponsor
   | undefined;

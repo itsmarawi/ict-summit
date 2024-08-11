@@ -1,4 +1,4 @@
-import { capitalize, onUnmounted, ref } from 'vue';
+import { capitalize, onMounted, onUnmounted, ref } from 'vue';
 import { IInstitution } from 'src/entities';
 import { theDialogs } from 'src/dialogs';
 import { useQuasar } from 'quasar';
@@ -68,6 +68,11 @@ export default function () {
     next(value) {
       listInstutions.value = [...value];
     },
+  });
+  onMounted(() => {
+    if (!profileStore.theUser?.emailVerified) {
+      $router.replace({ name: 'verify' });
+    }
   });
   onUnmounted(() => {
     sub.unsubscribe();

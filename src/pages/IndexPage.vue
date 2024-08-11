@@ -1,7 +1,10 @@
 <template>
   <q-page class="">
     <div class="full-width row">
-      <q-img class="rounded-borders col" src="~assets/ictSummit2.jpg">
+      <q-img
+        class="rounded-borders col"
+        :src="activeSummit?.promoBg || '~assets/ictSummit2.jpg'"
+      >
         <div
           v-if="profileStore.theUser"
           class="text-bold"
@@ -23,7 +26,10 @@
       <CountCard count="2" description="Days" />
       <CountCard count="6" description="Speakers" />
       <CountCard count="10+" description="Topics" />
-      <CountCard count="300" description="Slots" />
+      <CountCard
+        :count="String(activeSummit?.slots || 300)"
+        description="Slots"
+      />
       <CountCard
         v-if="attendees"
         :count="attendees.toString()"
@@ -381,26 +387,10 @@ import InstitutionCard from 'src/components/InstitutionCard.vue';
 import { scroll } from 'quasar';
 import { useRoute, useRouter } from 'vue-router';
 import { useProfileStore } from 'src/stores/profile-store';
-import { RafflePrice } from 'src/entities';
+import { ISpeaker, ISponsor, ISummit, ITopic, RafflePrice } from 'src/entities';
 import { useRaffleDrawStore } from 'src/stores/raffle-draw-store';
-type Speaker = {
-  fullname: string;
-  position: string;
-  expertise: string;
-  companyLogo?: string;
-  avatar?: string;
-  defaultAvatar?: string;
-};
-type Sponsor = {
-  logo: string;
-  background?: string;
-  name?: string;
-};
-type Topic = {
-  schedule: string;
-  name: string;
-  contents: string[];
-};
+import { useSummitStore } from 'src/stores/summit-store';
+
 defineOptions({
   name: 'IndexPage',
 });
@@ -408,6 +398,8 @@ const $route = useRoute();
 const $router = useRouter();
 const profileStore = useProfileStore();
 const raffeDrawStore = useRaffleDrawStore();
+const summitStore = useSummitStore();
+
 $router.afterEach((route) => {
   if (route.hash && route.name == 'home') {
     handleHash(route.hash);
@@ -415,32 +407,81 @@ $router.afterEach((route) => {
 });
 const slide = ref('0');
 const attendees = ref(300);
+const activeSummit = ref<ISummit>();
 const prices = ref<RafflePrice[]>([]);
-const sponsors = ref<Sponsor[]>([]);
-const speakers = ref<Speaker[]>([]);
-const topics = ref<Topic[]>([]);
+const sponsors = ref<ISponsor[]>([]);
+const speakers = ref<ISpeaker[]>([]);
+const topics = ref<ITopic[]>([]);
 
 const defaultManAvatar = ref<string>();
 const defaultWomanAvatar = ref<string>();
 // const participating = ref<string[]>([]);
+
 onMounted(async () => {
+  activeSummit.value = await summitStore.getSummit(
+    new Date().getFullYear().toString()
+  );
+
   defaultManAvatar.value = (await import('../assets/man-dummy.webp')).default;
   defaultWomanAvatar.value = (
     await import('../assets/dummy-woman.png')
   ).default;
 
   sponsors.value = [
-    { logo: (await import('../assets/logos/LDS Logo.png')).default },
-    { logo: (await import('../assets/logos/ICTO.jpg')).default },
-    { logo: (await import('../assets/logos/DICT Logo.png')).default },
-    { logo: (await import('../assets/logos/MSU CICS.png')).default },
-    { logo: (await import('../assets/logos/ITSMarawi Logo.png')).default },
-    { logo: (await import('../assets/logos/KHMARS.jpg')).default },
-    { logo: (await import('../assets/logos/DemocracyNetPH.png')).default },
-    { logo: (await import('../assets/logos/Data Lake.jpg')).default },
+    {
+      logo: (await import('../assets/logos/LDS Logo.png')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/ICTO.jpg')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/DICT Logo.png')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/MSU CICS.png')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/ITSMarawi Logo.png')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/KHMARS.jpg')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/DemocracyNetPH.png')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/Data Lake.jpg')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
     {
       logo: (await import('../assets/logos/DITO_PH_Logo-Transparent.png'))
         .default,
+      key: '',
+      name: '',
+      summit: '',
     },
     {
       logo: (
@@ -448,14 +489,35 @@ onMounted(async () => {
           '../assets/logos/QBOInnovation_gray_accented_stacked_allcaps.png'
         )
       ).default,
+      key: '',
+      name: '',
+      summit: '',
     },
     {
       logo: (await import('../assets/logos/Biond Logo.png')).default,
       background: 'grey',
+      key: '',
+      name: '',
+      summit: '',
     },
-    { logo: (await import('../assets/logos/MSU OFFICIAL LOGO.png')).default },
-    { logo: (await import('../assets/logos/MSU-BYTES.png')).default },
-    { logo: (await import('../assets/logos/The Cursor.png')).default },
+    {
+      logo: (await import('../assets/logos/MSU OFFICIAL LOGO.png')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/MSU-BYTES.png')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
+    {
+      logo: (await import('../assets/logos/The Cursor.png')).default,
+      key: '',
+      name: '',
+      summit: '',
+    },
   ];
 
   speakers.value = [
@@ -466,6 +528,8 @@ onMounted(async () => {
       avatar: defaultManAvatar.value,
       defaultAvatar: defaultManAvatar.value,
       companyLogo: (await import('../assets/logos/LDS Logo.png')).default,
+      key: '',
+      summit: '',
     },
     {
       fullname: 'Moslemen M. Macarambon Jr.',
@@ -475,6 +539,8 @@ onMounted(async () => {
         'https://media.licdn.com/dms/image/D5603AQEg6gM0GPKWTA/profile-displayphoto-shrink_800_800/0/1684551192284?e=2147483647&v=beta&t=pjWJWw_3RYL4mWYACa7TAi_0EZxrW3Vh3DflL1sYfpw',
       defaultAvatar: defaultManAvatar.value,
       companyLogo: (await import('../assets/logos/DemocracyNetPH.png')).default,
+      key: '',
+      summit: '',
     },
     {
       fullname: 'Mudzna M. Asakil',
@@ -483,6 +549,8 @@ onMounted(async () => {
       avatar: defaultWomanAvatar.value,
       defaultAvatar: defaultWomanAvatar.value,
       companyLogo: (await import('../assets/logos/MSU CICS.png')).default,
+      key: '',
+      summit: '',
     },
     {
       fullname: 'Hannah Grace M. Parcon',
@@ -490,7 +558,9 @@ onMounted(async () => {
       expertise: 'Digital Innovation',
       avatar: defaultWomanAvatar.value,
       defaultAvatar: defaultWomanAvatar.value,
-      companyLogo: (await import('../assets/logos/DICTBARMM.jpg.png')).default,
+      companyLogo: (await import('../assets/logos/DICT Logo.png')).default,
+      key: '',
+      summit: '',
     },
     {
       fullname: 'Engr. Amal Salih M. Asum',
@@ -498,7 +568,9 @@ onMounted(async () => {
       expertise: 'Innovative Governance',
       avatar: defaultManAvatar.value,
       defaultAvatar: defaultManAvatar.value,
-      companyLogo: (await import('../assets/logos/DICTBARMM.jpg.png')).default,
+      companyLogo: (await import('../assets/logos/DICT Logo.png')).default,
+      key: '',
+      summit: '',
     },
     {
       fullname: 'Azreen M. Marohomsalic',
@@ -508,6 +580,8 @@ onMounted(async () => {
         'https://yt3.googleusercontent.com/ytc/AIdro_nezLkMAII0B_rjmEe_7CulWH488wO5M3mjhLYyquprIg=s160-c-k-c0x00ffffff-no-rj',
       defaultAvatar: defaultManAvatar.value,
       companyLogo: (await import('../assets/logos/ITSMarawi Logo.png')).default,
+      key: '',
+      summit: '',
     },
   ];
 
@@ -520,6 +594,8 @@ onMounted(async () => {
         'Role and Updates of Academe in ICT',
         'Philippine Skills Framework (PSF) for ICT-related industries',
       ],
+      key: '',
+      summit: '',
     },
     {
       schedule: 'Aug 28',
@@ -528,13 +604,42 @@ onMounted(async () => {
         'IT Governance and ICT Council in LGU LDS Province',
         'LDS ICT Ecosystem: Opportunities',
       ],
+      key: '',
+      summit: '',
     },
     {
       schedule: 'Aug 29',
       name: 'ICT Council and ICT Trends',
       contents: ['ICT Council 101', 'Cybersecurity Best Practices'],
+      key: '',
+      summit: '',
     },
   ];
+  const summit = activeSummit.value?.key || new Date().getFullYear().toString();
+  const speakerSub = summitStore.streamSpeakers(summit).subscribe({
+    next(value) {
+      speakers.value = value;
+      if (value.length) {
+        speakerSub.unsubscribe();
+      }
+    },
+  });
+  const topicsSub = summitStore.streamTopics(summit).subscribe({
+    next(value) {
+      topics.value = value;
+      if (value.length) {
+        topicsSub.unsubscribe();
+      }
+    },
+  });
+  const sponsorSub = summitStore.streamSponsors(summit).subscribe({
+    next(value) {
+      sponsors.value = value;
+      if (value.length) {
+        sponsorSub.unsubscribe();
+      }
+    },
+  });
   handleHash();
   attendees.value = await profileStore.countRegisters();
   if (profileStore.theUser) {

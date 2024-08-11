@@ -122,6 +122,7 @@
     </q-drawer>
     <q-page-container>
       <router-view />
+      <SelectImageDialog />
     </q-page-container>
     <q-footer elevated>
       <q-btn
@@ -149,10 +150,14 @@
 import { useQuasar } from 'quasar';
 import { useAuthStore } from 'src/stores/auth-store';
 import { useProfileStore } from 'src/stores/profile-store';
-import { ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import DrawerItemList from './DrawerItemList.vue';
 import { IDrawerItem } from './drawer.item';
+import SelectImageDialog from 'src/dialogs/shared/components/SelectImageDialog.vue';
+import { useSummitStore } from 'src/stores/summit-store';
+import { Subscription } from 'rxjs';
+import { ISummit } from 'src/entities';
 
 defineOptions({
   name: 'MainLayout',
@@ -162,44 +167,15 @@ const profileStore = useProfileStore();
 const $q = useQuasar();
 const authStore = useAuthStore();
 const $router = useRouter();
+const summitStore = useSummitStore();
 const drawer = ref(false);
+const summitList = ref<ISummit[]>();
+const canModerate = computed(() => {
+  return /^(admin|moderator)$/i.test(profileStore.theUser?.role || '');
+});
+let sub: Subscription;
 
-const menuList = ref<IDrawerItem[]>([
-  {
-    icon: 'inbox',
-    label: 'Accounts',
-    route: { name: 'accounts' },
-    requires: ['admin'],
-  },
-  {
-    icon: 'ion-analytics',
-    label: 'Dashboard',
-    route: { name: 'dashboard' },
-    requires: ['admin', 'moderator'],
-  },
-  {
-    label: 'Raffle',
-    icon: 'widgets',
-    children: [
-      {
-        icon: 'celebration',
-        label: 'Draws',
-        route: { name: 'draws' },
-        requires: ['admin', 'moderator'],
-      },
-      {
-        icon: 'military_tech',
-        label: 'Prices',
-        route: { name: 'prices' },
-      },
-    ],
-  },
-  {
-    icon: 'qr_code_scanner',
-    label: 'Scanner',
-    route: { name: 'scanner' },
-  },
-]);
+const menuList = ref<IDrawerItem[]>([]);
 function onLogout() {
   $q.dialog({
     title: '<span class="text-primary">Logout</span>',
@@ -217,4 +193,109 @@ function onLogout() {
       //
     });
 }
+onMounted(async () => {
+  if (canModerate.value) {
+    sub = summitStore.streamSummits().subscribe({
+      next(value) {
+        summitList.value = value;
+        menuList.value = [
+          {
+            icon: 'inbox',
+            label: 'Accounts',
+            route: { name: 'accounts' },
+            requires: ['admin'],
+          },
+          {
+            icon: 'ion-analytics',
+            label: 'Dashboard',
+            route: { name: 'dashboard' },
+            requires: ['admin', 'moderator'],
+          },
+          {
+            icon: 'inbox',
+            label: 'Summit Management',
+            route: { name: 'summit' },
+            requires: ['admin'],
+          },
+          ...value.map((summit) => ({
+            label: summit.name,
+            icon: 'sun',
+            route: {
+              name: 'summit-mgt',
+              params: { summit: summit.key, tab: 'speakers' },
+            },
+          })),
+          {
+            label: 'Raffle',
+            icon: 'widgets',
+            children: [
+              {
+                icon: 'celebration',
+                label: 'Draws',
+                route: { name: 'draws' },
+                requires: ['admin', 'moderator'],
+              },
+              {
+                icon: 'military_tech',
+                label: 'Prices',
+                route: { name: 'prices' },
+              },
+            ],
+          },
+          {
+            icon: 'qr_code_scanner',
+            label: 'Scanner',
+            route: { name: 'scanner' },
+          },
+        ];
+      },
+    });
+  } else {
+    menuList.value = [
+      {
+        icon: 'inbox',
+        label: 'Accounts',
+        route: { name: 'accounts' },
+        requires: ['admin'],
+      },
+      {
+        icon: 'ion-analytics',
+        label: 'Dashboard',
+        route: { name: 'dashboard' },
+        requires: ['admin', 'moderator'],
+      },
+      {
+        icon: 'inbox',
+        label: 'Summit Management',
+        route: { name: 'summit' },
+        requires: ['admin'],
+      },
+      {
+        label: 'Raffle',
+        icon: 'widgets',
+        children: [
+          {
+            icon: 'celebration',
+            label: 'Draws',
+            route: { name: 'draws' },
+            requires: ['admin', 'moderator'],
+          },
+          {
+            icon: 'military_tech',
+            label: 'Prices',
+            route: { name: 'prices' },
+          },
+        ],
+      },
+      {
+        icon: 'qr_code_scanner',
+        label: 'Scanner',
+        route: { name: 'scanner' },
+      },
+    ];
+  }
+});
+onUnmounted(() => {
+  sub?.unsubscribe();
+});
 </script>

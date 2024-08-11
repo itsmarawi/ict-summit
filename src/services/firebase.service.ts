@@ -51,6 +51,7 @@ import {
   ref,
   uploadBytesResumable,
   UploadTask,
+  listAll,
 } from 'firebase/storage';
 import {
   getDatabase,
@@ -232,6 +233,17 @@ class FirebaseService {
       });
       uploadTask.catch(reject);
     });
+  }
+  async listAll(path: string) {
+    const listRef = ref(imagesStorageRef, path);
+    const list = await listAll(listRef);
+    return Promise.all(
+      list.items.map(async (item) => ({
+        url: await getDownloadURL(item),
+        name: item.name,
+        path: item.fullPath,
+      }))
+    );
   }
   async updateProfile(displayName: string, photoURL?: string) {
     if (auth.currentUser) {

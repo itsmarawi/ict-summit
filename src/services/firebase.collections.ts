@@ -7,5 +7,9 @@ export function getCollections(fbStore: Firestore) {
     draws: () => collection(fbStore, 'draws'),
     participants: () => collection(fbStore, 'participants'),
     prices: () => collection(fbStore, 'prices'),
+    summits: () => collection(fbStore, 'summits'),
+    speakers: () => collection(fbStore, 'speakers'),
+    topics: () => collection(fbStore, 'topics'),
+    sponsors: () => collection(fbStore, 'sponsors'),
   };
 }

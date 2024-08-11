@@ -63,6 +63,22 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'summit-management/:summit/:tab',
+        name: 'summit-mgt',
+        component: () => import('pages/summit/SummitPage.vue'),
+        meta: {
+          requires: ['admin', 'moderator'],
+        },
+      },
+      {
+        path: 'summit/:summit?',
+        name: 'summit',
+        component: () => import('pages/summit/IndexPage.vue'),
+        meta: {
+          requires: ['admin'],
+        },
+      },
+      {
         path: 'scanner',
         name: 'scanner',
         component: () => Promise.resolve(ScannerIndexPage),

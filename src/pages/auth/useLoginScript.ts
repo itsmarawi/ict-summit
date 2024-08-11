@@ -28,7 +28,12 @@ export default function () {
         username: email.value,
         password: password.value,
         done() {
-          if ($route.query?.redirect && profileStore.theUser?.institution) {
+          if (!profileStore.theUser?.emailVerified) {
+            $router.replace({ name: 'verify' });
+          } else if (
+            $route.query?.redirect &&
+            profileStore.theUser?.institution
+          ) {
             $router.replace($route.query?.redirect as string);
           } else if (profileStore.theUser?.institution) {
             $router.replace({ name: 'home' });

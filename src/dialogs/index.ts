@@ -4,8 +4,16 @@ import { Auth } from './auth/definition';
 import { Registration } from './registration/definition';
 import { Profile } from 'src/pages/account/ui-components/dialog/definition';
 import { Raffle } from 'src/pages/raffle/ui-components/dialogs/definition';
+import { Summit } from 'src/pages/summit/ui-components/dialogs/definition';
+import { Shared } from './shared/definition';
 
-export type DialogStructs = Auth | Registration | Profile | Raffle;
+export type DialogStructs =
+  | Auth
+  | Registration
+  | Profile
+  | Raffle
+  | Summit
+  | Shared;
 
 type DialogEvents = ToEmit<DialogStructs, DialogStructs>;
 export type DialogTypes = ToType<DialogStructs, DialogStructs>;

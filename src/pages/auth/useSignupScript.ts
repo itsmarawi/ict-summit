@@ -38,13 +38,13 @@ export default function () {
     try {
       signingUp.value = true;
       await authStore.signup(payload, '');
-      await router.replace({ name: 'start', params: { action: 'register' } });
+      await router.replace({ name: 'verify' });
     } catch (error) {
       if (error == 'synching timeout') {
         $q.notify({
           icon: 'error',
           color: 'negative',
-          message: 'Failed to sync profile with the institution',
+          message: 'Failed to sync profile',
         });
       } else if (error instanceof FirebaseError) {
         switch (error.code) {

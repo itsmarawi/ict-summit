@@ -219,7 +219,8 @@ onMounted(async () => {
           },
           ...value.map((summit) => ({
             label: summit.name,
-            icon: 'sun',
+            icon: 'settings_applications',
+            requires: ['admin', 'moderator'],
             route: {
               name: 'summit-mgt',
               params: { summit: summit.key, tab: 'speakers' },

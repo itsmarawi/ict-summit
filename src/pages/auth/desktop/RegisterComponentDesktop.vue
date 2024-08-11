@@ -72,11 +72,17 @@
               class="q-mt-lg"
               style="width: 100%"
               label="Register"
-              color="primary"
+              :disable="isRegistrationFull"
+              :color="!isRegistrationFull ? 'primary' : 'negative'"
+              :loading="loading"
               rounded
               data-cy="registerAccount"
               type="submit"
-            />
+            >
+              <q-tooltip v-if="isRegistrationFull" class="text-h5 bg-negative"
+                >Registration slots is Full!</q-tooltip
+              >
+            </q-btn>
           </div>
         </q-form>
       </div>
@@ -109,6 +115,8 @@ const {
   listInstutions,
   mapInstitution,
   registerUser,
+  isRegistrationFull,
+  loading,
 } = useRegisterScript();
 </script>
 

@@ -1,10 +1,11 @@
-import { capitalize, onMounted, onUnmounted, ref } from 'vue';
-import { IInstitution } from 'src/entities';
+import { capitalize, computed, onMounted, onUnmounted, ref } from 'vue';
+import { IInstitution, ISummit } from 'src/entities';
 import { theDialogs } from 'src/dialogs';
 import { useQuasar } from 'quasar';
 import { useInstitutionStore } from 'src/stores/institution-store';
 import { useProfileStore } from 'src/stores/profile-store';
 import { useRoute, useRouter } from 'vue-router';
+import { useSummitStore } from 'src/stores/summit-store';
 
 export default function () {
   const gender = ref<'male' | 'female'>('male');
@@ -61,18 +62,27 @@ export default function () {
   const $q = useQuasar();
   const institutionStore = useInstitutionStore();
   const profileStore = useProfileStore();
+  const summitStore = useSummitStore();
   const $router = useRouter();
   const $route = useRoute();
-
+  const activeSummit = ref<ISummit>();
+  const registerCount = ref(0);
+  const isRegistrationFull = computed(() => {
+    return (activeSummit.value?.slots || 300) <= registerCount.value;
+  });
   const sub = institutionStore.streamAll().subscribe({
     next(value) {
       listInstutions.value = [...value];
     },
   });
-  onMounted(() => {
+  onMounted(async () => {
     if (!profileStore.theUser?.emailVerified) {
       $router.replace({ name: 'verify' });
     }
+    activeSummit.value = await summitStore.getSummit(
+      new Date().getFullYear().toString()
+    );
+    registerCount.value = await profileStore.countRegisters();
   });
   onUnmounted(() => {
     sub.unsubscribe();
@@ -90,6 +100,14 @@ export default function () {
     });
   }
   function registerInstitution() {
+    if (isRegistrationFull.value) {
+      $q.notify({
+        icon: 'error',
+        color: 'negative',
+        message: 'Registration is Full',
+      });
+      return;
+    }
     if (!tShirtSize.value) {
       $q.notify({
         icon: 'warning',
@@ -122,6 +140,14 @@ export default function () {
     if (!institution.value?.key || !profileStore.theUser) {
       return;
     }
+    if (isRegistrationFull.value) {
+      $q.notify({
+        icon: 'error',
+        color: 'negative',
+        message: 'Registration slots is Full',
+      });
+      return;
+    }
     try {
       loading.value = true;
       const office = await institutionStore.findInstitutionByKey(
@@ -130,6 +156,26 @@ export default function () {
       if (!office) {
         await institutionStore.createInstitution(institution.value);
       }
+
+      const instHeadCount = await profileStore.countProfiles({
+        institution: institution.value.key,
+        summit: activeSummit?.value?.key || '',
+      });
+      if (
+        instHeadCount > 0 &&
+        activeSummit.value &&
+        (activeSummit.value.slotsPerInstitution || 0) > 0 &&
+        (activeSummit.value.slotsPerInstitution || 0) <= instHeadCount
+      ) {
+        $q.notify({
+          icon: 'error',
+          color: 'negative',
+          message: `Registration slots for ${institution.value.name} is full`,
+        });
+        loading.value = false;
+        return;
+      }
+
       const user = profileStore.theUser;
       await profileStore.modifyProfile(
         user?.key,
@@ -174,6 +220,7 @@ export default function () {
     gender,
     tShirtSize,
     position,
+    loading,
     listInstutions,
     positionOptions,
     filterPositions,
@@ -181,5 +228,6 @@ export default function () {
     registerInstitution,
     mapInstitution,
     registerUser,
+    isRegistrationFull,
   };
 }

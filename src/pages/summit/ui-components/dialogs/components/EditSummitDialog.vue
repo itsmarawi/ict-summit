@@ -61,6 +61,16 @@
                 </q-icon>
               </q-chip>
             </div>
+            <div class="col-6">
+              <q-input label="Slots" v-model="summit.slots" type="number" />
+            </div>
+            <div class="col-6">
+              <q-input
+                label="Slots per Institution"
+                v-model="summit.slotsPerInstitution"
+                type="number"
+              />
+            </div>
           </div>
         </q-card-section>
         <q-card-actions align="right">

@@ -1,7 +1,9 @@
 <template>
   <q-page>
     <q-toolbar>
-      <q-toolbar-title></q-toolbar-title>
+      <q-toolbar-title
+        >{{ activeSummit?.name }} ({{ activeSummit?.year }})</q-toolbar-title
+      >
     </q-toolbar>
     <q-tabs v-model="activeTab">
       <q-route-tab

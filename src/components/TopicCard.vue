@@ -8,7 +8,7 @@
           style="width: 200px; height: 10px; margin-top: -40px"
         >
           <div class="absolute text-h6 text-bold" style="top: -20px" dense>
-            {{ schedule }}
+            {{ date.formatDate(schedule, 'MMM DD') }}
           </div>
         </q-chip>
       </q-card-section>
@@ -19,6 +19,8 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { date } from 'quasar';
+
 defineProps<{
   schedule: string;
 }>();

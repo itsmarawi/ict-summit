@@ -463,16 +463,20 @@ onMounted(async () => {
   });
   const topicsSub = summitStore.streamTopics(summit).subscribe({
     next(value) {
-      topics.value = value;
       if (value.length) {
+        topics.value = value
+          .filter((t) => t.status)
+          .sort((a, b) => a.schedule.localeCompare(b.schedule));
         topicsSub.unsubscribe();
       }
     },
   });
   const sponsorSub = summitStore.streamSponsors(summit).subscribe({
     next(value) {
-      sponsors.value = value;
       if (value.length) {
+        sponsors.value = value
+          .filter((s) => s.status)
+          .sort((a, b) => (a.order || 100) - (b.order || 100));
         sponsorSub.unsubscribe();
       }
     },

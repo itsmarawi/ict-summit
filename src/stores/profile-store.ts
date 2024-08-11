@@ -165,10 +165,10 @@ export const useProfileStore = defineStore('profile', {
       }
       return profile;
     },
-    countRegisters() {
+    countRegisters(summit?: string) {
       return profileResource.count({
         'institution >=': '',
-        summit: new Date().getFullYear().toString(),
+        summit: summit || new Date().getFullYear().toString(),
       });
     },
     countProfiles(filter: Partial<IProfile>) {

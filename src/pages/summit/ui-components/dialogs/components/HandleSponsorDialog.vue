@@ -38,7 +38,7 @@
               </q-input>
             </div>
 
-            <div class="col-12">
+            <div class="col-8">
               <div
                 v-if="sponsor.logo"
                 class="cursor-pointer"
@@ -47,6 +47,9 @@
                 <q-img :src="sponsor.logo" height="100px" />
               </div>
               <q-btn v-else icon="image" @click="selectCompanyIcon" />
+            </div>
+            <div class="col-4">
+              <q-input label="Order" v-model="sponsor.order" type="number" />
             </div>
           </div>
         </q-card-section>
@@ -98,7 +101,7 @@ async function onSubmit() {
       ? await summitStore.registerSponsor(sponsor.value)
       : await summitStore.updateSponsor(
           sponsor.value.key,
-          ['name', 'logo', 'background', 'institution'],
+          ['name', 'logo', 'background', 'institution', 'order'],
           sponsor.value
         );
     if (saved) {

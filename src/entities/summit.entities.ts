@@ -29,6 +29,7 @@ export interface ISpeaker extends IBaseEntity {
 }
 export interface ISponsor extends IBaseEntity {
   key: string;
+  order?: number;
   summit: string;
   logo: string;
   background?: string;

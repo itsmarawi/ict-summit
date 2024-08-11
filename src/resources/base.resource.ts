@@ -1014,6 +1014,14 @@ export abstract class BaseResource<T extends IBaseResourceModel> {
       existing.status = status;
       cb && this.subscribeOn(existing, cb);
       this.manageDocCallback(existing);
+    } else {
+      cb &&
+        cb({
+          status: existing.status,
+          entity: this.entity,
+          module: '',
+          key: existing.key,
+        });
     }
     return existing;
   }

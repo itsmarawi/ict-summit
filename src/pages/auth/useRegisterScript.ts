@@ -8,9 +8,16 @@ import { useRoute, useRouter } from 'vue-router';
 import { useSummitStore } from 'src/stores/summit-store';
 
 export default function () {
-  const gender = ref<'male' | 'female'>('male');
-  const tShirtSize = ref<'S' | 'M' | 'L' | 'XL' | 'XXL'>('L');
-  const position = ref('');
+  const $q = useQuasar();
+  const institutionStore = useInstitutionStore();
+  const profileStore = useProfileStore();
+  const summitStore = useSummitStore();
+  const $router = useRouter();
+  const $route = useRoute();
+
+  const gender = ref<string>(profileStore.theUser?.gender || 'male');
+  const tShirtSize = ref<string>(profileStore.theUser?.tshirt || 'L');
+  const position = ref(profileStore.theUser?.position || '');
   const institution = ref<IInstitution>();
   const listInstutions = ref<IInstitution[]>([]);
   const positionOptions = ref([
@@ -59,20 +66,22 @@ export default function () {
   ]);
   const filteredPositions = ref<string[]>([]);
   const loading = ref(false);
-  const $q = useQuasar();
-  const institutionStore = useInstitutionStore();
-  const profileStore = useProfileStore();
-  const summitStore = useSummitStore();
-  const $router = useRouter();
-  const $route = useRoute();
   const activeSummit = ref<ISummit>();
   const registerCount = ref(0);
   const isRegistrationFull = computed(() => {
-    return (activeSummit.value?.slots || 300) <= registerCount.value;
+    return (
+      !profileStore.theUser?.institution &&
+      (activeSummit.value?.slots || 300) <= registerCount.value
+    );
   });
   const sub = institutionStore.streamAll().subscribe({
     next(value) {
       listInstutions.value = [...value];
+      if (profileStore.theUser?.institution) {
+        institution.value = listInstutions.value.find(
+          (i) => i.key == profileStore.theUser?.institution
+        );
+      }
     },
   });
   onMounted(async () => {

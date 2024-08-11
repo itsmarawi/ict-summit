@@ -200,6 +200,16 @@ onMounted(async () => {
         summitList.value = value;
         menuList.value = [
           {
+            icon: 'home',
+            label: 'Home',
+            route: { name: 'home' },
+          },
+          {
+            icon: 'person',
+            label: 'Registration',
+            route: { name: 'start', params: { action: 'register' } },
+          },
+          {
             icon: 'inbox',
             label: 'Accounts',
             route: { name: 'accounts' },

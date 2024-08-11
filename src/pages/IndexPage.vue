@@ -23,9 +23,23 @@
       </q-img>
     </div>
     <div class="row fit justify-center items-center q-gutter-lg q-py-lg">
-      <CountCard count="2" description="Days" />
-      <CountCard count="6" description="Speakers" />
-      <CountCard count="10+" description="Topics" />
+      <CountCard
+        :count="
+          String(
+            date.getDateDiff(
+              activeSummit?.dateEnd || activeSummit?.dateStart || new Date(),
+              activeSummit?.dateStart || new Date(),
+              'days'
+            ) || 1
+          )
+        "
+        description="Days"
+      />
+      <CountCard :count="String(speakers.length || 6)" description="Speakers" />
+      <CountCard
+        :count="String(topics.length || 10) + '+'"
+        description="Topics"
+      />
       <CountCard
         :count="String(activeSummit?.slots || 300)"
         description="Slots"
@@ -390,7 +404,7 @@ import CountCard from 'components/CountCard.vue';
 import SpeakerCard from 'components/SpeakerCard.vue';
 import TopicCard from 'src/components/TopicCard.vue';
 import InstitutionCard from 'src/components/InstitutionCard.vue';
-import { scroll } from 'quasar';
+import { date, scroll } from 'quasar';
 import { useRoute, useRouter } from 'vue-router';
 import { useProfileStore } from 'src/stores/profile-store';
 import { ISpeaker, ISponsor, ISummit, ITopic, RafflePrice } from 'src/entities';

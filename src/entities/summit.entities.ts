@@ -5,6 +5,7 @@ export interface ISummit extends IBaseEntity {
   year: string;
   name: string;
   theme: string;
+  cutOff?: string;
   dateStart: string;
   dateEnd: string;
   promoBg?: string;

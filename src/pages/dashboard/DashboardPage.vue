@@ -51,6 +51,8 @@ const tShirtSizes = ref<{ size: string; value?: number }[]>([
   { size: 'L', value: 0 },
   { size: 'XL', value: 0 },
   { size: 'XXL', value: 0 },
+  { size: '3XL', value: 0 },
+  { size: '4XL', value: 0 },
 ]);
 const institutions = ref<
   { inst: string; name: string; male?: number; female?: number }[]

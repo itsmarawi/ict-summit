@@ -1,7 +1,7 @@
 import { capitalize, computed, onMounted, onUnmounted, ref } from 'vue';
 import { IInstitution, ISummit } from 'src/entities';
 import { theDialogs } from 'src/dialogs';
-import { useQuasar } from 'quasar';
+import { date, useQuasar } from 'quasar';
 import { useInstitutionStore } from 'src/stores/institution-store';
 import { useProfileStore } from 'src/stores/profile-store';
 import { useRoute, useRouter } from 'vue-router';
@@ -91,7 +91,21 @@ export default function () {
     activeSummit.value = await summitStore.getSummit(
       new Date().getFullYear().toString()
     );
-    registerCount.value = await profileStore.countRegisters();
+    if (
+      activeSummit.value?.cutOff &&
+      date.getDateDiff(new Date(), activeSummit.value?.cutOff, 'days') >= 0
+    ) {
+      $q.notify({
+        icon: 'error',
+        color: 'negative',
+        message: 'Registration have reached the cut-off',
+      });
+      $router.replace({
+        name: 'home',
+      });
+    } else {
+      registerCount.value = await profileStore.countRegisters();
+    }
   });
   onUnmounted(() => {
     sub.unsubscribe();

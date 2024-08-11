@@ -34,7 +34,7 @@
               </div>
               <q-btn v-else icon="image" @click="selectPromoBg" />
             </div>
-            <div class="col-12">
+            <div class="col-6">
               <q-chip size="md" color="primary" class="full-width">
                 {{ date.formatDate(summit.dateStart, 'MMM DD') }} -
                 {{ date.formatDate(summit.dateEnd, 'MMM DD') }}
@@ -60,6 +60,30 @@
                   </q-popup-proxy>
                 </q-icon>
               </q-chip>
+            </div>
+            <div class="col-6">
+              <q-input label="Cut-Off" v-model="summit.cutOff">
+                <template #append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date v-model="summit.cutOff">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Set"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
             <div class="col-6">
               <q-input label="Slots" v-model="summit.slots" type="number" />
@@ -132,6 +156,7 @@ async function onSubmit() {
             'slotsPerInstitution',
             'promoBg',
             'name',
+            'cutOff',
           ],
           summit.value
         );

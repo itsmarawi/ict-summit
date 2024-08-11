@@ -52,9 +52,9 @@ const tShirtSizes = ref<{ size: string; value?: number }[]>([
   { size: 'XL', value: 0 },
   { size: 'XXL', value: 0 },
 ]);
-const institutions = ref<{ inst: string; male?: number; female?: number }[]>(
-  []
-);
+const institutions = ref<
+  { inst: string; name: string; male?: number; female?: number }[]
+>([]);
 const commonChartOptions: EChartsOption = {
   toolbox: {
     show: true,
@@ -75,7 +75,7 @@ const chartInstiutionOptions = computed(() => {
     xAxis: [
       {
         type: 'category',
-        data: institutions.value.map((i) => i.inst),
+        data: institutions.value.map((i) => `${i.name} (${i.inst})`),
       },
     ],
     yAxis: [
@@ -115,6 +115,9 @@ const chartInstiutionPieOptions = computed(() => {
         data: institutions.value.map((i) => ({
           name: i.inst,
           value: (i.female || 0) + (i.male || 0),
+          label: {
+            formatter: `${i.name} (${i.inst})`,
+          },
         })),
       },
     ],
@@ -163,6 +166,7 @@ onMounted(async () => {
       institutions.value = value.map((i) => ({
         inst: i.key,
         value: 0,
+        name: i.name,
       }));
       institutions.value.forEach((i) => {
         profileStore

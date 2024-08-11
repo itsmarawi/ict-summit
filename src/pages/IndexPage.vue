@@ -439,8 +439,10 @@ onMounted(async () => {
   const summit = activeSummit.value?.key || new Date().getFullYear().toString();
   const speakerSub = summitStore.streamSpeakers(summit).subscribe({
     next(value) {
-      speakers.value = value;
       if (value.length) {
+        speakers.value = value
+          .filter((s) => s.status)
+          .sort((a, b) => (a.order || 100) - (b.order || 100));
         speakerSub.unsubscribe();
       }
     },

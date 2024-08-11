@@ -24,9 +24,9 @@
             <div class="col-12 q-pb-sm">
               <q-input label="Expertise" v-model="speaker.expertise" />
             </div>
-            <span class="col-6 text-bold text-grey">Gender:</span>
+            <span class="col-3 text-bold text-grey">Gender:</span>
             <q-option-group
-              class="col-6"
+              class="col-3"
               inline
               v-model="speaker.defaultAvatar"
               :options="[
@@ -35,6 +35,7 @@
               ]"
             >
             </q-option-group>
+            <q-input label="Order" v-model="speaker.order" type="number" />
             <div class="col-6">
               <div
                 v-if="speaker.avatar"
@@ -122,6 +123,7 @@ async function onSubmit() {
             'expertise',
             'position',
             'avatar',
+            'order',
           ],
           speaker.value
         );

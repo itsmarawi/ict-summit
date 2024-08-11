@@ -16,6 +16,7 @@ export interface ISummit extends IBaseEntity {
 
 export interface ISpeaker extends IBaseEntity {
   key: string;
+  order?: number;
   summit: string;
   fullname: string;
   position: string;

@@ -104,7 +104,7 @@ const filteredPrices = computed(() => {
 function streamSpeakers() {
   sub = summitStore.streamSpeakers(activeSummit.value.key).subscribe({
     next(list) {
-      speakers.value = list;
+      speakers.value = list.sort((a, b) => (a.order || 100) - (b.order || 100));
     },
   });
 }

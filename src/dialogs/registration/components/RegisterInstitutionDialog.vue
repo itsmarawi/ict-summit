@@ -45,8 +45,10 @@
             type="text"
             label="Short Name"
             hint="at least 2 letters"
+            maxlength="15"
             :rules="[
               (val) => /^.{2}/.test(val) || 'Please enter a valid short name',
+              (val) => /\s/.test(val) || 'Cannot contain space',
             ]"
             hide-bottom-space
           >

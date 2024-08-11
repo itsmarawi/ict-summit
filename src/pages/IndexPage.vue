@@ -114,7 +114,13 @@
         <SpeakerCard
           v-for="speaker in speakers"
           :key="speaker.fullname"
-          :avatar="speaker.avatar || speaker.defaultAvatar || ''"
+          :avatar="
+            speaker.avatar ||
+            (speaker.defaultAvatar == 'woman'
+              ? defaultWomanAvatar
+              : defaultManAvatar) ||
+            ''
+          "
           :company-logo="speaker.companyLogo || ''"
           :full-name="speaker.fullname"
           :position="speaker.position"
@@ -427,194 +433,9 @@ onMounted(async () => {
     await import('../assets/dummy-woman.png')
   ).default;
 
-  sponsors.value = [
-    {
-      logo: (await import('../assets/logos/LDS Logo.png')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/ICTO.jpg')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/DICT Logo.png')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/MSU CICS.png')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/ITSMarawi Logo.png')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/KHMARS.jpg')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/DemocracyNetPH.png')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/Data Lake.jpg')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/DITO_PH_Logo-Transparent.png'))
-        .default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (
-        await import(
-          '../assets/logos/QBOInnovation_gray_accented_stacked_allcaps.png'
-        )
-      ).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/Biond Logo.png')).default,
-      background: 'grey',
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/MSU OFFICIAL LOGO.png')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/MSU-BYTES.png')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-    {
-      logo: (await import('../assets/logos/The Cursor.png')).default,
-      key: '',
-      name: '',
-      summit: '',
-    },
-  ];
-
-  speakers.value = [
-    {
-      fullname: 'MAHID A. MACADATO',
-      position: 'Communications Officer',
-      expertise: 'Communications Specialist',
-      avatar: defaultManAvatar.value,
-      defaultAvatar: defaultManAvatar.value,
-      companyLogo: (await import('../assets/logos/LDS Logo.png')).default,
-      key: '',
-      summit: '',
-    },
-    {
-      fullname: 'Moslemen M. Macarambon Jr.',
-      position: 'President: Democracy.net.ph',
-      expertise: 'Innovative Governance',
-      avatar:
-        'https://media.licdn.com/dms/image/D5603AQEg6gM0GPKWTA/profile-displayphoto-shrink_800_800/0/1684551192284?e=2147483647&v=beta&t=pjWJWw_3RYL4mWYACa7TAi_0EZxrW3Vh3DflL1sYfpw',
-      defaultAvatar: defaultManAvatar.value,
-      companyLogo: (await import('../assets/logos/DemocracyNetPH.png')).default,
-      key: '',
-      summit: '',
-    },
-    {
-      fullname: 'Mudzna M. Asakil',
-      position: 'MSU CICS, College Dean',
-      expertise: 'Database',
-      avatar: defaultWomanAvatar.value,
-      defaultAvatar: defaultWomanAvatar.value,
-      companyLogo: (await import('../assets/logos/MSU CICS.png')).default,
-      key: '',
-      summit: '',
-    },
-    {
-      fullname: 'Hannah Grace M. Parcon',
-      position: 'Project Focal: DICT IIDB',
-      expertise: 'Digital Innovation',
-      avatar: defaultWomanAvatar.value,
-      defaultAvatar: defaultWomanAvatar.value,
-      companyLogo: (await import('../assets/logos/DICT Logo.png')).default,
-      key: '',
-      summit: '',
-    },
-    {
-      fullname: 'Engr. Amal Salih M. Asum',
-      position: 'Provicial Field Officer',
-      expertise: 'Innovative Governance',
-      avatar: defaultManAvatar.value,
-      defaultAvatar: defaultManAvatar.value,
-      companyLogo: (await import('../assets/logos/DICT Logo.png')).default,
-      key: '',
-      summit: '',
-    },
-    {
-      fullname: 'Azreen M. Marohomsalic',
-      position: 'ITS Marawi, CEO',
-      expertise: 'Project Management',
-      avatar:
-        'https://yt3.googleusercontent.com/ytc/AIdro_nezLkMAII0B_rjmEe_7CulWH488wO5M3mjhLYyquprIg=s160-c-k-c0x00ffffff-no-rj',
-      defaultAvatar: defaultManAvatar.value,
-      companyLogo: (await import('../assets/logos/ITSMarawi Logo.png')).default,
-      key: '',
-      summit: '',
-    },
-  ];
-
-  topics.value = [
-    {
-      schedule: 'Aug 28',
-      name: 'DIGITAL INNOVATION',
-      contents: [
-        'ICT Industry Development for Lanao del Sur',
-        'Role and Updates of Academe in ICT',
-        'Philippine Skills Framework (PSF) for ICT-related industries',
-      ],
-      key: '',
-      summit: '',
-    },
-    {
-      schedule: 'Aug 28',
-      name: 'Governance',
-      contents: [
-        'IT Governance and ICT Council in LGU LDS Province',
-        'LDS ICT Ecosystem: Opportunities',
-      ],
-      key: '',
-      summit: '',
-    },
-    {
-      schedule: 'Aug 29',
-      name: 'ICT Council and ICT Trends',
-      contents: ['ICT Council 101', 'Cybersecurity Best Practices'],
-      key: '',
-      summit: '',
-    },
-  ];
+  sponsors.value = [];
+  speakers.value = [];
+  topics.value = [];
   const summit = activeSummit.value?.key || new Date().getFullYear().toString();
   const speakerSub = summitStore.streamSpeakers(summit).subscribe({
     next(value) {

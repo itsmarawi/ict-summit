@@ -24,6 +24,17 @@
             <div class="col-12 q-pb-sm">
               <q-input label="Expertise" v-model="speaker.expertise" />
             </div>
+            <span class="col-6 text-bold text-grey">Gender:</span>
+            <q-option-group
+              class="col-6"
+              inline
+              v-model="speaker.defaultAvatar"
+              :options="[
+                { label: 'Man', value: 'man' },
+                { label: 'Woman', value: 'woman' },
+              ]"
+            >
+            </q-option-group>
             <div class="col-6">
               <div
                 v-if="speaker.avatar"

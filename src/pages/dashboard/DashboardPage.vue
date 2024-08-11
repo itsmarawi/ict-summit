@@ -115,9 +115,6 @@ const chartInstiutionPieOptions = computed(() => {
         data: institutions.value.map((i) => ({
           name: i.inst,
           value: (i.female || 0) + (i.male || 0),
-          label: {
-            formatter: `${i.name} (${i.inst})`,
-          },
         })),
       },
     ],

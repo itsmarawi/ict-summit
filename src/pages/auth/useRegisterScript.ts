@@ -171,6 +171,7 @@ export default function () {
           icon: 'error',
           color: 'negative',
           message: `Registration slots for ${institution.value.name} is full`,
+          caption: 'Consider registering your department or sub-unit',
         });
         loading.value = false;
         return;

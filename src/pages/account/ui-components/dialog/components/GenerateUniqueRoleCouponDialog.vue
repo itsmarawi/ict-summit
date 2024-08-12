@@ -118,6 +118,13 @@ theDialogs.on({
       e.error && e.error(new Error('already have role'));
       return;
     }
+    if (user.role == 'admin') {
+      options.value = [...Roles];
+    } else if (user.role == 'moderator') {
+      options.value = ['No role', ...Roles].filter(
+        (r) => !/^(admin|moderator)$/.test(r)
+      );
+    }
     uCoupon.value = '';
     isShowDialog.value = true;
   },

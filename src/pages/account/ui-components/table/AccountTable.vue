@@ -18,6 +18,7 @@
     <template #tableBodyRight="{ props }">
       <TableBodyRight
         @onToggleRole="onToggleRole(props.row)"
+        @generate-u-coupon="generateUCoupon(props.row)"
         :elements="computedPropsTableActionRight"
       />
     </template>
@@ -27,6 +28,7 @@
     <template #cardItemRight="{ props }">
       <CardItemRight
         @on-toggle-role="onToggleRole(props.row)"
+        @generate-u-coupon="generateUCoupon(props.row)"
         :elements="computedPropsTableActionRight"
       />
     </template>
@@ -43,7 +45,7 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
 import { computed, onMounted, ref } from 'vue';
-import { IProfile } from 'src/entities';
+import { IProfile, ISummit } from 'src/entities';
 import { accountColumns } from 'src/pages/account/ui-components/table/table.columns';
 import { useProfileStore } from 'src/stores/profile-store';
 import { theDialogs } from 'src/dialogs';
@@ -54,18 +56,23 @@ import TableBodyCustomColumn from 'src/pages/account/ui-components/table/table-c
 import CardItemRight from 'src/pages/account/ui-components/table/card-components/CardItemRight.vue';
 import CardItemCustomSection from 'src/pages/account/ui-components/table/card-components/CardItemCustomSection.vue';
 import { propsTableActionRight } from './table.elements';
+import { useSummitStore } from 'src/stores/summit-store';
 
 const $q = useQuasar();
 const profileStore = useProfileStore();
-
+const summitStore = useSummitStore();
+const activeSummit = ref<ISummit>();
 const columns = ref(accountColumns);
 const profiles = ref([] as IProfile[]);
 const profile = ref({} as IProfile);
 const search = ref('');
 
-onMounted(() => {
+onMounted(async () => {
   profile.value = profileStore.theUser as IProfile;
   onStreamAllProfiles();
+  activeSummit.value = await summitStore.getSummit(
+    new Date().getFullYear().toString()
+  );
 });
 
 const computedPropsTableActionRight = computed(() => {
@@ -136,5 +143,22 @@ function onToggleStatus(value: IProfile) {
     .onCancel(() => {
       // console.log('>>>> Cancel')
     });
+}
+function generateUCoupon(payload: IProfile) {
+  if (!activeSummit.value) return;
+  theDialogs.emit({
+    type: 'generateURoleCouponDialog',
+    arg: {
+      profile: payload,
+      summit: activeSummit.value,
+      error(err) {
+        $q.notify({
+          message: String(err),
+          color: 'negative',
+          icon: 'error',
+        });
+      },
+    },
+  });
 }
 </script>

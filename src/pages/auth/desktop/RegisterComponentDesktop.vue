@@ -68,6 +68,7 @@
           </div>
 
           <div class="text-center">
+            <q-input label="Coupon Code" v-model="couponCode" />
             <q-btn
               class="q-mt-lg"
               style="width: 100%"
@@ -115,6 +116,7 @@ const {
   listInstutions,
   mapInstitution,
   registerUser,
+  couponCode,
   isRegistrationFull,
   loading,
 } = useRegisterScript();

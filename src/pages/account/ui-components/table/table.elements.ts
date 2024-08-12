@@ -7,4 +7,10 @@ export const propsTableActionRight: ITableUIElements[] = [
     icon: 'manage_accounts',
     label: 'Assign Role',
   },
+  {
+    event: 'generateUCoupon',
+    color: 'positive',
+    icon: 'sell',
+    label: 'Generate Unique Coupon',
+  },
 ];

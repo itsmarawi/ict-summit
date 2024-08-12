@@ -1,5 +1,11 @@
 import { IBaseEntity } from './base.entity';
-export const Roles = ['admin', 'participant', 'moderator', ''] as const;
+export const Roles = [
+  'admin',
+  'participant',
+  'moderator',
+  'organizer',
+  '',
+] as const;
 export type RoleType = (typeof Roles)[number];
 export interface IProfile extends IBaseEntity {
   key: string;

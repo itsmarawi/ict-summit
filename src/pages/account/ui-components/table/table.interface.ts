@@ -9,7 +9,11 @@ interface IStyle {
   icon?: string;
 }
 
-export type TEvents = 'onToggleRole' | 'onAddQrEdits' | 'onNominateSubscriptionRole' | 'onSearch';
+export type TEvents =
+  | 'onToggleRole'
+  | 'onAddQrEdits'
+  | 'generateUCoupon'
+  | 'onSearch';
 export interface ITableUIElements {
   event: TEvents;
   label?: string;

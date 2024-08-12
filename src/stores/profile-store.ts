@@ -187,9 +187,7 @@ export const useProfileStore = defineStore('profile', {
           instKey: this.theUser.institution,
         });
       } else if (this.theUser && this.theUser?.role === 'admin') {
-        return profileResource.streamWith({
-          'institution !=': '',
-        });
+        return profileResource.streamWith();
       } else {
         return profileResource.streamWith({
           key: this.theUser?.key,

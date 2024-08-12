@@ -1,11 +1,12 @@
 import { capitalize, computed, onMounted, onUnmounted, ref } from 'vue';
-import { IInstitution, ISummit } from 'src/entities';
+import { IInstitution, ISummit, Roles } from 'src/entities';
 import { theDialogs } from 'src/dialogs';
 import { date, useQuasar } from 'quasar';
 import { useInstitutionStore } from 'src/stores/institution-store';
 import { useProfileStore } from 'src/stores/profile-store';
 import { useRoute, useRouter } from 'vue-router';
 import { useSummitStore } from 'src/stores/summit-store';
+import { Profiler } from 'src/utils/profiler';
 
 export default function () {
   const $q = useQuasar();
@@ -68,8 +69,23 @@ export default function () {
   const loading = ref(false);
   const activeSummit = ref<ISummit>();
   const registerCount = ref(0);
+  const couponCode = ref('');
+  const roleOfCoupon = computed(() => {
+    if (!profileStore.theUser || !activeSummit.value || !couponCode.value)
+      return '';
+    const summit = activeSummit.value;
+    const profile = profileStore.theUser;
+    const mapping = Roles.map((r) => ({
+      role: r,
+      code: String(
+        Profiler.hashName(`${profile.email}:${summit.key}:${r}`)
+      ).replace('-', 'N'),
+    }));
+    return mapping.find((m) => m.code == couponCode.value)?.role || '';
+  });
   const isRegistrationFull = computed(() => {
     return (
+      !roleOfCoupon.value &&
       !profileStore.theUser?.institution &&
       (activeSummit.value?.slots || 300) <= registerCount.value
     );
@@ -199,16 +215,27 @@ export default function () {
         loading.value = false;
         return;
       }
+      const couponRole = roleOfCoupon.value;
 
       const user = profileStore.theUser;
       await profileStore.modifyProfile(
         user?.key,
-        ['institution', 'position', 'gender', 'tshirt', 'summit'],
+        [
+          'institution',
+          'position',
+          'gender',
+          'tshirt',
+          'summit',
+          'role',
+          'status',
+        ],
         {
           institution: institution.value.key,
           position: position.value,
           gender: gender.value,
           tshirt: tShirtSize.value,
+          status: true,
+          role: couponRole || user.role,
           summit: new Date().getFullYear().toString(),
         }
       );
@@ -243,6 +270,7 @@ export default function () {
     institution,
     gender,
     tShirtSize,
+    couponCode,
     position,
     loading,
     listInstutions,

@@ -309,4 +309,12 @@ onMounted(async () => {
 onUnmounted(() => {
   sub?.unsubscribe();
 });
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.addEventListener('message', async (e) => {
+    if (!e.data) return;
+    $router.push({
+      name: 'prices',
+    });
+  });
+}
 </script>

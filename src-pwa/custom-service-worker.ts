@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*
  * This file (which will be your service worker)
  * is picked up by the build system ONLY if
@@ -33,3 +34,35 @@ if (process.env.MODE !== 'ssr' || process.env.PROD) {
     )
   );
 }
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  // This looks to see if the current is already open and
+  // focuses if it is
+  event.waitUntil(
+    self.clients
+      .matchAll({
+        type: 'window',
+      })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if ('focus' in client) {
+            client.postMessage({
+              type: 'notificationClick',
+              data: event.notification.data,
+            });
+            return client.focus();
+          }
+        }
+        self.clients.openWindow('/').then((client) => {
+          setTimeout(() => {
+            if (client) {
+              client.postMessage({
+                type: 'notificationClick',
+                data: event.notification.data,
+              });
+            }
+          }, 1000);
+        });
+      })
+  );
+});

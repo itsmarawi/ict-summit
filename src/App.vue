@@ -46,6 +46,14 @@ defineOptions({
 const $q = useQuasar();
 $q.dark.set(true);
 onMounted(async () => {
+  if (
+    ($q.platform.is.android ||
+      $q.platform.is.ios ||
+      typeof Notification != 'undefined') &&
+    !['granted', 'denied'].includes(Notification.permission)
+  ) {
+    Notification.requestPermission();
+  }
   await import('src/workflows');
   theWorkflows.ready(true);
 });

@@ -5,22 +5,22 @@
         class="rounded-borders col"
         :src="activeSummit?.promoBg || '~assets/ictSummit2.jpg'"
       >
-        <div
-          v-if="profileStore.theUser"
-          class="text-bold"
-          :class="$q.screen.gt.sm ? 'q-ma-xl text-h4' : 'text-h6'"
-          style="background: transparent"
-        >
-          Hi, {{ profileStore.theUser.name }}!
-          <q-btn
-            v-if="prices.length"
-            flat
-            :label="`Redeem ${prices.length}`"
-            :to="{ name: 'prices' }"
-            icon="redeem"
-          />
-        </div>
       </q-img>
+      <div
+        v-if="profileStore.theUser"
+        class="text-bold absolute q-ma-md"
+        :class="$q.screen.gt.sm ? 'q-ma-xl text-h4' : 'text-h6'"
+        style="background: transparent"
+      >
+        Hi, {{ profileStore.theUser.name }}!
+        <q-btn
+          v-if="prices.length"
+          flat
+          :label="`Redeem ${prices.length}`"
+          :to="{ name: 'prices' }"
+          icon="redeem"
+        />
+      </div>
     </div>
     <div class="row fit justify-center items-center q-gutter-lg q-py-lg">
       <CountCard
@@ -487,6 +487,12 @@ onMounted(async () => {
     raffeDrawStore.streamParticipantPrices(profileStore.theUser).subscribe({
       next(value) {
         prices.value = value.filter((p) => p.status == 'ready');
+        prices.value.forEach((p) => {
+          new Notification(`Redeem your ${p.price} price`, {
+            body: `Your qualified to redeem ${p.price} price`,
+            tag: p.key,
+          });
+        });
       },
     });
   }

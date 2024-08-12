@@ -336,6 +336,19 @@ async function load() {
           }
           winners.value =
             list.filter((p) => p.won && !p.default) || winners.value;
+          winners.value
+            .filter((w) => profileStore.theUser?.key == w.participant.key)
+            .forEach((w) => {
+              new Notification(
+                `Congrats ${
+                  w.participant.name
+                } you win ${presentRaffle.value?.winnerPrices.join(', ')}`,
+                {
+                  body: presentRaffle.value?.name,
+                  tag: w.key,
+                }
+              );
+            });
         },
       });
     if (canManageDraw.value) {

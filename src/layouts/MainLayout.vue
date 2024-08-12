@@ -225,7 +225,7 @@ onMounted(async () => {
             icon: 'inbox',
             label: 'Summit Management',
             route: { name: 'summit' },
-            requires: ['admin'],
+            requires: ['admin', 'moderator'],
           },
           ...value.map((summit) => ({
             label: summit.name,

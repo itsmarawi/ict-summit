@@ -35,13 +35,13 @@
         "
         description="Days"
       />
-      <CountCard :count="String(speakers.length || 6)" description="Speakers" />
+      <CountCard :count="String(speakers.length || 2)" description="Speakers" />
       <CountCard
-        :count="String(topics.length || 10) + '+'"
+        :count="String(topics.length || 1) + '+'"
         description="Topics"
       />
       <CountCard
-        :count="String(activeSummit?.slots || 300)"
+        :count="String(activeSummit?.slots || 0)"
         description="Slots"
       />
       <CountCard
@@ -426,7 +426,7 @@ $router.afterEach((route) => {
   }
 });
 const slide = ref('0');
-const attendees = ref(300);
+const attendees = ref(0);
 const activeSummit = ref<ISummit>();
 const prices = ref<RafflePrice[]>([]);
 const sponsors = ref<ISponsor[]>([]);

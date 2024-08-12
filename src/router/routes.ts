@@ -27,7 +27,7 @@ const routes: RouteRecordRaw[] = [
         name: 'accounts',
         component: () => import('pages/account/IndexPage.vue'),
         meta: {
-          requires: ['admin'],
+          requires: ['admin', 'moderator'],
         },
       },
       {

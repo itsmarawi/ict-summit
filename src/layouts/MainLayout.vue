@@ -213,7 +213,7 @@ onMounted(async () => {
             icon: 'inbox',
             label: 'Accounts',
             route: { name: 'accounts' },
-            requires: ['admin'],
+            requires: ['admin', 'moderator'],
           },
           {
             icon: 'ion-analytics',
@@ -225,7 +225,7 @@ onMounted(async () => {
             icon: 'inbox',
             label: 'Summit Management',
             route: { name: 'summit' },
-            requires: ['admin', 'moderator'],
+            requires: ['admin'],
           },
           ...value.map((summit) => ({
             label: summit.name,

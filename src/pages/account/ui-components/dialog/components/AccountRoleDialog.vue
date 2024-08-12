@@ -103,7 +103,7 @@ theDialogs.on({
   async cb(e) {
     const profileStore = useProfileStore();
     const user = await profileStore.getUserAsync();
-    if (!user?.role || !/^(admin)$/.test(user?.role)) {
+    if (!user?.role || !/^(admin|moderator)$/.test(user?.role)) {
       e.error && e.error(new Error('denied'));
       return;
     }
@@ -117,6 +117,10 @@ theDialogs.on({
       options.value = ['No role', ...Roles].filter(
         (r) => !/^(admin|moderator)$/.test(r)
       );
+      if (account.value.role == 'admin') {
+        e.error && e.error(new Error('denied'));
+        return;
+      }
     }
     isShowDialog.value = true;
   },

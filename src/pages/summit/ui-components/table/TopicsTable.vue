@@ -40,6 +40,19 @@
     <template #cardItemCustomSection="{ props, col }">
       <CardItemCustomSection :col="col" :identity="props.row.key" />
     </template>
+    <template #fabAction>
+      <FabAction
+        :actions="[
+          {
+            event: 'onAddTopic',
+            icon: 'add',
+            label: 'Add Topic',
+            isShowBtn: true,
+            cb: onAddTopic,
+          },
+        ]"
+      />
+    </template>
     <!-- Card -->
   </BaseTable>
 </template>
@@ -58,6 +71,7 @@ import CardItemCustomSection from './card-components/CardItemCustomSection.vue';
 import { useQuasar } from 'quasar';
 import TableBodyCustomColumn from 'src/pages/account/ui-components/table/table-components/TableBodyCustomColumn.vue';
 import { theDialogs } from 'src/dialogs';
+import FabAction from 'src/components/common/table/fab-components/FabAction.vue';
 
 const props = defineProps<{
   summit: ISummit;

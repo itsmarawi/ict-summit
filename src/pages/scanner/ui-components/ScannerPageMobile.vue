@@ -308,6 +308,7 @@ async function onDetect(detectedCode: ResultType) {
     $q.notify({
       message: JSON.stringify(detectedCode),
       caption: typeof detectedCode,
+      color: 'info',
       icon: 'info',
       position: 'center',
     });

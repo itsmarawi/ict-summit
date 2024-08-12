@@ -165,9 +165,11 @@ function cloneRaffleParticipants(raffle: RaffleDraw) {
   });
 }
 async function exportParticipants(raffle: RaffleDraw) {
-  const participants = await raffleDrawStore.findParticipants({
-    draw: raffle.key,
-  });
+  const participants = (
+    await raffleDrawStore.findParticipants({
+      draw: raffle.key,
+    })
+  ).sort((a, b) => a.participant.name.localeCompare(b.participant.name));
   const status = exportFile(
     'participant.csv',
     participants.reduce((content, p) => {

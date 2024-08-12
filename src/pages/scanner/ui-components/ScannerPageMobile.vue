@@ -246,6 +246,11 @@ const primaryText = computed(() => {
 const secondaryText = computed(() => {
   return 'secondary';
 });
+const canReleasePrice = computed(() => {
+  return /^(admin|moderator|organizer)$/.test(
+    profileStore.theUser?.role || 'none'
+  );
+});
 
 function startScanning(timeout = 30 * 1000) {
   paused.value = !paused.value;
@@ -279,7 +284,11 @@ async function onDetect(detectedCode: ResultType) {
     /^(?:[a-z+]+:)?\/\//i.test(result.value)
   ) {
     window.open(result.value, '_self');
-  } else if (typeof detectedCode == 'object' && detectedCode) {
+  } else if (
+    typeof detectedCode == 'object' &&
+    detectedCode &&
+    canReleasePrice.value
+  ) {
     loading.value = true;
     priceMatched.value = await raffleStore.getRafflePriceDraw(detectedCode.key);
     if (priceMatched.value) {
@@ -295,6 +304,13 @@ async function onDetect(detectedCode: ResultType) {
         priceMatched.value.recipient;
     }
     loading.value = false;
+  } else {
+    $q.notify({
+      message: JSON.stringify(detectedCode),
+      caption: typeof detectedCode,
+      icon: 'info',
+      position: 'center',
+    });
   }
 }
 
@@ -309,7 +325,7 @@ function onError(err: string) {
   });
 }
 function releaseRafflePrice(price: RafflePrice) {
-  if (!/^(admin|moderator)$/.test(profileStore.theUser?.role || 'none')) {
+  if (!canReleasePrice.value) {
     $q.notify({
       message: 'Unauthorized to release prices',
       caption: 'Redeeming your price?',

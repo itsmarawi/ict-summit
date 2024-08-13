@@ -64,6 +64,11 @@
         :count="attendees.toString()"
         description="Attendees"
       />
+      <CountCard
+        v-if="isAdmin"
+        :count="signUps.toString()"
+        description="SignUps"
+      />
     </div>
     <div>
       <div class="text-center">
@@ -225,6 +230,7 @@
           :key="s.name || s.logo"
           :logo="s.logo"
           :bg="s.background"
+          :name="s.name"
         ></InstitutionCard>
       </div>
     </div>
@@ -432,7 +438,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import CountCard from 'components/CountCard.vue';
 import SpeakerCard from 'components/SpeakerCard.vue';
 import TopicCard from 'src/components/TopicCard.vue';
@@ -460,6 +466,7 @@ $router.afterEach((route) => {
 });
 const slide = ref('0');
 const attendees = ref(0);
+const signUps = ref(0);
 const activeSummit = ref<ISummit>();
 const prices = ref<RafflePrice[]>([]);
 const sponsors = ref<ISponsor[]>([]);
@@ -469,7 +476,9 @@ const topics = ref<ITopic[]>([]);
 const defaultManAvatar = ref<string>();
 const defaultWomanAvatar = ref<string>();
 // const participating = ref<string[]>([]);
-
+const isAdmin = computed(() => {
+  return /^admin$/i.test(profileStore.theUser?.role || '');
+});
 onMounted(async () => {
   activeSummit.value = await summitStore.getSummit(
     new Date().getFullYear().toString()
@@ -528,6 +537,9 @@ onMounted(async () => {
         });
       },
     });
+    if (isAdmin.value) {
+      signUps.value = await profileStore.countProfiles({});
+    }
   }
 });
 

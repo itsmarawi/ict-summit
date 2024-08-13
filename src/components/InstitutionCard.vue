@@ -8,6 +8,7 @@
     >
       <q-card-section class="q-py-none">
         <q-img :src="logo" />
+        <q-tooltip v-if="name">{{ name }}</q-tooltip>
       </q-card-section>
     </q-card>
     <slot></slot>
@@ -16,6 +17,7 @@
 <script lang="ts" setup>
 defineProps<{
   logo: string;
+  name?: string;
   bg?: string;
 }>();
 </script>

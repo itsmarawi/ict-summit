@@ -13,6 +13,20 @@
         style="background: transparent"
       >
         Hi, {{ profileStore.theUser.name }}!
+        <span v-if="profileStore.theUser.institution">
+          thank you for registering
+          <span
+            v-if="
+              date.getDateDiff(
+                new Date(),
+                activeSummit?.dateStart || '',
+                'days'
+              ) < 0
+            "
+            >, see you on
+            {{ date.formatDate(activeSummit?.dateStart || '', 'MMM DD') }}</span
+          >
+        </span>
         <q-btn
           v-if="prices.length"
           flat

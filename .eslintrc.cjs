@@ -68,6 +68,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     'prefer-promise-reject-errors': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
 
     quotes: ['warn', 'single', { avoidEscape: true }],
 

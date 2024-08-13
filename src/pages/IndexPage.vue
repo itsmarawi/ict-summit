@@ -57,6 +57,7 @@
       <CountCard
         :count="String(activeSummit?.slots || 0)"
         description="Slots"
+        :color="(activeSummit?.slots || 0) <= attendees ? 'negative' : ''"
       />
       <CountCard
         v-if="attendees"
@@ -74,53 +75,71 @@
           style="width: 400px; height: 30px; margin-top: -40px; z-index: -10"
         ></q-chip>
       </div>
-      <div class="text-bod2 q-px-lg">
-        <p class="text-h6">
-          Join us as we accelerate Lanao del Sur's digital future!
-        </p>
-        <div class="text-h6">The 2nd Ranao ICT Summit is your gateway to:</div>
-        <ul>
-          <li>
-            Unleash Innovation: Discover cutting-edge technologies and solutions
-            transforming industries.
-          </li>
-          <li>
-            Expand Your Network: Connect with IT enthusiasts, industry leaders,
-            and potential partners.
-          </li>
-          <li>
-            Drive Economic Growth: Learn how to harness the power of digital
-            economy for Lanao del Sur's prosperity.
-          </li>
-          <li>
-            Protect Our Heritage: Understand the role of ICT in preserving and
-            promoting Ranaw's rich culture. Shape the Future: Be part of the
-            conversation that will define Lanao del Sur's digital landscape.
-          </li>
-        </ul>
-        <p class="text-bold">
-          Don't miss this opportunity to contribute to a thriving, digitally
-          empowered Lanao del Sur.
-        </p>
-        <div class="text-h6">Key Highlights:</div>
-        <ul>
-          <li>
-            Inspiring Keynotes: Hear from industry experts and visionaries.
-          </li>
-          <li>Interactive Workshops: Gain practical skills and knowledge.</li>
-          <li>
-            Showcase of Local Talent: Discover innovative solutions from Lanao
-            del Sur.
-          </li>
-          <li>Networking Opportunities: Build valuable connections.</li>
-        </ul>
+      <div class="row">
+        <div class="col text-bod2 q-px-lg">
+          <p class="text-h6">
+            Join us as we accelerate Lanao del Sur's digital future!
+          </p>
+          <div class="text-h6">
+            The 2nd Ranao ICT Summit is your gateway to:
+          </div>
+          <ul>
+            <li>
+              Unleash Innovation: Discover cutting-edge technologies and
+              solutions transforming industries.
+            </li>
+            <li>
+              Expand Your Network: Connect with IT enthusiasts, industry
+              leaders, and potential partners.
+            </li>
+            <li>
+              Drive Economic Growth: Learn how to harness the power of digital
+              economy for Lanao del Sur's prosperity.
+            </li>
+            <li>
+              Protect Our Heritage: Understand the role of ICT in preserving and
+              promoting Ranaw's rich culture. Shape the Future: Be part of the
+              conversation that will define Lanao del Sur's digital landscape.
+            </li>
+          </ul>
+          <p class="text-bold">
+            Don't miss this opportunity to contribute to a thriving, digitally
+            empowered Lanao del Sur.
+          </p>
+          <div class="text-h6">Key Highlights:</div>
+          <ul>
+            <li>
+              Inspiring Keynotes: Hear from industry experts and visionaries.
+            </li>
+            <li>Interactive Workshops: Gain practical skills and knowledge.</li>
+            <li>
+              Showcase of Local Talent: Discover innovative solutions from Lanao
+              del Sur.
+            </li>
+            <li>Networking Opportunities: Build valuable connections.</li>
+          </ul>
 
-        <p class="text-h6">
-          <q-btn color="primary" class="text-bold" icon-right="ads_click"
-            >Register Now&nbsp;</q-btn
-          >
-          and be part of the digital revolution!
-        </p>
+          <p class="text-h6" v-if="!profileStore.theUser?.institution">
+            <q-btn color="primary" class="text-bold" icon-right="ads_click"
+              >Register Now&nbsp;</q-btn
+            >
+            and be part of the digital revolution!
+          </p>
+        </div>
+        <div class="col" v-if="profileStore.theUser?.institution">
+          <div class="text-h6 text-center">
+            You are registered representing
+            {{ profileStore.theUser.institution }}
+          </div>
+          <q-card class="bg-white q-ma-xl">
+            <q-card-section>
+              <q-img src="~assets/shirt.png" />
+            </q-card-section>
+            <div class="text-h6 text-bold text-center text-dark">
+              Your TShirt Size: {{ profileStore.theUser.tshirt }}
+            </div>
+          </q-card>
+        </div>
       </div>
     </div>
     <div class="bg-dark q-py-lg" id="speakers">

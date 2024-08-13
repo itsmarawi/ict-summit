@@ -173,7 +173,6 @@ export const useProfileStore = defineStore('profile', {
     },
     countProfiles(filter: Partial<IProfile>) {
       return profileResource.count({
-        summit: new Date().getFullYear().toString(),
         ...filter,
       });
     },

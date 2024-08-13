@@ -153,6 +153,7 @@ onMounted(async () => {
     tShirtSizes.value.map((t) => {
       return profileStore
         .countProfiles({
+          summit: new Date().getFullYear().toString(),
           tshirt: t.size,
         })
         .then((count) => {
@@ -170,6 +171,7 @@ onMounted(async () => {
       institutions.value.forEach((i) => {
         profileStore
           .countProfiles({
+            summit: new Date().getFullYear().toString(),
             institution: i.inst,
             gender: 'male',
           })
@@ -178,6 +180,7 @@ onMounted(async () => {
           });
         profileStore
           .countProfiles({
+            summit: new Date().getFullYear().toString(),
             institution: i.inst,
             gender: 'female',
           })

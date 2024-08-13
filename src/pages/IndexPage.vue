@@ -76,7 +76,7 @@
         ></q-chip>
       </div>
       <div class="row">
-        <div class="col text-bod2 q-px-lg">
+        <div class="col-12 col-md text-bod2 q-px-lg">
           <p class="text-h6">
             Join us as we accelerate Lanao del Sur's digital future!
           </p>
@@ -126,7 +126,7 @@
             and be part of the digital revolution!
           </p>
         </div>
-        <div class="col" v-if="profileStore.theUser?.institution">
+        <div class="col-12 col-md" v-if="profileStore.theUser?.institution">
           <div class="text-h6 text-center">
             You are registered representing
             {{ profileStore.theUser.institution }}

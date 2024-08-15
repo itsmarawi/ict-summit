@@ -240,8 +240,10 @@
           v-for="s in sponsors"
           :key="s.name || s.logo"
           :logo="s.logo"
+          :website="s.website"
           :bg="s.background"
           :name="s.name"
+          :description="s.description"
         ></InstitutionCard>
       </div>
     </div>

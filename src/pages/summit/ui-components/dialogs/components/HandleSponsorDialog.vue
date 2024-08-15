@@ -51,6 +51,16 @@
             <div class="col-4">
               <q-input label="Order" v-model="sponsor.order" type="number" />
             </div>
+            <div class="col-12 q-pb-sm">
+              <q-input
+                label="Description"
+                v-model="sponsor.description"
+                type="textarea"
+              />
+            </div>
+            <div class="col-12 q-pb-sm">
+              <q-input label="Website" v-model="sponsor.website" />
+            </div>
           </div>
         </q-card-section>
         <q-card-actions align="right">
@@ -101,7 +111,15 @@ async function onSubmit() {
       ? await summitStore.registerSponsor(sponsor.value)
       : await summitStore.updateSponsor(
           sponsor.value.key,
-          ['name', 'logo', 'background', 'institution', 'order'],
+          [
+            'name',
+            'logo',
+            'background',
+            'institution',
+            'order',
+            'description',
+            'website',
+          ],
           sponsor.value
         );
     if (saved) {

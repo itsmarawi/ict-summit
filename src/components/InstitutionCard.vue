@@ -6,7 +6,7 @@
       style="height: 250px"
       :style="bg ? 'background-color:' + bg : ''"
     >
-      <q-btn color="dark" :href="website" flat dense
+      <q-btn class="q-pa-md" color="dark" :href="website" flat dense
         ><q-img :src="logo" />
         <q-tooltip v-if="name">{{ name }}</q-tooltip>
       </q-btn>

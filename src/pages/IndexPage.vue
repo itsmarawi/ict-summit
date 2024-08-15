@@ -177,6 +177,7 @@
           :full-name="speaker.fullname"
           :position="speaker.position"
           :expertise="speaker.expertise"
+          :description="speaker.description"
         />
       </div>
     </div>

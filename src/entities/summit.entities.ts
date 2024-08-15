@@ -22,6 +22,8 @@ export interface ISpeaker extends IBaseEntity {
   fullname: string;
   position: string;
   expertise: string;
+  description?: string;
+  sponsor?: string;
   institution?: string;
   companyLogo?: string;
   avatar?: string;

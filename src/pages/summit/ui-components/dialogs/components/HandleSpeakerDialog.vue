@@ -21,8 +21,15 @@
             <div class="col-12">
               <q-input label="Position" v-model="speaker.position" />
             </div>
-            <div class="col-12 q-pb-sm">
+            <div class="col-12">
               <q-input label="Expertise" v-model="speaker.expertise" />
+            </div>
+            <div class="col-12 q-pb-sm">
+              <q-input
+                label="Description"
+                v-model="speaker.description"
+                type="textarea"
+              />
             </div>
             <span class="col-3 text-bold text-grey">Gender:</span>
             <q-option-group
@@ -124,6 +131,7 @@ async function onSubmit() {
             'position',
             'avatar',
             'order',
+            'description',
           ],
           speaker.value
         );

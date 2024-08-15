@@ -41,9 +41,9 @@
         <q-card-section>
           <div class="text-bold">About:</div>
           <q-card class="bg-black" flat>
-            <pre style="overflow: auto; word-wrap: normal">{{
+            {{
               description || '&nbsp;'
-            }}</pre>
+            }}
           </q-card>
         </q-card-section>
       </q-card>

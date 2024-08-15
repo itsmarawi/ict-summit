@@ -22,11 +22,28 @@
     </q-card>
     <slot></slot>
     <q-dialog v-model="showDialog">
-      <q-card>
+      <q-card style="min-width: 300px">
+        <q-toolbar
+          ><q-space /> <q-btn icon="close" dense round flat v-close-popup />
+        </q-toolbar>
+        <q-card-section class="text-center bg-white">
+          <div>
+            <q-btn class="q-pa-md" color="dark" :href="website" flat dense
+              ><q-img width="100px" :src="logo" />
+              <q-tooltip v-if="name">{{ name }}</q-tooltip>
+            </q-btn>
+          </div>
+          <div class="text-dark">{{ website }}</div>
+          <div class="text-h4">
+            <q-chip>{{ name }}</q-chip>
+          </div>
+        </q-card-section>
         <q-card-section>
           <div class="text-bold">About:</div>
-          <q-card class="bg-black" flat>
-            {{ description || '&nbsp;' }}
+          <q-card class="bg-black q-pa-sm" flat>
+            <p v-for="(p, i) in (description || '&nbsp;').split('\n')" :key="i">
+              {{ p }}
+            </p>
           </q-card>
         </q-card-section>
       </q-card>

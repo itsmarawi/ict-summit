@@ -40,10 +40,10 @@
         </q-card-section>
         <q-card-section>
           <div class="text-bold">About:</div>
-          <q-card class="bg-black" flat>
-            {{
-              description || '&nbsp;'
-            }}
+          <q-card class="bg-black q-pa-sm" flat>
+            <p v-for="(p, i) in (description || '&nbsp;').split('\n')" :key="i">
+              {{ p }}
+            </p>
           </q-card>
         </q-card-section>
       </q-card>

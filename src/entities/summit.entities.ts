@@ -38,12 +38,15 @@ export interface ISponsor extends IBaseEntity {
   background?: string;
   name: string;
   status?: boolean;
+  website?: string;
+  description?: string;
   institution?: string;
 }
 export interface ITopic extends IBaseEntity {
   key: string;
   summit: string;
   schedule: string;
+  speakers?: string[];
   name: string;
   contents: string[];
   status?: boolean;

@@ -203,6 +203,16 @@
           :schedule="topic.schedule"
           class="col-12 col-md-5"
         >
+          <div class="q-gutter-sm q-my-sm">
+            <q-avatar
+              size="md"
+              v-for="speaker in topic.speakers || []"
+              :key="speaker"
+            >
+              <q-img :src="getSpeaker(speaker)?.avatar" />
+              <q-tooltip>{{ getSpeaker(speaker)?.fullname }}</q-tooltip>
+            </q-avatar>
+          </div>
           <div>{{ topic.name }}</div>
           <ul>
             <li v-for="line in topic.contents" :key="line">{{ line }}</li>
@@ -477,6 +487,9 @@ const topics = ref<ITopic[]>([]);
 const defaultManAvatar = ref<string>();
 const defaultWomanAvatar = ref<string>();
 // const participating = ref<string[]>([]);
+function getSpeaker(key: string) {
+  return speakers.value.find((s) => s.key == key);
+}
 const isAdmin = computed(() => {
   return /^admin$/i.test(profileStore.theUser?.role || '');
 });

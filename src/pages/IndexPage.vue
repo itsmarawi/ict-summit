@@ -198,7 +198,7 @@
         class="row fit justify-center items-center q-gutter-xl q-py-lg q-px-xl"
       >
         <TopicCard
-          v-for="topic in topics"
+          v-for="topic in topicList"
           :key="topic.name + topic.schedule"
           :schedule="topic.schedule"
           class="col-12 col-md-5"
@@ -206,11 +206,11 @@
           <div class="q-gutter-sm q-my-sm">
             <q-avatar
               size="md"
-              v-for="speaker in topic.speakers || []"
-              :key="speaker"
+              v-for="speaker in topic.speakerList"
+              :key="speaker?.key"
             >
-              <q-img :src="getSpeaker(speaker)?.avatar" />
-              <q-tooltip>{{ getSpeaker(speaker)?.fullname }}</q-tooltip>
+              <q-img :src="speaker?.avatar" />
+              <q-tooltip>{{ speaker?.fullname }}</q-tooltip>
             </q-avatar>
           </div>
           <div>{{ topic.name }}</div>
@@ -477,6 +477,9 @@ $router.afterEach((route) => {
     handleHash(route.hash);
   }
 });
+interface ITopicWithSpeakers extends ITopic {
+  speakerList: (ISpeaker | undefined)[];
+}
 const slide = ref('0');
 const attendees = ref(0);
 const signUps = ref(0);
@@ -485,13 +488,20 @@ const prices = ref<RafflePrice[]>([]);
 const sponsors = ref<ISponsor[]>([]);
 const speakers = ref<ISpeaker[]>([]);
 const topics = ref<ITopic[]>([]);
-
+const topicList = computed(() => {
+  return topics.value.map(
+    (t) =>
+      ({
+        ...t,
+        speakerList: (t.speakers || []).map((key) =>
+          speakers.value.find((s) => s.key == key)
+        ),
+      } as ITopicWithSpeakers)
+  );
+});
 const defaultManAvatar = ref<string>();
 const defaultWomanAvatar = ref<string>();
-// const participating = ref<string[]>([]);
-function getSpeaker(key: string) {
-  return speakers.value.find((s) => s.key == key);
-}
+
 const isAdmin = computed(() => {
   return /^admin$/i.test(profileStore.theUser?.role || '');
 });

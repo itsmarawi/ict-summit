@@ -170,6 +170,9 @@ theDialogs.on({
     summitStore.streamSpeakers(summitStore.activeSummit?.key || '').subscribe({
       next(value) {
         speakerOptions.value = value;
+        speakers.value = (topic.value?.speakers || [])
+          .map((key) => speakerOptions.value.find((s) => s.key == key))
+          .filter((s) => s) as ISpeaker[];
       },
     });
     doneCb.value = e.done;

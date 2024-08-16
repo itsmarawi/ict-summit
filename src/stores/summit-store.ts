@@ -6,6 +6,7 @@ import { sponsorsResource } from 'src/resources/sponsor.resource';
 import { summitsResource } from 'src/resources/summit.resource';
 import { topicsResource } from 'src/resources/topic.resource';
 import { firebaseService } from 'src/services/firebase.service';
+import { ObjectUtil } from 'src/utils/object.util';
 
 export const useSummitStore = defineStore('summit', {
   state: () =>
@@ -167,7 +168,7 @@ export const useSummitStore = defineStore('summit', {
       const deferred = new DeferredPromise<ITopic | undefined>();
       topicsResource.updatePropertiesFrom(
         key,
-        source,
+        ObjectUtil.copyObject(source),
         props,
         async (update) => {
           if (update.status == 'synced') {

@@ -22,7 +22,10 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="topic.schedule">
+                      <q-date
+                        v-model="topic.schedule"
+                        mask="YYYY/MM/DD hh:mm A"
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -32,6 +35,62 @@
                           />
                         </div>
                       </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-time
+                        v-model="topic.schedule"
+                        mask="YYYY/MM/DD hh:mm A"
+                      >
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Set"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+                <template #after>
+                  <q-chip color="primary">
+                    <span v-if="(topic.duration || 0) >= 60">
+                      {{ Math.round((topic.duration || 0) / 60) }} hr &nbsp;
+                    </span>
+                    <span v-if="(topic.duration || 0) % 60 || !topic.duration">
+                      {{ (topic.duration || 0) % 60 }} min
+                    </span>
+                    <q-tooltip>Duration</q-tooltip>
+                  </q-chip>
+                  <q-icon name="timelapse" class="cursor-pointer">
+                    <q-popup-proxy
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-time
+                        @update:model-value="computeDuration()"
+                        v-model="duration"
+                        mask="YYYY/MM/DD HH:mm"
+                        format24h
+                      >
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            @click="computeDuration()"
+                            label="Set"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-time>
                     </q-popup-proxy>
                   </q-icon>
                 </template>
@@ -103,16 +162,28 @@ import { ISpeaker, ITopic } from 'src/entities';
 import { theDialogs } from 'src/dialogs';
 import { useProfileStore } from 'src/stores/profile-store';
 import { useSummitStore } from 'src/stores/summit-store';
+import { date } from 'quasar';
+import { ObjectUtil } from 'src/utils/object.util';
 
 const profileStore = useProfileStore();
 const summitStore = useSummitStore();
 const isShowDialog = ref(false);
+const duration = ref('');
 const speakerOptions = ref<ISpeaker[]>([]);
 const speakers = ref<ISpeaker[]>([]);
 const busy = ref(false);
 const topic = ref<ITopic>();
 const doneCb = ref<(speaker: ITopic) => void>();
 const errorCb = ref<ErrorCallback>();
+function computeDuration() {
+  const durationDate =
+    (duration.value && new Date(duration.value)) || new Date();
+  const baseDate = new Date(durationDate);
+  baseDate.setHours(0, 0, 0, 0);
+  if (topic.value) {
+    topic.value.duration = date.getDateDiff(durationDate, baseDate, 'minutes');
+  }
+}
 async function onSubmit() {
   if (!topic.value) return;
   try {
@@ -121,7 +192,7 @@ async function onSubmit() {
       ? await summitStore.registerTopic(topic.value)
       : await summitStore.updateTopic(
           topic.value.key,
-          ['name', 'contents', 'schedule', 'speakers'],
+          ['name', 'contents', 'schedule', 'speakers', 'duration'],
           topic.value
         );
     if (saved) {
@@ -177,7 +248,7 @@ theDialogs.on({
     });
     doneCb.value = e.done;
     errorCb.value = e.error;
-    topic.value = e.payload;
+    topic.value = ObjectUtil.copyObject(e.payload);
     isShowDialog.value = true;
   },
 });

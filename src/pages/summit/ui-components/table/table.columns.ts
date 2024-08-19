@@ -86,6 +86,23 @@ export const topicsColumns = [
   },
   {
     headerStyle: 'font-size: 20px',
+    name: 'duration',
+    field: (row: ITopic) =>
+      `${
+        (row.duration || 0) >= 60
+          ? `${Math.round((row.duration || 0) / 60)} hr `
+          : ''
+      } ${
+        (row.duration || 0) % 60 || !row.duration
+          ? `${row.duration || 0} min`
+          : ''
+      } `,
+    label: 'Duration',
+    align: 'left',
+    sortable: true,
+  },
+  {
+    headerStyle: 'font-size: 20px',
     name: 'status',
     field: 'status',
     label: 'Status',

@@ -996,7 +996,15 @@ export abstract class BaseResource<T extends IBaseResourceModel> {
       const oldData = existing.data[prop];
       if (oldData == source[prop]) continue;
       (existing.data as unknown as Record<string, string>)['*' + String(prop)] =
-        oldData as unknown as string;
+        (typeof oldData != 'undefined'
+          ? oldData
+          : typeof source[prop] == 'number'
+          ? 0
+          : typeof source[prop] == 'boolean'
+          ? false
+          : typeof source[prop] == 'string'
+          ? ''
+          : oldData) as unknown as string;
       existing.data[prop] = (
         typeof source[prop] != 'undefined' ? source[prop] : existing.data[prop]
       ) as T[keyof T];

@@ -46,6 +46,7 @@ export interface ITopic extends IBaseEntity {
   key: string;
   summit: string;
   schedule: string;
+  duration?: number;
   speakers?: string[];
   name: string;
   contents: string[];

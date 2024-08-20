@@ -57,6 +57,30 @@
         :col="col"
       />
     </template>
+    <template #fabAction>
+      <FabAction
+        :actions="[
+          {
+            event: 'onExportAccounts',
+            isShowBtn: true,
+            icon: 'download',
+            label: 'Export',
+            cb() {
+              exportAccounts();
+            },
+          },
+          {
+            event: 'generateUCoupon',
+            isShowBtn: true,
+            label: 'Generate Role Coupon',
+            icon: 'sell',
+            cb() {
+              generateUCoupon();
+            },
+          },
+        ]"
+      ></FabAction>
+    </template>
     <!-- Card -->
   </BaseTable>
 </template>
@@ -75,6 +99,7 @@ import CardItemRight from 'src/pages/account/ui-components/table/card-components
 import CardItemCustomSection from 'src/pages/account/ui-components/table/card-components/CardItemCustomSection.vue';
 import { propsTableActionRight } from './table.elements';
 import { useSummitStore } from 'src/stores/summit-store';
+import FabAction from 'src/components/common/table/fab-components/FabAction.vue';
 
 const $q = useQuasar();
 const profileStore = useProfileStore();

@@ -13,7 +13,7 @@ export type Profile =
   | BusStruct<
       'generateURoleCouponDialog',
       {
-        profile: IProfile;
+        profile?: IProfile;
         summit: ISummit;
         done?: VoidCallback;
         error?: ErrorCallback;

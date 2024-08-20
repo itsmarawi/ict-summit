@@ -5,12 +5,19 @@
       <TableTop
         @onSearch="onSearchRecords"
         @onExportAccounts="exportAccounts"
+        @generateUCoupon="generateUCoupon()"
         :elements="[
           {
             event: 'onExportAccounts',
             isShowBtn: true,
             icon: 'download',
             label: 'Export',
+          },
+          {
+            event: 'generateUCoupon',
+            isShowBtn: true,
+            label: 'Generate Role Coupon',
+            icon: 'sell',
           },
         ]"
       />
@@ -198,7 +205,7 @@ function onToggleStatus(value: IProfile) {
       // console.log('>>>> Cancel')
     });
 }
-function generateUCoupon(payload: IProfile) {
+function generateUCoupon(payload?: IProfile) {
   if (!activeSummit.value) return;
   theDialogs.emit({
     type: 'generateURoleCouponDialog',

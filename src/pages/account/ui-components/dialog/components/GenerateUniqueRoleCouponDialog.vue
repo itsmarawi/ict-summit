@@ -16,6 +16,9 @@
         </div>
         <q-card-section>
           <div class="row justify-between q-col-gutter-x-lg">
+            <div class="col-12" v-if="!account">
+              <q-input v-model="email" label="Email" />
+            </div>
             <div class="col-12">
               <q-select
                 v-model="role"
@@ -78,18 +81,21 @@ const role = ref<RoleType>('organizer');
 const uCoupon = ref('');
 const options = ref<string[]>([...Roles]);
 const account = ref<IProfile>();
+const email = ref('');
 const doneCb = ref<(profile: IProfile) => void>();
 const errorCb = ref<ErrorCallback>();
 
 async function generateUCoupon() {
-  if (!account.value || !activeSummit.value) {
+  if ((!account.value && !email.value) || !activeSummit.value) {
     errorCb.value && errorCb.value(new Error('No account'));
     isShowDialog.value = false;
     return;
   }
   uCoupon.value = String(
     Profiler.hashName(
-      `${account.value.email}:${activeSummit.value.key}:${role.value}`
+      `${account.value?.email || email.value}:${activeSummit.value.key}:${
+        role.value
+      }`
     )
   ).replace('-', 'N');
 }
@@ -114,7 +120,8 @@ theDialogs.on({
     errorCb.value = e.error;
     account.value = e.profile;
     activeSummit.value = e.summit;
-    if (e.profile.role && e.profile.summit == e.summit.key) {
+    email.value = '';
+    if (e.profile?.role && e.profile.summit == e.summit.key) {
       e.error && e.error(new Error('already have role'));
       return;
     }

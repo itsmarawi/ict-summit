@@ -2,7 +2,18 @@
   <BaseTable row-key="name" :columns="columns" :rows="filteredProfiles" flat>
     <!-- Table -->
     <template #tableTop>
-      <TableTop @onSearch="onSearchRecords" :elements="[]" />
+      <TableTop
+        @onSearch="onSearchRecords"
+        @onExportAccounts="exportAccounts"
+        :elements="[
+          {
+            event: 'onExportAccounts',
+            isShowBtn: true,
+            icon: 'download',
+            label: 'Export',
+          },
+        ]"
+      />
     </template>
     <template #tableBodyCustomColumn="{ props, col }">
       <TableBodyCustomColumn
@@ -43,7 +54,7 @@
   </BaseTable>
 </template>
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
+import { exportFile, useQuasar } from 'quasar';
 import { computed, onMounted, ref } from 'vue';
 import { IProfile, ISummit } from 'src/entities';
 import { accountColumns } from 'src/pages/account/ui-components/table/table.columns';
@@ -86,7 +97,15 @@ const filteredProfiles = computed(() => {
   if (search.value) {
     return profiles.value.filter((r) =>
       new RegExp(search.value, 'i').test(
-        r.email + ':' + r.name + ':' + r.institution
+        r.email +
+          ':' +
+          r.name +
+          '>Institution:' +
+          r.institution +
+          '>Summit:' +
+          r.summit +
+          '>TShirt:' +
+          r.tshirt
       )
     );
   }
@@ -122,6 +141,41 @@ function onToggleRole(payload: IProfile) {
       },
     },
   });
+}
+async function exportAccounts() {
+  const accounts = filteredProfiles.value.sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+  const status = exportFile(
+    'profiles.csv',
+    accounts.reduce((content, p) => {
+      return (
+        content +
+        `\r\n"${p.name}","${p.email}","${p.institution || 'none'}","${
+          p.position
+        }","${p.tshirt}","${p.summit}","${p.gender}"`
+      );
+    }, '"Name","Email","Institution","Position","Tshirt","Summit","Gender"'),
+    {
+      encoding: 'windows-1252',
+      mimeType: 'text/tsv;charset=windows-1252;',
+    }
+  );
+
+  if (status === true) {
+    $q.notify({
+      message: `Exported ${accounts.length}`,
+      icon: 'info',
+      color: 'positive',
+    });
+  } else {
+    // browser denied it
+    $q.notify({
+      message: 'Brower denied it:' + String(status),
+      icon: 'error',
+      color: 'negative',
+    });
+  }
 }
 
 function onToggleStatus(value: IProfile) {

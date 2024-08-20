@@ -11,7 +11,7 @@ interface IStyle {
 
 export type TEvents =
   | 'onToggleRole'
-  | 'onAddQrEdits'
+  | 'onExportAccounts'
   | 'generateUCoupon'
   | 'onSearch';
 export interface ITableUIElements {

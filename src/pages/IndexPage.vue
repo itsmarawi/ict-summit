@@ -534,7 +534,10 @@ onMounted(async () => {
       if (value.length) {
         topics.value = value
           .filter((t) => t.status)
-          .sort((a, b) => a.schedule.localeCompare(b.schedule));
+          .sort(
+            (a, b) =>
+              new Date(a.schedule).getTime() - new Date(b.schedule).getTime()
+          );
         topicsSub.unsubscribe();
       }
     },

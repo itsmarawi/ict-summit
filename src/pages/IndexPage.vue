@@ -201,6 +201,7 @@
           v-for="topic in topicList"
           :key="topic.name + topic.schedule"
           :schedule="topic.schedule"
+          :duration="topic.duration"
           class="col-12 col-md-5"
         >
           <div class="q-gutter-sm q-my-sm">

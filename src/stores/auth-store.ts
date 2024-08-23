@@ -58,8 +58,12 @@ export const useAuthStore = defineStore('auth', {
     async login(email: string, password: string) {
       return firebaseService.signInWithEmailAndPass(email, password);
     },
-    async googleLogin() {
-      return firebaseService.signInWithGoogleRedirect();
+    async googleLogin(redirect?: boolean) {
+      if (redirect) {
+        return firebaseService.signInWithGoogleRedirect();
+      } else {
+        return firebaseService.signInWithGoogleAccount();
+      }
     },
     async logout() {
       useProfileStore().clearUser();

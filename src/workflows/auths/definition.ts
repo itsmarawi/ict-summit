@@ -7,7 +7,7 @@ export type Auths =
       {
         username?: string;
         password?: string;
-        method: 'username/password' | 'google';
+        method: 'username/password' | 'google' | 'googleRedirect';
         done?: (
           user?: Pick<
             IProfile,

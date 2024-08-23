@@ -13,6 +13,8 @@ theWorkflows.on({
         await authStore.login(e.username, e.password);
       } else if (e.method == 'google') {
         await authStore.googleLogin();
+      } else if (e.method == 'googleRedirect') {
+        await authStore.googleLogin(true);
       }
     } catch (error) {
       if (e.error) {

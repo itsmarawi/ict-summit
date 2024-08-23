@@ -1,6 +1,6 @@
 const firebaseConfig = {
   apiKey: 'AIzaSyAkOToPDm92tWNpU8CFFjyFZuZHnxO6Xoo',
-  authDomain: 'ranao-ict-summit.firebaseapp.com',
+  authDomain: 'ranaoictsummit.com',
   projectId: 'ranao-ict-summit',
   storageBucket: 'ranao-ict-summit.appspot.com',
   messagingSenderId: '644421892878',
@@ -9,7 +9,7 @@ const firebaseConfig = {
 
 const firebaseConfigDev = {
   apiKey: 'AIzaSyAkOToPDm92tWNpU8CFFjyFZuZHnxO6Xoo',
-  authDomain: 'ranao-ict-summit.firebaseapp.com',
+  authDomain: 'ranaoictsummit.com',
   projectId: 'ranao-ict-summit',
   storageBucket: 'ranao-ict-summit.appspot.com',
   messagingSenderId: '644421892878',

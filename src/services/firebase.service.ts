@@ -205,7 +205,7 @@ class FirebaseService {
     return res;
   }
   async signInWithGoogleRedirect() {
-    await signInWithRedirect(auth, googleProvider);
+    signInWithRedirect(auth, googleProvider);
     const res = await getRedirectResult(auth);
     if (res) {
       this.setAccessStatus(AccessStatus.authorized);

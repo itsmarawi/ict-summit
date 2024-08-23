@@ -16,6 +16,8 @@ import {
   signInAnonymously,
   sendPasswordResetEmail,
   fetchSignInMethodsForEmail,
+  getRedirectResult,
+  signInWithRedirect,
 } from 'firebase/auth';
 
 import {
@@ -200,6 +202,16 @@ class FirebaseService {
   async signInWithGoogleAccount() {
     const res = await signInWithPopup(auth, googleProvider);
     this.setAccessStatus(AccessStatus.authorized);
+    return res;
+  }
+  async signInWithGoogleRedirect() {
+    await signInWithRedirect(auth, googleProvider);
+    const res = await getRedirectResult(auth);
+    if (res) {
+      this.setAccessStatus(AccessStatus.authorized);
+    } else {
+      this.setAccessStatus(AccessStatus.unAuthorized);
+    }
     return res;
   }
   async createUserWithEmailPass(email: string, password: string) {

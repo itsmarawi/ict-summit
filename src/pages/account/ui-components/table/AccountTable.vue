@@ -134,6 +134,8 @@ const filteredProfiles = computed(() => {
           r.name +
           '>Institution:' +
           r.institution +
+          '>Role:' +
+          r.role +
           '>Summit:' +
           r.summit +
           '>TShirt:' +

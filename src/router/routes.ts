@@ -117,33 +117,7 @@ const routes: RouteRecordRaw[] = [
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
     name: 'NotFound',
-    beforeEnter: (to, from, next) => {
-      if (isStaticFile(to.path) || to.name == 'NotFound') {
-        next(); // Proceed to the static file
-      } else {
-        next({ name: 'NotFound' }); // Redirect to the NotFound component
-      }
-    },
   },
 ];
-
-function isStaticFile(path: string) {
-  const staticFileExtensions = [
-    '.js',
-    '.css',
-    '.png',
-    '.jpg',
-    '.gif',
-    '.svg',
-    '.woff',
-    '.woff2',
-    '.ttf',
-    '.eot',
-  ]; // Add more extensions as needed
-  return (
-    staticFileExtensions.some((ext) => path.endsWith(ext)) ||
-    /__\/auth\//.test(path)
-  );
-}
 
 export default routes;

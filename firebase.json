@@ -3,12 +3,20 @@
     "public": "dist/pwa",
     "site": "ranao-ict-summit",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rules": [
+      {
+        "match": "/__auth/**",
+        "allow": {
+          "read": true
+        }
+      }
+    ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html",
         "redirect": true,
-        "excludes": ["**__/auth/**"]
+        "excludes": ["/__/auth/**"]
       }
     ]
   },

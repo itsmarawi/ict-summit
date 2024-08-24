@@ -14,9 +14,7 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html",
-        "redirect": true,
-        "excludes": ["/__/auth/**"]
+        "destination": "/index.html"
       }
     ]
   },

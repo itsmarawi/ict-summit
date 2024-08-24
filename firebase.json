@@ -6,7 +6,9 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "destination": "/index.html",
+        "redirect": true,
+        "excludes": ["__/auth/**"]
       }
     ]
   },

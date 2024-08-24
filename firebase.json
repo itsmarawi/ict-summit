@@ -13,6 +13,14 @@
     ],
     "rewrites": [
       {
+        "source": "/__/auth/handler**?*",
+        "destination": "/__/auth/handler"
+      },
+      {
+        "source": "/__/auth/iframe**?*",
+        "destination": "/__/auth/iframe"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

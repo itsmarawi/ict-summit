@@ -97,7 +97,7 @@ export default function () {
     theWorkflows.emit({
       type: 'login',
       arg: {
-        method: $q.platform.is.ios || true ? 'googleRedirect' : 'google',
+        method: $q.platform.is.ios ? 'googleRedirect' : 'google',
         done() {
           if ($route.query?.redirect && profileStore.theUser?.institution) {
             $router.replace($route.query?.redirect as string);

@@ -5,7 +5,7 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rules": [
       {
-        "match": "/__auth/**",
+        "match": "/__auth/**?*",
         "allow": {
           "read": true
         }

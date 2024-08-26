@@ -214,7 +214,7 @@
               <q-tooltip>{{ speaker?.fullname }}</q-tooltip>
             </q-avatar>
           </div>
-          <div>{{ topic.name }}</div>
+          <div class="text-h6">{{ topic.name }}</div>
           <ul>
             <li v-for="line in topic.contents" :key="line">{{ line }}</li>
           </ul>

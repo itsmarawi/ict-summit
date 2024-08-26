@@ -1,15 +1,18 @@
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useQuasar } from 'quasar';
+import { date, useQuasar } from 'quasar';
 import { FirebaseError } from 'firebase/app';
 import { theWorkflows } from 'src/workflows/the.workflows';
 import { useProfileStore } from 'src/stores/profile-store';
+import { ISummit } from 'src/entities';
+import { useSummitStore } from 'src/stores/summit-store';
 
 export default function () {
   const $router = useRouter();
   const $route = useRoute();
   const $q = useQuasar();
   const profileStore = useProfileStore();
+  const summitStore = useSummitStore();
   const persistent = ref(false);
   const isPwd = ref(true);
   const email = ref('');
@@ -18,7 +21,20 @@ export default function () {
   const emailAdd = ref('');
   const isLoadingLogin = ref(false);
   const isLoadingGoogleLogin = ref(false);
-
+  const activeSummit = ref<ISummit>();
+  onMounted(async () => {
+    activeSummit.value = await summitStore.getSummit(
+      new Date().getFullYear().toString()
+    );
+  });
+  function isRegistrationOpen() {
+    return (
+      activeSummit.value &&
+      activeSummit.value.status &&
+      (!activeSummit.value?.cutOff ||
+        date.getDateDiff(new Date(), activeSummit.value?.cutOff, 'days') >= 0)
+    );
+  }
   async function onLogin() {
     isLoadingLogin.value = true;
     theWorkflows.emit({
@@ -35,7 +51,10 @@ export default function () {
             profileStore.theUser?.institution
           ) {
             $router.replace($route.query?.redirect as string);
-          } else if (profileStore.theUser?.institution) {
+          } else if (
+            profileStore.theUser?.institution ||
+            !isRegistrationOpen()
+          ) {
             $router.replace({ name: 'home' });
           } else if (profileStore.theUser) {
             $router.replace({

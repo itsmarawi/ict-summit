@@ -109,7 +109,7 @@ export default function () {
     );
     if (
       activeSummit.value?.cutOff &&
-      date.getDateDiff(new Date(), activeSummit.value?.cutOff, 'days') >= 0
+      date.getDateDiff(new Date(), activeSummit.value?.cutOff, 'days') < 0
     ) {
       $q.notify({
         icon: 'error',

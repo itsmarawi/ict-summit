@@ -185,6 +185,8 @@ import { Subscription } from 'rxjs';
 import { useQuasar } from 'quasar';
 import ProfileAvatar from 'src/components/common/ProfileAvatar.vue';
 import { ObjectUtil } from 'src/utils/object.util';
+import { DeferredPromise } from 'src/resources/localbase';
+
 function toggleFullscreen() {
   const target = document.getElementById('rafflePage');
   if (target) {
@@ -195,6 +197,7 @@ function generateAvatar(name: string) {
   const initials = name
     .split(' ')
     .map((str) => (str ? str[0].toUpperCase() : ''))
+    .splice(0, 2)
     .join('');
 
   const canvas = document.createElement('canvas');
@@ -299,6 +302,9 @@ const isHosting = computed(() => {
 const qrCodeUrl = computed(() => {
   return location.href;
 });
+const isManager = computed(() => {
+  return /^(admin|moderator)$/.test(profileStore.theUser?.role || '');
+});
 const canManageDraw = computed(() => {
   if (
     presentRaffle.value &&
@@ -307,7 +313,7 @@ const canManageDraw = computed(() => {
   ) {
     return false;
   }
-  return /^(admin|moderator)$/.test(profileStore.theUser?.role || '');
+  return isManager.value;
 });
 let participantSub: Subscription;
 let presentSub: Subscription;
@@ -361,47 +367,52 @@ async function load() {
         }
       );
     } else if (profileStore.theUser) {
-      raffleStore
-        .joinRaffle(presentRaffle.value, profileStore.theUser)
-        .then((result) => {
-          if (result) {
-            const withPrices =
-              Array.isArray(result.prices) && result.prices.length > 0;
-            $q.notify({
-              position: 'center',
-              icon: 'info',
-              message: !result.won
-                ? `Welcome to ${presentRaffle.value?.name}`
-                : 'Already won!',
-              caption: withPrices
-                ? `Please claim your ${result.prices.length} freebie`
-                : '',
-              actions: withPrices
-                ? [
-                    {
-                      icon: 'reddem',
-                      label: 'Redeem',
-                      to: { name: 'prices' },
-                    },
-                  ]
-                : [],
-            });
-          } else {
-            if (canManageDraw.value) {
-              $q.notify({
-                position: 'center',
-                icon: 'warning',
-                message: 'Admins or Moderators are not qualified to join',
-              });
-            } else {
-              $q.notify({
-                position: 'center',
-                icon: 'warning',
-                message: `${presentRaffle.value?.name} is closed for new joiners`,
-              });
-            }
-          }
+      if (!canManageDraw.value && isManager.value) {
+        if (!presentRaffle.value.defaultPrices.length) {
+          $q.notify({
+            position: 'center',
+            icon: 'warning',
+            message: 'Admins or Moderators are not qualified to join',
+          });
+          return;
+        }
+        if (!(await confirmJoinDraw())) {
+          return;
+        }
+      }
+      const result = await raffleStore.joinRaffle(
+        presentRaffle.value,
+        profileStore.theUser
+      );
+      if (result) {
+        const withPrices =
+          Array.isArray(result.prices) && result.prices.length > 0;
+        $q.notify({
+          position: 'center',
+          icon: 'info',
+          message: !result.won
+            ? `Welcome to ${presentRaffle.value?.name}`
+            : 'Already won!',
+          caption: withPrices
+            ? `Please claim your ${result.prices.length} freebie`
+            : '',
+          actions: withPrices
+            ? [
+                {
+                  icon: 'reddem',
+                  label: 'Redeem',
+                  to: { name: 'prices' },
+                },
+              ]
+            : [],
         });
+      } else {
+        $q.notify({
+          position: 'center',
+          icon: 'warning',
+          message: `${presentRaffle.value?.name} is closed for new joiners`,
+        });
+      }
     }
     presentSub = raffleStore.streamUpdate(presentRaffle.value).subscribe({
       next(value) {
@@ -443,6 +454,29 @@ function confirmLaunchWeels() {
   }).onOk(async () => {
     await launchWheel();
   });
+}
+
+function confirmJoinDraw() {
+  const msg = `Join ${presentRaffle.value?.name || 'Draw'} as ${
+    profileStore.theUser?.role || 'participant'
+  }`;
+  const deferred = new DeferredPromise<boolean>();
+  $q.dialog({
+    title: `<span class="text-negative">${msg}</span>`,
+    message: `Are you sure you want to ${msg}?`,
+    color: 'warning',
+    cancel: { outline: true, rounded: true, color: 'negative' },
+    ok: { rounded: true, label: msg, icon: 'ion-play-circle' },
+    persistent: true,
+    html: true,
+  })
+    .onOk(() => {
+      deferred.resolve(true);
+    })
+    .onCancel(() => {
+      deferred.reject(false);
+    });
+  return deferred.promise;
 }
 
 async function launchWheel() {

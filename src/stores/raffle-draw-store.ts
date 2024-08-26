@@ -95,10 +95,7 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
     },
     //{participaints}
     async joinRaffle(raffle: RaffleDraw, participant: IProfile, won?: boolean) {
-      if (
-        raffle.status == 'closed' ||
-        /^(admin|moderator)$/.test(participant.role || '')
-      ) {
+      if (raffle.status == 'closed') {
         return;
       }
       const payload = {
@@ -119,7 +116,7 @@ export const useRaffleDrawStore = defineStore('raffleDraw', {
       if (existing) return { ...existing, prices: [] };
       const result = await raffleParticipantsResource.setData('', payload);
       const prices = await Promise.all(
-        (raffle.defaultPrices || []).map((price) => {
+        ((participant.summit && raffle.defaultPrices) || []).map((price) => {
           return this.sendRafflePrice(
             raffle,
             `Freebie:${price}`,

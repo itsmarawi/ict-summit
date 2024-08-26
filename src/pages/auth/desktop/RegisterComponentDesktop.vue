@@ -2,6 +2,16 @@
   <q-card class="row justify-between" flat>
     <q-card-section class="col" style="overflow: auto">
       <q-btn
+        v-if="isRegistrationFull && $route.query?.redirect"
+        icon="start"
+        :to="$route.query.redirect"
+        rounded
+        flat
+        dense
+        class="absolute-top-left q-ma-lg"
+      />
+      <q-btn
+        v-else
         icon="home"
         :to="{ name: 'home' }"
         rounded

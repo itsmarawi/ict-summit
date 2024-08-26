@@ -48,7 +48,7 @@ export default function () {
             $router.replace({ name: 'verify' });
           } else if (
             $route.query?.redirect &&
-            profileStore.theUser?.institution
+            (profileStore.theUser?.institution || !isRegistrationOpen())
           ) {
             $router.replace($route.query?.redirect as string);
           } else if (
@@ -118,7 +118,10 @@ export default function () {
       arg: {
         method: $q.platform.is.ios ? 'googleRedirect' : 'google',
         done() {
-          if ($route.query?.redirect && profileStore.theUser?.institution) {
+          if (
+            $route.query?.redirect &&
+            (profileStore.theUser?.institution || !isRegistrationOpen())
+          ) {
             $router.replace($route.query?.redirect as string);
           } else if (profileStore.theUser?.institution) {
             $router.replace({ name: 'home' });

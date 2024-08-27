@@ -6,6 +6,7 @@ export const accountColumns = [
     field: 'avatar',
     label: ' ',
     align: 'left',
+    headerStyle: 'width: 40px',
   },
   {
     headerStyle: 'font-size: 20px',

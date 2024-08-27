@@ -8,6 +8,13 @@
       @update:model-value="emit('onToggleStatus')"
     />
   </q-item-label>
+  <q-avatar size="md" v-else-if="col.name == 'avatar'">
+    <img
+      v-if="typeof col.value == 'string' && col.value"
+      :src="String(col.value)"
+    />
+    <span>AV</span>
+  </q-avatar>
   <q-item-label
     v-else
     caption

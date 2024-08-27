@@ -11,10 +11,12 @@
       {{ name }}
     </span>
   </div>
-  <q-avatar v-else-if="col.name == 'avatar'">
+  <q-avatar size="md" v-else-if="col.name == 'avatar'">
     <img
-      :src="String(col.value) || 'https://cdn.quasar.dev/img/boy-avatar.png'"
+      v-if="typeof col.value == 'string' && col.value"
+      :src="String(col.value)"
     />
+    <span>AV</span>
   </q-avatar>
   <span v-else> {{ col.value }}</span>
 </template>

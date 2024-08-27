@@ -2,6 +2,12 @@ import { QTableColumn } from 'quasar';
 
 export const accountColumns = [
   {
+    name: 'avatar',
+    field: 'avatar',
+    label: ' ',
+    align: 'left',
+  },
+  {
     headerStyle: 'font-size: 20px',
     name: 'name',
     field: (row: { name: string }) => row.name,

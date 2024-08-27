@@ -16,7 +16,7 @@
       v-if="typeof col.value == 'string' && col.value"
       :src="String(col.value)"
     />
-    <span>AV</span>
+    <span v-else>AV</span>
   </q-avatar>
   <span v-else> {{ col.value }}</span>
 </template>

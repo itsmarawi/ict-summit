@@ -1,5 +1,10 @@
 <template>
-  <BaseTable row-key="name" :columns="columns" :rows="filteredProfiles" flat>
+  <BaseTable
+    row-key="name"
+    :columns="$q.screen.lt.md ? columns.slice(1) : columns"
+    :rows="filteredProfiles"
+    flat
+  >
     <!-- Table -->
     <template #tableTop>
       <TableTop
